@@ -7,7 +7,7 @@
 *.rsuser
 *.suo
 *.user
-*/data/personal/
+/data/personal/*.asqd
 *.userosscache
 *.sln.docstates
 
