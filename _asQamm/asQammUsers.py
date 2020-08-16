@@ -166,11 +166,15 @@ class AqUsersSystem(AqMainWindow):
                 self.userSystemLogger.Logger.info('Создан экземпляр класса пользователя: ' + str(core.instance))
 
 
-    def addToUserList(self, root, object):
-        self.users.append(object)
-        root.ui.liw_UsersDbList.addItems([object.login])
-        self.userSystemLogger.Logger.debug('Экземпляр класса пользователя ({0}) был добавлен в лист экземпляров класса пользователя'.format(
-                                            str(object)))
+    def addToUserList(self, root, object, mode):
+        if mode == 0:
+            self.users.append(object)
+            root.ui.liw_UsersDbList.addItems([object.login])
+            self.userSystemLogger.Logger.debug('Экземпляр класса пользователя ({0}) был добавлен в лист экземпляров класса пользователя'.format(
+                                                str(object)))
+        elif mode == 1:
+            for User in object:
+                root.ui.liw_UsersDbList.addItems([(User.login)])
 
 
     def cleanUserList(self):
@@ -282,7 +286,10 @@ class AqUsersSystem(AqMainWindow):
 
             if self.msg == QMessageBox.Yes:
                 self.users.remove(userToDelete)
-                root.ui.liw_UsersDbList.removeItemWidget(root.ui.liw_UsersDbList.selectedItems()[0])
+                root.ui.liw_UsersDbList.clear()
+                self.addToUserList(root, (self.users), 1)
+                self.userSystemLogger.Logger.info('Пользователь %s был удалён' % userToDelete.login)
+                self.msg = QMessageBox.information(root, 'Удаление завершено', 'Пользователь %s был удалён.' % userToDelete.login)
 
             elif self.msg == QMessageBox.No:
                 pass
@@ -390,7 +397,7 @@ class User(AqUsersSystem):
        self.current = bool()
        self.edited = bool(True)
 
-       core.addToUserList(root, self)
+       core.addToUserList(root, self, 0)
 
 
     def setup(self, core, root, Password, Desc, NewAvAddr, pxHomeRooms, pxDefnBasic, pxDefnDbEdit, pxDefnAsAdmin, pxPlants,

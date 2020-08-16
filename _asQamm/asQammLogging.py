@@ -1,8 +1,13 @@
-import logging, time
+import logging, time, os
 
 class AqLogger:
 
     def __init__(self, name):
+
+        try:
+            os.mkdir(str(os.getcwd() + '/log'))
+        except FileExistsError:
+            pass
 
         self.filenames = list()
         self.Logger = logging.getLogger(name)
