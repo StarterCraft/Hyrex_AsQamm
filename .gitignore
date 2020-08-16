@@ -7,6 +7,7 @@
 *.rsuser
 *.suo
 *.user
+*/data/personal/
 *.userosscache
 *.sln.docstates
 
@@ -87,6 +88,7 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
+/log/*.log
 
 # Chutzpah Test files
 _Chutzpah*
