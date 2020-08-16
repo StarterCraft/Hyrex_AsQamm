@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dlg_EditUserInUserDb</class>
+ <widget class="QDialog" name="Dlg_EditUserInUserDb">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>401</width>
+    <height>479</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Редактировать существоющего пользователя</string>
+  </property>
+  <property name="windowOpacity">
+   <double>0.959500000000000</double>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QDialog { background-color: rgb(45, 45, 45); color: white; }
+
+QGroupBox { font: 10pt &quot;Segoe UI Semibold&quot;; color: white; }
+
+QCheckBox, QLabel { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
+QCheckBox:disabled { color: gray; }
+
+
+ QScrollBar:vertical
+ {
+     background-color: #2A2929;
+     width: 15px;
+     margin: 15px 3px 15px 3px;
+     border: 1px transparent #2A2929;
+ }
+
+
+ QScrollBar::handle:vertical
+ {
+     background-color: rgb(45, 45, 45);         /* #605F5F; */
+     min-height: 5px;
+	 border: 2px solid white;
+	 border-radius: 4px;
+ }
+
+
+ QScrollBar::sub-line:vertical
+ {
+     margin: 3px 0px 3px 0px;
+     border-image: url(:/qss_icons/rc/up_arrow_disabled.png);
+     height: 10px;
+     width: 10px;
+     subcontrol-position: top;
+     subcontrol-origin: margin;
+ }
+
+
+ QScrollBar::add-line:vertical
+ {
+     margin: 3px 0px 3px 0px;
+     border-image: url(:/qss_icons/rc/down_arrow_disabled.png);
+     height: 10px;
+     width: 10px;
+     subcontrol-position: bottom;
+     subcontrol-origin: margin;
+ }
+
+
+ QScrollBar::sub-line:vertical:hover,QScrollBar::sub-line:vertical:on
+ {
+
+     border-image: url(:/qss_icons/rc/up_arrow.png);
+     height: 10px;
+     width: 10px;
+     subcontrol-position: top;
+     subcontrol-origin: margin;
+ }
+
+
+ QScrollBar::add-line:vertical:hover, QScrollBar::add-line:vertical:on
+ {
+     border-image: url(:/qss_icons/rc/down_arrow.png);
+     height: 10px;
+     width: 10px;
+     subcontrol-position: bottom;
+     subcontrol-origin: margin;
+ }
+
+
+ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical
+ {
+     background: none;
+ }
+
+
+ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
+ {
+     background: none;
+ }
+
+
+QComboBox {
+	color: black;
+    border: 1px solid gray;
+    border-radius: 3px;
+    padding: 1px 18px 1px 3px;
+    min-width: 6em;
+	font: 8pt &quot;Segoe UI Semilight&quot;;
+}
+
+
+QComboBox:hover {
+	border: 1px solid rgb(254, 254, 254);
+	background-color: rgb(236, 236, 236);
+}
+
+
+QPushButton { 
+	color: black;
+    background-color: rgb(215, 215, 215);
+	border: 1px solid gray;
+	border-radius: 3px;  
+	min-width: 6em;
+	font: 8pt &quot;Segoe UI Semibold&quot;;
+}
+
+
+QPushButton:hover { 
+	background-color: rgb(235, 235, 235);
+}
+
+
+QPushButton:pressed { 
+	background-color: rgb(221, 221, 221);
+}
+
+QComboBox:disabled { color: gray; background-color: rgb(35, 35, 35); }
+
+
+QComboBox::down-arrow {
+    image: url(:/images/arrowDown_ico.png);
+}
+
+
+QComboBox::up-arrow { image: url(:/images/arrowUp_ico.png); }
+
+
+QComboBox:editable {
+    background: white;
+}
+
+
+QComboBox:!editable, QComboBox::drop-down:editable {
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+}
+
+
+/* QComboBox gets the &quot;on&quot; state when the popup is open */
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,
+                                stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);
+}
+
+
+QComboBox:on { /* shift the text when the popup opens */
+    padding-top: 3px;
+    padding-left: 4px;
+}
+
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+
+    border-left-width: 1px;
+    border-left-color: darkgray;
+    border-left-style: solid; /* just a single line */
+    border-top-right-radius: 3px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 3px;
+}
+
+
+QLineEdit { 
+	border-radius: 3px;
+	border: 1px solid white;
+ }
+
+QLineEdit:hover { 
+	border-color: rgb(42, 105, 23);
+}</string>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>false</bool>
+  </property>
+  <property name="modal">
+   <bool>false</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="box_MainUserProps">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Основные настройки</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="2" column="1" colspan="3">
+       <widget class="QLabel" name="lbl_EuID">
+        <property name="text">
+         <string>(id)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="gfv_EuAvatarPrev">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>64</width>
+          <height>64</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>64</width>
+          <height>64</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border: 1px solid grey;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="lbl_EuDescHint">
+        <property name="text">
+         <string>Описание:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_EuAvatarPrevHint">
+        <property name="text">
+         <string>Просмотр:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="lbl_EuPassword">
+        <property name="text">
+         <string>Пароль:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1" colspan="3">
+       <widget class="QLineEdit" name="lnI_EuPassword">
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1" colspan="3">
+       <widget class="QLineEdit" name="lnI_EuDesc"/>
+      </item>
+      <item row="6" column="1">
+       <widget class="QLineEdit" name="lnI_EuAvatarAddr"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_EuIDHint">
+        <property name="text">
+         <string>ID:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_EuLogin">
+        <property name="text">
+         <string>Логин:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="3">
+       <widget class="QLineEdit" name="lnI_EuLogin">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="toolTip">
+         <string>Вы не можете редактировать логин существующего пользователя</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(218, 218, 218);</string>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="3">
+       <widget class="QToolButton" name="tlb_Browse">
+        <property name="text">
+         <string>...</string>
+        </property>
+        <property name="autoRaise">
+         <bool>false</bool>
+        </property>
+        <property name="arrowType">
+         <enum>Qt::NoArrow</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="lbl_EuAvatarHint">
+        <property name="text">
+         <string>Аватарка:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="btn_EuAvatarPrevRef">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>64</width>
+          <height>18</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>64</width>
+          <height>18</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Обновить</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="box_UserPermits">
+     <property name="title">
+      <string>Настройки разрешений</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="7" column="0">
+       <widget class="QCheckBox" name="cbb_UserPermit_4">
+        <property name="text">
+         <string>Экран &quot;Оборудование&quot;</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="cbb_UserPermit_2">
+        <property name="text">
+         <string>Управление комнатами</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="cbb_UserPermit_6">
+        <property name="text">
+         <string>Защита</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="cbb_UserPermit_7">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Изменение БД защиты</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="2">
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="cbb_UserPermit_1">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="toolTip">
+         <string>Отключить возможность открытия экрана статистики дома нельзя, так как это - базовая функциональность</string>
+        </property>
+        <property name="text">
+         <string>Экран &quot;Статистика дома&quot;</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="cbb_UserPermit_3">
+        <property name="text">
+         <string>Экран &quot;Растения&quot;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="cbb_UserPermit_8">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Управление системой защиты</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QCheckBox" name="cbb_UserPermit_9">
+        <property name="text">
+         <string>Экран &quot;Конфигурация&quot;</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QCheckBox" name="cbb_UserPermit_5">
+        <property name="text">
+         <string>Доб/удл. оборудование</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QCheckBox" name="cbb_UserPermit_10">
+        <property name="text">
+         <string>Настройки суперадмина</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="btb_Buttons">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>32</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">min-height: 24px;</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
+     </property>
+     <property name="centerButtons">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>btn_EuAvatarPrevRef</tabstop>
+  <tabstop>lnI_EuLogin</tabstop>
+  <tabstop>lnI_EuPassword</tabstop>
+  <tabstop>lnI_EuAvatarAddr</tabstop>
+  <tabstop>tlb_Browse</tabstop>
+  <tabstop>lnI_EuDesc</tabstop>
+  <tabstop>cbb_UserPermit_1</tabstop>
+  <tabstop>cbb_UserPermit_2</tabstop>
+  <tabstop>cbb_UserPermit_3</tabstop>
+  <tabstop>cbb_UserPermit_4</tabstop>
+  <tabstop>cbb_UserPermit_5</tabstop>
+  <tabstop>cbb_UserPermit_6</tabstop>
+  <tabstop>cbb_UserPermit_7</tabstop>
+  <tabstop>cbb_UserPermit_8</tabstop>
+  <tabstop>cbb_UserPermit_9</tabstop>
+  <tabstop>cbb_UserPermit_10</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>btb_Buttons</sender>
+   <signal>accepted()</signal>
+   <receiver>Dlg_EditUserInUserDb</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>245</x>
+     <y>469</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btb_Buttons</sender>
+   <signal>rejected()</signal>
+   <receiver>Dlg_EditUserInUserDb</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>334</x>
+     <y>469</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbb_UserPermit_1</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>cbb_UserPermit_2</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>59</x>
+     <y>300</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>48</x>
+     <y>322</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbb_UserPermit_6</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>cbb_UserPermit_7</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>365</x>
+     <y>300</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>365</x>
+     <y>322</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbb_UserPermit_6</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>cbb_UserPermit_8</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>365</x>
+     <y>300</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>365</x>
+     <y>344</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbb_UserPermit_4</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>cbb_UserPermit_5</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>98</x>
+     <y>383</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>98</x>
+     <y>412</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbb_UserPermit_9</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>cbb_UserPermit_10</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>381</x>
+     <y>383</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>381</x>
+     <y>412</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
