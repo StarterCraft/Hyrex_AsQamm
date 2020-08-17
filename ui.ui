@@ -807,7 +807,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
 </string>
             </property>
             <property name="currentIndex">
-             <number>3</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="page_1">
              <property name="styleSheet">
@@ -891,7 +891,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
                 <item row="0" column="1">
                  <widget class="QGroupBox" name="box_DefnLogsPool">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -979,7 +979,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
                 <item row="1" column="1">
                  <widget class="QGroupBox" name="box_DefnDatabase">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -987,7 +987,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
                   <property name="maximumSize">
                    <size>
                     <width>16777215</width>
-                    <height>191</height>
+                    <height>192</height>
                    </size>
                   </property>
                   <property name="title">
@@ -1176,6 +1176,12 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
                 </item>
                 <item row="0" column="0" rowspan="2">
                  <widget class="QGroupBox" name="box_DefnCamBox">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="title">
                    <string>Камеры видеонаблюдения и FaceID</string>
                   </property>
@@ -3754,7 +3760,7 @@ QPushButton:hover {
                 <x>360</x>
                 <y>150</y>
                 <width>280</width>
-                <height>130</height>
+                <height>150</height>
                </rect>
               </property>
               <property name="sizePolicy">
@@ -3772,7 +3778,7 @@ QPushButton:hover {
               <property name="maximumSize">
                <size>
                 <width>280</width>
-                <height>130</height>
+                <height>150</height>
                </size>
               </property>
               <property name="styleSheet">
@@ -3791,28 +3797,6 @@ QGroupBox::title {
                <property name="topMargin">
                 <number>16</number>
                </property>
-               <item row="1" column="1" colspan="2">
-                <widget class="QLineEdit" name="lnI_Password">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>25</height>
-                  </size>
-                 </property>
-                 <property name="inputMask">
-                  <string/>
-                 </property>
-                 <property name="echoMode">
-                  <enum>QLineEdit::Password</enum>
-                 </property>
-                </widget>
-               </item>
                <item row="2" column="0" colspan="2">
                 <widget class="QPushButton" name="btn_UserInit">
                  <property name="sizePolicy">
@@ -3887,6 +3871,28 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
                  </property>
                  <property name="text">
                   <string>Логин</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1" colspan="2">
+                <widget class="QLineEdit" name="lnI_Password">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>25</height>
+                  </size>
+                 </property>
+                 <property name="inputMask">
+                  <string/>
+                 </property>
+                 <property name="echoMode">
+                  <enum>QLineEdit::Password</enum>
                  </property>
                 </widget>
                </item>

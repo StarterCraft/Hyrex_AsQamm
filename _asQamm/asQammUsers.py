@@ -225,7 +225,7 @@ class AqUsersSystem(AqMainWindow):
                 self.lockApp(root, core)
 
         except IndexError:
-            root.ui.box_Login.setGeometry(QtCore.QRect(360, 150, 280, 130))
+            root.ui.box_Login.setGeometry(QtCore.QRect(360, 130, 280, 150))
             root.ui.lbl_LoginStatus.show()
             root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
             root.ui.lbl_LoginStatus.setText('Неверный логин или пароль!')
