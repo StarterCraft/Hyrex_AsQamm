@@ -57,7 +57,7 @@ class AqUIFunctions():
 
 
     def changeInterfaceMode(self, root, userscore):
-        if (root.ui.stack.currentWidget()) == (root.ui.page3):
+        if (root.ui.stack.currentWidget()) == (root.ui.page_3):
             self.selector = [User for User in userscore.users if (User.current == True)]
 
             if self.selector[0].permits['plants'] == True:

@@ -2321,7 +2321,7 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                       </rect>
                      </property>
                     </widget>
-                    <widget class="QFrame" name="frame_PtsWateringSysBtb">
+                    <widget class="QFrame" name="frame_PtsWateringSysScheduleBtb">
                      <property name="geometry">
                       <rect>
                        <x>280</x>
@@ -2336,7 +2336,7 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                      <property name="frameShadow">
                       <enum>QFrame::Raised</enum>
                      </property>
-                     <widget class="QRadioButton" name="radioButton">
+                     <widget class="QRadioButton" name="rdb_PtsWateringSysSchedPeriodic">
                       <property name="geometry">
                        <rect>
                         <x>0</x>
@@ -2349,7 +2349,7 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                        <string>Период</string>
                       </property>
                      </widget>
-                     <widget class="QRadioButton" name="radioButton_2">
+                     <widget class="QRadioButton" name="rb_PtsWateringSysSchedAbsolute">
                       <property name="geometry">
                        <rect>
                         <x>0</x>
@@ -2362,11 +2362,11 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                        <string>Точно</string>
                       </property>
                      </widget>
-                     <widget class="QTimeEdit" name="timeEdit">
+                     <widget class="QTimeEdit" name="tme_PtsWateringSysScheduleTime">
                       <property name="geometry">
                        <rect>
                         <x>0</x>
-                        <y>70</y>
+                        <y>108</y>
                         <width>81</width>
                         <height>22</height>
                        </rect>
@@ -2375,62 +2375,30 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                        <string>HH:mm</string>
                       </property>
                      </widget>
-                     <widget class="QPushButton" name="btn_PtsWateringSysScheduleAddTag">
+                     <widget class="QPushButton" name="btn_PtsWateringSysDelArg">
                       <property name="geometry">
                        <rect>
                         <x>0</x>
-                        <y>44</y>
-                        <width>25</width>
+                        <y>80</y>
+                        <width>80</width>
                         <height>23</height>
                        </rect>
                       </property>
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="minimumSize">
-                       <size>
-                        <width>25</width>
-                        <height>23</height>
-                       </size>
-                      </property>
                       <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset resource="resources.qrc">
-                        <normaloff>:/images/plus_ico.png</normaloff>:/images/plus_ico.png</iconset>
+                       <string>Удалить</string>
                       </property>
                      </widget>
-                     <widget class="QPushButton" name="pushButton_2">
+                     <widget class="QPushButton" name="btn_PtsWateringSysAddArg">
                       <property name="geometry">
                        <rect>
-                        <x>53</x>
-                        <y>44</y>
-                        <width>25</width>
+                        <x>0</x>
+                        <y>55</y>
+                        <width>80</width>
                         <height>23</height>
                        </rect>
                       </property>
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="minimumSize">
-                       <size>
-                        <width>25</width>
-                        <height>23</height>
-                       </size>
-                      </property>
                       <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset resource="resources.qrc">
-                        <normaloff>:/images/minus_ico.png</normaloff>:/images/minus_ico.png</iconset>
+                       <string>Добавить</string>
                       </property>
                      </widget>
                     </widget>
@@ -4707,7 +4675,7 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
   <connection>
    <sender>rdb_PtsWateringScheduleMode</sender>
    <signal>toggled(bool)</signal>
-   <receiver>frame_PtsWateringSysBtb</receiver>
+   <receiver>frame_PtsWateringSysScheduleBtb</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -4717,6 +4685,38 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
     <hint type="destinationlabel">
      <x>621</x>
      <y>416</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rb_PtsWateringSysSchedAbsolute</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>btn_PtsWateringSysAddArg</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>641</x>
+     <y>352</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>645</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rb_PtsWateringSysSchedAbsolute</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>btn_PtsWateringSysDelArg</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>617</x>
+     <y>350</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>629</x>
+     <y>417</y>
     </hint>
    </hints>
   </connection>

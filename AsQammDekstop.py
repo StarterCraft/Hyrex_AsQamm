@@ -91,7 +91,7 @@ if __name__ == "__main__":
     root.ui.btn_UserDatabaseDeleteUser.clicked.connect( lambda: usersCore.callUserDeletionDlg(root, usersCore.getInstance(root, False)) )
     root.ui.liw_UsersDbList.itemSelectionChanged.connect( lambda: usersCore.updateListWidget(root, usersCore) )
     root.ui.sld_WindowsOpacitySct.valueChanged.connect ( lambda: AqUIFunctions.setPopupsOpacity(root) )
-    root.ui.btn_InterfaceMode.clicked.connect ( lambda: AqUIFunctions.changeInterfaceMode(root, usersCore) )
+    root.ui.btn_InterfaceMode.clicked.connect ( lambda: AqUIFunctions.changeInterfaceMode(AqUIFunctions, root, usersCore) )
 
     root.rootLogger.Logger.info('Привязка кнопок в интерфейсе приложения завершена успешно')
 
