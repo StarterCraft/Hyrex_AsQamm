@@ -56,6 +56,16 @@ class AqUIFunctions():
         root.ui.lbl_MenuHint5.hide()
 
 
+    def changeInterfaceMode(self, root, userscore):
+        if (root.ui.stack.currentWidget()) == (root.ui.page3):
+            self.selector = [User for User in userscore.users if (User.current == True)]
+
+            if self.selector[0].permits['plants'] == True:
+                root.ui.stack.setCurrentWidget(root.ui.page_6)
+            else:
+                root.msg = QMessageBox.critical('Действие запрещено', 'Вы не имеете права на осуществление этого действия')
+
+
     # Функция toggleSimpleWidgetInteraction может быть использована для анимирования виджетов простой
     # линейной анимацией. Ей необходимо иметь следующие аргументы: желаемый максимальный размер
     # виджета (ширина/высота в зависимости от типа анимации) и ID виджета, с которым она будет

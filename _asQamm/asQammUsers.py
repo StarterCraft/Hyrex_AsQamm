@@ -13,7 +13,7 @@ class AqUsersSystem(AqMainWindow):
         self.crypto = AqCrypto()
         self.loggedIn = bool(False)
         self.users = []
-        self.sysFileNames = ["data\personal\~!guest!~.asqd"]
+        self.sysFileNames = ["data\system\~!guest!~.asqd", "data/system/~!dev!~.asqd"]
         self.userSystemLogger = AqLogger('UserSystem')
         self.possibleFileNames = []
         self.availableFileNames = []
@@ -145,6 +145,19 @@ class AqUsersSystem(AqMainWindow):
             core.guest = User(core, root, (jsonString['id']), (jsonString['type']), (jsonString['description']), 
                               (jsonString['avatarAddress']), (jsonString['login']), (jsonString['password']), (jsonString['permits']))
             core.guest.edited = False
+
+
+        with open(r'%s' % str(self.sysFileNames[1]), 'r') as dataFile:
+
+            fileString = dataFile.readline()
+            jsonString = self.crypto.decryptContent(fileString)
+            jsonString = json.loads(jsonString)
+            self.userSystemLogger.Logger.debug('Прочитан ASQD-файл, получен словарь для создания экземпляра класса пользователя')
+
+            core.dev = User(core, root, (jsonString['id']), (jsonString['type']), (jsonString['description']), 
+                              (jsonString['avatarAddress']), (jsonString['login']), (jsonString['password']), (jsonString['permits']))
+            core.dev.edited = False
+
 
         self.userSystemLogger.Logger.info('Система пользователей начинает выполнение метода инициализации добавленных извне экземпляров' +
                                            ' класса пользователя')

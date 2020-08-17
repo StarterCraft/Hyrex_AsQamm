@@ -1,4 +1,4 @@
-import sys
+import sys, os
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -18,11 +18,24 @@ class AqMainWindow(QMainWindow):
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.mkdirs()
 
         self.rootLogger = AqLogger('Main')
         self.rootLogger.Logger.info('Инициализация корневого класса')
 
         self.popups = []
+
+
+    def mkdirs(self):
+        neededDirs = ['/log', '/data', '/data/personal', '/data/config', '/data/system']
+        rootdir = os.getcwd()
+
+        for i in neededDirs:
+            try:
+                os.makedirs(str(rootdir + i))
+            except FileExistsError:
+                continue
+
 
     def mainloop(self, app):
         self.rootLogger.Logger.info('Запуск главного цикла приложения')
@@ -78,6 +91,7 @@ if __name__ == "__main__":
     root.ui.btn_UserDatabaseDeleteUser.clicked.connect( lambda: usersCore.callUserDeletionDlg(root, usersCore.getInstance(root, False)) )
     root.ui.liw_UsersDbList.itemSelectionChanged.connect( lambda: usersCore.updateListWidget(root, usersCore) )
     root.ui.sld_WindowsOpacitySct.valueChanged.connect ( lambda: AqUIFunctions.setPopupsOpacity(root) )
+    root.ui.btn_InterfaceMode.clicked.connect ( lambda: AqUIFunctions.changeInterfaceMode(root, usersCore) )
 
     root.rootLogger.Logger.info('Привязка кнопок в интерфейсе приложения завершена успешно')
 

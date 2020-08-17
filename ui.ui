@@ -530,7 +530,9 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
           <item>
            <widget class="QStackedWidget" name="stack">
             <property name="styleSheet">
-             <string notr="true">QGroupBox { font: 63 10pt &quot;Segoe UI Semibold&quot;; }
+             <string notr="true">QRadioButton { font: 9pt &quot;Segoe UI Semilight&quot; ; }
+
+QGroupBox { font: 63 10pt &quot;Segoe UI Semibold&quot;; }
 
 QCheckBox, QLabel { font: 9pt &quot;Segoe UI Semilight&quot;; }
 QCheckBox:disabled { color: gray; }
@@ -572,6 +574,9 @@ QTabBar::tab {
 	font: 63 9pt &quot;Segoe UI Semibold&quot;;
 }
 
+QTabBar::tab:disabled { background-color: gray; }
+QTabBar::tab:active:disabled { background-color: grey; }
+
 QTabBar::tab:hover {
 	background-color: rgb(47, 105, 23);
 	color: rgb(248, 248, 248);
@@ -611,6 +616,9 @@ QSlider::handle:horizontal {
     margin: -2px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
     border-radius: 3px;
 }
+
+QSlider::handle:horizontal:hover { background-color: rgb(45, 102, 23); }
+QSlider::handle:horizontal:disabled { background-color: grey; }
 
  QScrollBar:vertical
  {
@@ -683,6 +691,22 @@ QSlider::handle:horizontal {
  {
      background: none;
  }
+
+
+QSpinBox { border: none; font: 9pt &quot;Segoe UI&quot;; }
+QSpinBox:hover { border: 1px green sunken; }
+QSpinBox:disabled { color: grey; }
+
+QSpinBox::up-button { color: white; }
+QSpinBox::down-button { color: white; }
+
+
+QTimeEdit { border: none; font: 9pt &quot;Segoe UI&quot;; }
+QTimeEdit:hover { border: 1px green sunken; }
+QTimeEdit:disabled { color: grey; }
+
+QTimeEdit::up-button { color: white; }
+QTimeEdit::down-button { color: white; }
 
 
 QComboBox {
@@ -783,7 +807,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
 </string>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>3</number>
             </property>
             <widget class="QWidget" name="page_1">
              <property name="styleSheet">
@@ -1722,13 +1746,709 @@ QPushButton:hover {
                     <rect>
                      <x>3</x>
                      <y>3</y>
-                     <width>258</width>
+                     <width>611</width>
                      <height>371</height>
                     </rect>
                    </property>
                    <property name="title">
                     <string>Правила управления</string>
                    </property>
+                   <widget class="QLabel" name="lbl_ReadOnly38">
+                    <property name="geometry">
+                     <rect>
+                      <x>6</x>
+                      <y>20</y>
+                      <width>91</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">font: 63 10pt &quot;Segoe UI Semibold&quot;;</string>
+                    </property>
+                    <property name="text">
+                     <string>Климат и АВС</string>
+                    </property>
+                   </widget>
+                   <widget class="QLabel" name="lbl_ReadOnly35">
+                    <property name="geometry">
+                     <rect>
+                      <x>6</x>
+                      <y>49</y>
+                      <width>171</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>Segoe UI Semilight</family>
+                      <pointsize>9</pointsize>
+                      <weight>50</weight>
+                      <italic>false</italic>
+                      <bold>false</bold>
+                     </font>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">font: 9pt &quot;Segoe UI Semilight&quot;;</string>
+                    </property>
+                    <property name="text">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Если t° в теплице &lt;span style=&quot; font-weight:600;&quot;&gt;превышает&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                    <property name="textFormat">
+                     <enum>Qt::RichText</enum>
+                    </property>
+                   </widget>
+                   <widget class="QSpinBox" name="spb_PtsMaxPossibleTemp">
+                    <property name="geometry">
+                     <rect>
+                      <x>174</x>
+                      <y>46</y>
+                      <width>42</width>
+                      <height>22</height>
+                     </rect>
+                    </property>
+                    <property name="frame">
+                     <bool>true</bool>
+                    </property>
+                    <property name="buttonSymbols">
+                     <enum>QAbstractSpinBox::PlusMinus</enum>
+                    </property>
+                    <property name="suffix">
+                     <string>°</string>
+                    </property>
+                    <property name="minimum">
+                     <number>15</number>
+                    </property>
+                    <property name="maximum">
+                     <number>40</number>
+                    </property>
+                   </widget>
+                   <widget class="QLabel" name="lbl_ReadOnly37">
+                    <property name="geometry">
+                     <rect>
+                      <x>220</x>
+                      <y>48</y>
+                      <width>16</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>:</string>
+                    </property>
+                   </widget>
+                   <widget class="Line" name="line_4">
+                    <property name="geometry">
+                     <rect>
+                      <x>6</x>
+                      <y>35</y>
+                      <width>598</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                   </widget>
+                   <widget class="QLabel" name="lbl_ReadOnly36">
+                    <property name="geometry">
+                     <rect>
+                      <x>6</x>
+                      <y>155</y>
+                      <width>171</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>Segoe UI Semilight</family>
+                      <pointsize>9</pointsize>
+                      <weight>50</weight>
+                      <italic>false</italic>
+                      <bold>false</bold>
+                     </font>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">font: 9pt &quot;Segoe UI Semilight&quot;;</string>
+                    </property>
+                    <property name="text">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Если t° в теплице &lt;span style=&quot; font-weight:600;&quot;&gt;ниже&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                    <property name="textFormat">
+                     <enum>Qt::RichText</enum>
+                    </property>
+                   </widget>
+                   <widget class="QSpinBox" name="spb_PtsMinPossibleTemp">
+                    <property name="geometry">
+                     <rect>
+                      <x>174</x>
+                      <y>153</y>
+                      <width>42</width>
+                      <height>22</height>
+                     </rect>
+                    </property>
+                    <property name="frame">
+                     <bool>true</bool>
+                    </property>
+                    <property name="buttonSymbols">
+                     <enum>QAbstractSpinBox::PlusMinus</enum>
+                    </property>
+                    <property name="suffix">
+                     <string>°</string>
+                    </property>
+                    <property name="minimum">
+                     <number>15</number>
+                    </property>
+                    <property name="maximum">
+                     <number>40</number>
+                    </property>
+                   </widget>
+                   <widget class="QLabel" name="lbl_ReadOnly39">
+                    <property name="geometry">
+                     <rect>
+                      <x>220</x>
+                      <y>155</y>
+                      <width>16</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>:</string>
+                    </property>
+                   </widget>
+                   <widget class="Line" name="line_5">
+                    <property name="geometry">
+                     <rect>
+                      <x>225</x>
+                      <y>42</y>
+                      <width>20</width>
+                      <height>320</height>
+                     </rect>
+                    </property>
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                   </widget>
+                   <widget class="QLabel" name="lbl_ReadOnly40">
+                    <property name="geometry">
+                     <rect>
+                      <x>240</x>
+                      <y>20</y>
+                      <width>121</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">font: 63 10pt &quot;Segoe UI Semibold&quot;;</string>
+                    </property>
+                    <property name="text">
+                     <string>Автополив</string>
+                    </property>
+                   </widget>
+                   <widget class="QFrame" name="frame_PtsAutoVentSys">
+                    <property name="geometry">
+                     <rect>
+                      <x>8</x>
+                      <y>70</y>
+                      <width>215</width>
+                      <height>70</height>
+                     </rect>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <widget class="QRadioButton" name="rdb_PtsAutoVentSysManualMode">
+                     <property name="geometry">
+                      <rect>
+                       <x>12</x>
+                       <y>40</y>
+                       <width>111</width>
+                       <height>17</height>
+                      </rect>
+                     </property>
+                     <property name="text">
+                      <string>Задать: </string>
+                     </property>
+                    </widget>
+                    <widget class="QCheckBox" name="ckb_PtsAutoVentSysToggle">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>201</width>
+                       <height>17</height>
+                      </rect>
+                     </property>
+                     <property name="text">
+                      <string>Включить автовентиляцию</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                    <widget class="QSlider" name="sld_PtsAutoVentSysManMdSlider">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="geometry">
+                      <rect>
+                       <x>130</x>
+                       <y>40</y>
+                       <width>81</width>
+                       <height>22</height>
+                      </rect>
+                     </property>
+                     <property name="maximum">
+                      <number>10</number>
+                     </property>
+                     <property name="pageStep">
+                      <number>2</number>
+                     </property>
+                     <property name="value">
+                      <number>5</number>
+                     </property>
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="tickPosition">
+                      <enum>QSlider::TicksBelow</enum>
+                     </property>
+                     <property name="tickInterval">
+                      <number>5</number>
+                     </property>
+                    </widget>
+                    <widget class="QRadioButton" name="rdb_PtsAutoVentSysAutoMode">
+                     <property name="geometry">
+                      <rect>
+                       <x>12</x>
+                       <y>20</y>
+                       <width>201</width>
+                       <height>17</height>
+                      </rect>
+                     </property>
+                     <property name="text">
+                      <string>Подобрать мощность </string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </widget>
+                   <widget class="QFrame" name="frame_PtsMainHeatingSys">
+                    <property name="geometry">
+                     <rect>
+                      <x>10</x>
+                      <y>178</y>
+                      <width>211</width>
+                      <height>61</height>
+                     </rect>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <widget class="QSpinBox" name="spb_PtsOffHeatingIfTempHigher">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="geometry">
+                      <rect>
+                       <x>162</x>
+                       <y>39</y>
+                       <width>42</width>
+                       <height>22</height>
+                      </rect>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="frame">
+                      <bool>true</bool>
+                     </property>
+                     <property name="buttonSymbols">
+                      <enum>QAbstractSpinBox::PlusMinus</enum>
+                     </property>
+                     <property name="suffix">
+                      <string>°</string>
+                     </property>
+                     <property name="minimum">
+                      <number>15</number>
+                     </property>
+                     <property name="maximum">
+                      <number>40</number>
+                     </property>
+                    </widget>
+                    <widget class="QCheckBox" name="ckb_PtsElcHtgSysToggle">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>221</width>
+                       <height>17</height>
+                      </rect>
+                     </property>
+                     <property name="text">
+                      <string>Включить батареи ЭО</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                    <widget class="QRadioButton" name="rdb_PtsOffMainHeatingAuto">
+                     <property name="geometry">
+                      <rect>
+                       <x>6</x>
+                       <y>22</y>
+                       <width>201</width>
+                       <height>17</height>
+                      </rect>
+                     </property>
+                     <property name="text">
+                      <string>Выключить автоматически</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                    <widget class="QRadioButton" name="rdb_PtsOffMainHeatingManual">
+                     <property name="geometry">
+                      <rect>
+                       <x>6</x>
+                       <y>42</y>
+                       <width>151</width>
+                       <height>17</height>
+                      </rect>
+                     </property>
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>Выключить, если t°   &lt;  </string>
+                     </property>
+                    </widget>
+                   </widget>
+                   <widget class="QFrame" name="frame_PtsHotfloorSys">
+                    <property name="geometry">
+                     <rect>
+                      <x>10</x>
+                      <y>248</y>
+                      <width>211</width>
+                      <height>61</height>
+                     </rect>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <widget class="QSpinBox" name="spb_PtsOffHeatFlrTempHigher">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="geometry">
+                      <rect>
+                       <x>162</x>
+                       <y>39</y>
+                       <width>42</width>
+                       <height>22</height>
+                      </rect>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="frame">
+                      <bool>true</bool>
+                     </property>
+                     <property name="buttonSymbols">
+                      <enum>QAbstractSpinBox::PlusMinus</enum>
+                     </property>
+                     <property name="suffix">
+                      <string>°</string>
+                     </property>
+                     <property name="minimum">
+                      <number>15</number>
+                     </property>
+                     <property name="maximum">
+                      <number>40</number>
+                     </property>
+                    </widget>
+                    <widget class="QCheckBox" name="ckb_PtsFlrHtgSysToggle">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>221</width>
+                       <height>17</height>
+                      </rect>
+                     </property>
+                     <property name="text">
+                      <string>Включить Систему тёплого пола</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                    <widget class="QRadioButton" name="rdb_PtsOffHotfloorAuto">
+                     <property name="geometry">
+                      <rect>
+                       <x>6</x>
+                       <y>22</y>
+                       <width>201</width>
+                       <height>17</height>
+                      </rect>
+                     </property>
+                     <property name="text">
+                      <string>Выключить автоматически</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                    <widget class="QRadioButton" name="rdb_PtsOffHotfloorManual">
+                     <property name="geometry">
+                      <rect>
+                       <x>6</x>
+                       <y>42</y>
+                       <width>151</width>
+                       <height>17</height>
+                      </rect>
+                     </property>
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>Выключить, если t°   &lt;  </string>
+                     </property>
+                    </widget>
+                   </widget>
+                   <widget class="QFrame" name="frame_PtsWateringSys">
+                    <property name="geometry">
+                     <rect>
+                      <x>240</x>
+                      <y>49</y>
+                      <width>361</width>
+                      <height>311</height>
+                     </rect>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <widget class="QTabWidget" name="taw_PtsWateringAutoModeCfg">
+                     <property name="enabled">
+                      <bool>true</bool>
+                     </property>
+                     <property name="geometry">
+                      <rect>
+                       <x>20</x>
+                       <y>20</y>
+                       <width>341</width>
+                       <height>131</height>
+                      </rect>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QTabBar { font: 10pt &quot;Segoe UI Light&quot;; }
+QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
+                     </property>
+                     <property name="currentIndex">
+                      <number>0</number>
+                     </property>
+                     <widget class="QWidget" name="tab_PtsWateringMinMoisLvl_2">
+                      <attribute name="title">
+                       <string>Минимально</string>
+                      </attribute>
+                     </widget>
+                     <widget class="QWidget" name="tab_PtsWateringMaxMoisLvl_2">
+                      <attribute name="title">
+                       <string>Максимальнo</string>
+                      </attribute>
+                     </widget>
+                    </widget>
+                    <widget class="QRadioButton" name="rdb_PtsWateringAutoMode">
+                     <property name="geometry">
+                      <rect>
+                       <x>6</x>
+                       <y>0</y>
+                       <width>141</width>
+                       <height>17</height>
+                      </rect>
+                     </property>
+                     <property name="text">
+                      <string>Полив по влажности</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                    <widget class="QRadioButton" name="rdb_PtsWateringScheduleMode">
+                     <property name="geometry">
+                      <rect>
+                       <x>6</x>
+                       <y>160</y>
+                       <width>141</width>
+                       <height>17</height>
+                      </rect>
+                     </property>
+                     <property name="text">
+                      <string>Полив по расписанию</string>
+                     </property>
+                     <property name="checked">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                    <widget class="QTableWidget" name="tbw_PtsWateringSchedule">
+                     <property name="enabled">
+                      <bool>true</bool>
+                     </property>
+                     <property name="geometry">
+                      <rect>
+                       <x>20</x>
+                       <y>180</y>
+                       <width>251</width>
+                       <height>131</height>
+                      </rect>
+                     </property>
+                    </widget>
+                    <widget class="QFrame" name="frame_PtsWateringSysBtb">
+                     <property name="geometry">
+                      <rect>
+                       <x>280</x>
+                       <y>180</y>
+                       <width>81</width>
+                       <height>131</height>
+                      </rect>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Raised</enum>
+                     </property>
+                     <widget class="QRadioButton" name="radioButton">
+                      <property name="geometry">
+                       <rect>
+                        <x>0</x>
+                        <y>0</y>
+                        <width>82</width>
+                        <height>17</height>
+                       </rect>
+                      </property>
+                      <property name="text">
+                       <string>Период</string>
+                      </property>
+                     </widget>
+                     <widget class="QRadioButton" name="radioButton_2">
+                      <property name="geometry">
+                       <rect>
+                        <x>0</x>
+                        <y>20</y>
+                        <width>82</width>
+                        <height>17</height>
+                       </rect>
+                      </property>
+                      <property name="text">
+                       <string>Точно</string>
+                      </property>
+                     </widget>
+                     <widget class="QTimeEdit" name="timeEdit">
+                      <property name="geometry">
+                       <rect>
+                        <x>0</x>
+                        <y>70</y>
+                        <width>81</width>
+                        <height>22</height>
+                       </rect>
+                      </property>
+                      <property name="displayFormat">
+                       <string>HH:mm</string>
+                      </property>
+                     </widget>
+                     <widget class="QPushButton" name="btn_PtsWateringSysScheduleAddTag">
+                      <property name="geometry">
+                       <rect>
+                        <x>0</x>
+                        <y>44</y>
+                        <width>25</width>
+                        <height>23</height>
+                       </rect>
+                      </property>
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>25</width>
+                        <height>23</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string/>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="resources.qrc">
+                        <normaloff>:/images/plus_ico.png</normaloff>:/images/plus_ico.png</iconset>
+                      </property>
+                     </widget>
+                     <widget class="QPushButton" name="pushButton_2">
+                      <property name="geometry">
+                       <rect>
+                        <x>53</x>
+                        <y>44</y>
+                        <width>25</width>
+                        <height>23</height>
+                       </rect>
+                      </property>
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>25</width>
+                        <height>23</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string/>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="resources.qrc">
+                        <normaloff>:/images/minus_ico.png</normaloff>:/images/minus_ico.png</iconset>
+                      </property>
+                     </widget>
+                    </widget>
+                   </widget>
+                   <zorder>frame_PtsAutoVentSys</zorder>
+                   <zorder>lbl_ReadOnly35</zorder>
+                   <zorder>lbl_ReadOnly37</zorder>
+                   <zorder>line_4</zorder>
+                   <zorder>spb_PtsMaxPossibleTemp</zorder>
+                   <zorder>lbl_ReadOnly38</zorder>
+                   <zorder>lbl_ReadOnly36</zorder>
+                   <zorder>spb_PtsMinPossibleTemp</zorder>
+                   <zorder>lbl_ReadOnly39</zorder>
+                   <zorder>line_5</zorder>
+                   <zorder>lbl_ReadOnly40</zorder>
+                   <zorder>frame_PtsMainHeatingSys</zorder>
+                   <zorder>frame_PtsHotfloorSys</zorder>
+                   <zorder>frame_PtsWateringSys</zorder>
                   </widget>
                   <widget class="QGroupBox" name="box_PtsManualControl_1">
                    <property name="geometry">
@@ -1742,261 +2462,20 @@ QPushButton:hover {
                    <property name="title">
                     <string>Ручное управление</string>
                    </property>
-                   <widget class="QLabel" name="label">
+                   <widget class="QLabel" name="lbl_ReadOnly41">
                     <property name="geometry">
                      <rect>
                       <x>6</x>
-                      <y>22</y>
-                      <width>47</width>
-                      <height>13</height>
-                     </rect>
-                    </property>
-                    <property name="text">
-                     <string>TextLabel</string>
-                    </property>
-                   </widget>
-                  </widget>
-                  <widget class="QGroupBox" name="box_PtsRuleCfg_1">
-                   <property name="geometry">
-                    <rect>
-                     <x>283</x>
-                     <y>3</y>
-                     <width>331</width>
-                     <height>371</height>
-                    </rect>
-                   </property>
-                   <property name="title">
-                    <string>Управление правилами</string>
-                   </property>
-                   <widget class="QLabel" name="label_2">
-                    <property name="geometry">
-                     <rect>
-                      <x>6</x>
-                      <y>79</y>
-                      <width>91</width>
+                      <y>20</y>
+                      <width>161</width>
                       <height>16</height>
                      </rect>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <family>Segoe UI Semibold</family>
-                      <pointsize>9</pointsize>
-                      <weight>7</weight>
-                      <italic>false</italic>
-                      <bold>false</bold>
-                     </font>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">font: 63 9pt &quot;Segoe UI Semibold&quot;;</string>
+                     <string notr="true">font: 63 10pt &quot;Segoe UI Semibold&quot;;</string>
                     </property>
                     <property name="text">
-                     <string>Имя правила:</string>
-                    </property>
-                   </widget>
-                   <widget class="QLineEdit" name="lineEdit">
-                    <property name="geometry">
-                     <rect>
-                      <x>90</x>
-                      <y>77</y>
-                      <width>234</width>
-                      <height>20</height>
-                     </rect>
-                    </property>
-                   </widget>
-                   <widget class="QLabel" name="label_5">
-                    <property name="geometry">
-                     <rect>
-                      <x>6</x>
-                      <y>106</y>
-                      <width>61</width>
-                      <height>16</height>
-                     </rect>
-                    </property>
-                    <property name="text">
-                     <string>Триггеры</string>
-                    </property>
-                   </widget>
-                   <widget class="QLabel" name="label_6">
-                    <property name="geometry">
-                     <rect>
-                      <x>263</x>
-                      <y>106</y>
-                      <width>61</width>
-                      <height>16</height>
-                     </rect>
-                    </property>
-                    <property name="text">
-                     <string>Действия</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                   <widget class="Line" name="line_4">
-                    <property name="geometry">
-                     <rect>
-                      <x>155</x>
-                      <y>101</y>
-                      <width>20</width>
-                      <height>181</height>
-                     </rect>
-                    </property>
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                   </widget>
-                   <widget class="QListWidget" name="listWidget">
-                    <property name="geometry">
-                     <rect>
-                      <x>6</x>
-                      <y>126</y>
-                      <width>151</width>
-                      <height>141</height>
-                     </rect>
-                    </property>
-                   </widget>
-                   <widget class="QListWidget" name="listWidget_2">
-                    <property name="geometry">
-                     <rect>
-                      <x>173</x>
-                      <y>126</y>
-                      <width>151</width>
-                      <height>141</height>
-                     </rect>
-                    </property>
-                   </widget>
-                   <widget class="Line" name="line_5">
-                    <property name="geometry">
-                     <rect>
-                      <x>10</x>
-                      <y>38</y>
-                      <width>311</width>
-                      <height>20</height>
-                     </rect>
-                    </property>
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                   </widget>
-                   <widget class="QLabel" name="label_4">
-                    <property name="geometry">
-                     <rect>
-                      <x>6</x>
-                      <y>55</y>
-                      <width>81</width>
-                      <height>16</height>
-                     </rect>
-                    </property>
-                    <property name="text">
-                     <string>ID правила:</string>
-                    </property>
-                   </widget>
-                   <widget class="QLineEdit" name="lineEdit_2">
-                    <property name="geometry">
-                     <rect>
-                      <x>90</x>
-                      <y>55</y>
-                      <width>234</width>
-                      <height>20</height>
-                     </rect>
-                    </property>
-                   </widget>
-                   <widget class="QPushButton" name="pushButton">
-                    <property name="geometry">
-                     <rect>
-                      <x>6</x>
-                      <y>22</y>
-                      <width>101</width>
-                      <height>23</height>
-                     </rect>
-                    </property>
-                    <property name="text">
-                     <string>Добавить</string>
-                    </property>
-                    <property name="icon">
-                     <iconset resource="resources.qrc">
-                      <normaloff>:/images/plus_ico.png</normaloff>:/images/plus_ico.png</iconset>
-                    </property>
-                    <property name="iconSize">
-                     <size>
-                      <width>12</width>
-                      <height>12</height>
-                     </size>
-                    </property>
-                   </widget>
-                   <widget class="QPushButton" name="pushButton_2">
-                    <property name="geometry">
-                     <rect>
-                      <x>111</x>
-                      <y>22</y>
-                      <width>107</width>
-                      <height>23</height>
-                     </rect>
-                    </property>
-                    <property name="text">
-                     <string>Настроить</string>
-                    </property>
-                    <property name="icon">
-                     <iconset resource="resources.qrc">
-                      <normaloff>:/images/more_ico.png</normaloff>:/images/more_ico.png</iconset>
-                    </property>
-                    <property name="iconSize">
-                     <size>
-                      <width>12</width>
-                      <height>12</height>
-                     </size>
-                    </property>
-                   </widget>
-                   <widget class="QPushButton" name="pushButton_3">
-                    <property name="geometry">
-                     <rect>
-                      <x>222</x>
-                      <y>22</y>
-                      <width>101</width>
-                      <height>23</height>
-                     </rect>
-                    </property>
-                    <property name="text">
-                     <string>Удалить</string>
-                    </property>
-                    <property name="icon">
-                     <iconset resource="resources.qrc">
-                      <normaloff>:/images/minus_ico.png</normaloff>:/images/minus_ico.png</iconset>
-                    </property>
-                    <property name="iconSize">
-                     <size>
-                      <width>12</width>
-                      <height>12</height>
-                     </size>
-                    </property>
-                   </widget>
-                   <widget class="QPushButton" name="pushButton_4">
-                    <property name="geometry">
-                     <rect>
-                      <x>90</x>
-                      <y>100</y>
-                      <width>80</width>
-                      <height>20</height>
-                     </rect>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>80</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string/>
-                    </property>
-                    <property name="icon">
-                     <iconset resource="resources.qrc">
-                      <normaloff>:/images/plus_ico.png</normaloff>:/images/plus_ico.png</iconset>
-                    </property>
-                    <property name="iconSize">
-                     <size>
-                      <width>12</width>
-                      <height>12</height>
-                     </size>
+                     <string>Здесь пока ничего нет =)</string>
                     </property>
                    </widget>
                   </widget>
@@ -2005,6 +2484,19 @@ QPushButton:hover {
                   <attribute name="title">
                    <string> Теплица 2 </string>
                   </attribute>
+                  <widget class="QLabel" name="label">
+                   <property name="geometry">
+                    <rect>
+                     <x>430</x>
+                     <y>180</y>
+                     <width>47</width>
+                     <height>13</height>
+                    </rect>
+                   </property>
+                   <property name="text">
+                    <string>пусто XD</string>
+                   </property>
+                  </widget>
                  </widget>
                 </widget>
                </item>
@@ -4033,6 +4525,198 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
     <hint type="destinationlabel">
      <x>334</x>
      <y>395</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ckb_PtsAutoVentSysToggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>rdb_PtsAutoVentSysAutoMode</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>181</x>
+     <y>162</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>161</x>
+     <y>186</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ckb_PtsAutoVentSysToggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>rdb_PtsAutoVentSysManualMode</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>226</x>
+     <y>166</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>216</x>
+     <y>205</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rdb_PtsAutoVentSysManualMode</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sld_PtsAutoVentSysManMdSlider</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>124</x>
+     <y>207</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>280</x>
+     <y>220</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ckb_PtsElcHtgSysToggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>rdb_PtsOffMainHeatingAuto</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>117</x>
+     <y>269</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>118</x>
+     <y>292</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ckb_PtsElcHtgSysToggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>rdb_PtsOffMainHeatingManual</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>143</x>
+     <y>274</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>144</x>
+     <y>315</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rdb_PtsOffMainHeatingManual</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spb_PtsOffHeatingIfTempHigher</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>209</x>
+     <y>312</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>323</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ckb_PtsFlrHtgSysToggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>rdb_PtsOffHotfloorAuto</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>200</x>
+     <y>348</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>203</x>
+     <y>362</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ckb_PtsFlrHtgSysToggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>rdb_PtsOffHotfloorManual</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>159</x>
+     <y>349</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>159</x>
+     <y>387</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rdb_PtsOffHotfloorManual</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spb_PtsOffHeatFlrTempHigher</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>239</x>
+     <y>381</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>272</x>
+     <y>388</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rdb_PtsWateringAutoMode</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>taw_PtsWateringAutoModeCfg</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>377</x>
+     <y>144</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>380</x>
+     <y>163</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rdb_PtsWateringScheduleMode</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>tbw_PtsWateringSchedule</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>400</x>
+     <y>300</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>412</x>
+     <y>325</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rdb_PtsWateringScheduleMode</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>frame_PtsWateringSysBtb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>373</x>
+     <y>302</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>621</x>
+     <y>416</y>
     </hint>
    </hints>
   </connection>
