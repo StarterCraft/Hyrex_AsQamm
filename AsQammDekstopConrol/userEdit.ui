@@ -343,7 +343,7 @@ QLineEdit:hover {
         </property>
         <property name="minimumSize">
          <size>
-          <width>64</width>
+          <width>80</width>
           <height>18</height>
          </size>
         </property>
@@ -487,6 +487,9 @@ QLineEdit:hover {
      </property>
      <property name="styleSheet">
       <string notr="true">min-height: 24px;</string>
+     </property>
+     <property name="locale">
+      <locale language="Russian" country="Russia"/>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

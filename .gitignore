@@ -19,6 +19,8 @@
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
+*.pyproj
+*.sln
 x64/
 x86/
 [Aa][Rr][Mm]/
@@ -341,3 +343,5 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /data/system/~!guest!~.asqd
+/AsQamm/alphalogo.psd
+/AsQammDekstopConrol/AsQamm/alphalogo.psd

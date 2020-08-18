@@ -38,6 +38,9 @@
   <property name="styleSheet">
    <string notr="true">background-color: rgb(45, 45, 45);</string>
   </property>
+  <property name="locale">
+   <locale language="Russian" country="Russia"/>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
     <property name="leftMargin">
@@ -807,7 +810,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
 </string>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>5</number>
             </property>
             <widget class="QWidget" name="page_1">
              <property name="styleSheet">
@@ -1414,7 +1417,7 @@ QPushButton:hover {
                 </widget>
                </item>
                <item>
-                <widget class="QGroupBox" name="groupBox">
+                <widget class="QGroupBox" name="box_PtsSelectedModuleStats">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -2620,7 +2623,7 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                 <x>10</x>
                 <y>305</y>
                 <width>260</width>
-                <height>100</height>
+                <height>102</height>
                </rect>
               </property>
               <property name="title">
@@ -2851,6 +2854,9 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                </property>
                <property name="text">
                 <string>Сохранять лог</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
                </property>
               </widget>
               <widget class="QCheckBox" name="ckb_ToggleLogsArch">
@@ -3187,7 +3193,7 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                <property name="geometry">
                 <rect>
                  <x>7</x>
-                 <y>68</y>
+                 <y>71</y>
                  <width>248</width>
                  <height>23</height>
                 </rect>
@@ -3975,6 +3981,27 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
                </item>
               </layout>
              </widget>
+             <widget class="QLabel" name="label_2">
+              <property name="geometry">
+               <rect>
+                <x>360</x>
+                <y>10</y>
+                <width>280</width>
+                <height>140</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/main/AsQamm/logo-alpha.png</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+             <zorder>label_2</zorder>
+             <zorder>box_Login</zorder>
             </widget>
            </widget>
           </item>

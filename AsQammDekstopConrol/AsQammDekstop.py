@@ -24,6 +24,10 @@ class AqMainWindow(QMainWindow):
         self.rootLogger.Logger.info('Инициализация корневого класса')
 
         self.popups = []
+        self.sounds = {
+            'error': 'data/system/sounds/error.mp3',
+            'login': 'data/system/sounds/login.mp3', 
+            'logOut': 'data/system/sounds/logout.mp3'}
 
 
     def mkdirs(self):
@@ -56,6 +60,7 @@ if __name__ == "__main__":
 
     usersCore = AqUsersSystem(root)
     usersCore.userSystemLogger.Logger.debug('Экземпляр класса системы пользователей успешно создан: ' + str(usersCore))
+
 
     AqUIFunctions.createLabelsAtMainMenu(root)
     root.rootLogger.Logger.info('Всплывающие подсказки меню успешно сгенерированы! ')
@@ -92,6 +97,7 @@ if __name__ == "__main__":
     root.ui.liw_UsersDbList.itemSelectionChanged.connect( lambda: usersCore.updateListWidget(root, usersCore) )
     root.ui.sld_WindowsOpacitySct.valueChanged.connect ( lambda: AqUIFunctions.setPopupsOpacity(root) )
     root.ui.btn_InterfaceMode.clicked.connect ( lambda: AqUIFunctions.changeInterfaceMode(AqUIFunctions, root, usersCore) )
+    root.ui.btn_OpenLogFolder.clicked.connect ( lambda: root.rootLogger.openLogFolder() )
 
     root.rootLogger.Logger.info('Привязка кнопок в интерфейсе приложения завершена успешно')
 

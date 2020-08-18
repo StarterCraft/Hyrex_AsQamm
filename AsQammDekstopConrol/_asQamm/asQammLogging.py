@@ -18,3 +18,7 @@ class AqLogger:
 
     def getFilename(self):
         self.filenames.append(str( 'log/' + (time.strftime("""%d.%m.%Y_%H%M%S""", (time.localtime())))  + '_AsQammLog.log'))
+
+    def openLogFolder(self):
+        os.system('explorer "log"')
+        self.Logger.debug('Инициирована попытка открыть папку log')

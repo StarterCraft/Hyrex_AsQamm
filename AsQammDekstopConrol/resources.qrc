@@ -32,6 +32,7 @@
     <file>images/control_ico.png</file>
   </qresource>
   <qresource prefix="main">
+    <file>AsQamm/logo-alpha.png</file>
     <file>AsQamm/account-group.png</file>
     <file>AsQamm/icon.ico</file>
   </qresource>

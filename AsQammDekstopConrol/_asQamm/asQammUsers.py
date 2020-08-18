@@ -2,6 +2,7 @@ from AsQammDekstop import *
 from _asQamm.asQammFunctions import AqCrypto
 from _asQamm.asQammUserCreation import Ui_Dlg_CreateNewUserInUserDb
 from _asQamm.asQammUserEdit import Ui_Dlg_EditUserInUserDb
+from playsound import *
 
 import json, os
 
@@ -223,13 +224,17 @@ class AqUsersSystem(AqMainWindow):
             else:
                 self.cleanUserList()
                 self.lockApp(root, core)
+            playsound(root.sounds['login'], False)
+
+            self.userSystemLogger.Logger.info('Вход в систему произведён')
 
         except IndexError:
             root.ui.box_Login.setGeometry(QtCore.QRect(360, 130, 280, 150))
             root.ui.lbl_LoginStatus.show()
             root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
             root.ui.lbl_LoginStatus.setText('Неверный логин или пароль!')
-            self.userSystemLogger.Logger.info('Вход в систему не выполнен по причине: 0 — неверный логин или пароль')
+            self.userSystemLogger.Logger.info('Вход в систему не произведён по причине: 0 — неверный логин или пароль')
+            playsound(root.sounds['error'], False)
 
 
     def guestUserInit(self, core, root):
@@ -327,8 +332,9 @@ class AqUsersSystem(AqMainWindow):
                                                                 self.creationDlgUi.filedialog.selectedFiles()[0])) )
 
             self.creationDlgUi.tlb_Browse.clicked.connect( lambda:  self.creationDlgUi.filedialog.show() )
-            self.creationDlgUi.btn_CnuAvatarPrevRef.clicked.connect( lambda: self.creationDlgUi.gfv_CnuAvatarPrev.setPixmap(QPixmap(QImage(str(
-                                                                     self.creationDlgUi.lnI_CnuAvatarAddr.text())))) )
+            self.creationDlgUi.lnI_CnuAvatarAddr.textChanged.connect ( lambda: self.creationDlgUi.gfv_CnuAvatarPrev.setPixmap(
+                                                                               QPixmap(QImage(str(
+                                                                               self.creationDlgUi.lnI_CnuAvatarAddr.text())))) )
 
             self.creationDlg.permits = dict( homeRooms = self.creationDlgUi.cbb_UserPermit_2.isChecked(),
                                             defenseBasic = self.creationDlgUi.cbb_UserPermit_6.isChecked(),
@@ -375,6 +381,7 @@ class AqUsersSystem(AqMainWindow):
 
     def logOut(self, core, root):
         self.userSystemLogger.Logger.info('Инициирован выход из системы.')
+        playsound(root.sounds['logOut'], False)
 
         self.loggedIn = False
         self.userSystemLogger.Logger.debug('Система пользователей перешла в состояние: (Вход в систему не произведён)')
