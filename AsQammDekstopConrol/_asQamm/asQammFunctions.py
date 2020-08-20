@@ -212,7 +212,8 @@ class AqCrypto:
 
 
     def encryptContent(self, str):
-        return base64.b64encode(str.encode('uft-8'))
+        return (base64.b64encode(str.encode('utf-8'))).decode('utf-8')
+
 
     def rawContent(s):
         return str(r'{0}'.format(s))
@@ -221,19 +222,22 @@ class AqCrypto:
 class AqLocalFunctions(AqMainWindow):
     def __init__(self):
         self.unsaved = []
-        self.saveDialog = None
-        self.crypto = AqCrypto()
 
-    def saveUnsaved(self, userscore):
+    def saveUnsavedUsers(self, userscore, root):
         self.unsaved = [User for User in userscore.users if (User.edited == True)]
-
-        self.possibleFileNames = []
-        self.availableFileNames = []
-        self.crypto.getFileNamesList(self.possibleFileNames)
-        self.crypto.seekForFiles(self.possibleFileNames, self.availableFileNames, False)
+        self.checker = int()
 
         for User in self.unsaved:
-            with open((self.availableFileNames[0]), 'a+', encoding = 'utf-8') as dataFile:
+            with open((User.filepath), mode = 'w+', encoding = 'utf-8') as dataFile:
 
-                self.dumpData = { 'id': (User.id), 'avatarAddress': (User.avatarAddress)}
-                json.dump()
+                self.dumpData = { 'id': (User.id), 'description': (User.description), 'type': (User.type), 'filepath': (User.filepath),
+                                  'login': (User.login), 'password': (User.password), 'avatarAddress': (User.avatarAddress),
+                                  'permits': (User.permits), 'config': (User.configDict)}
+
+                jsonString = json.dumps((self.dumpData))
+                jsonString = AqCrypto.encryptContent(AqCrypto, jsonString)
+                dataFile.write(jsonString)
+
+                self.checker += 1
+
+        QMessageBox.information(root, 'Операция завершена', 'Сохранено {0} пользователей!'.format((self.checker)))

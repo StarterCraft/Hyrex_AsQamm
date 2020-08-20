@@ -1,26 +1,25 @@
 {
-	"defaultAsQammDekstopCfg": {
+	"preset": null,
+	"language": "ru-RU",
+	"theme": "dark",
+	"popupOpacity": 92,
 	
-		"language": "ru-RU",
-		"theme": "dark",
-		"popupOpacity": 92,
+	"loggingMode": true,
+	"logSavingMode": true,
+	"logSavingDuration": "1mon",
 	
-		"loggingMode": true,
-		"logSavingMode": true,
-		"logSavingDuration": "1mon",
+	"keyBindings": {
 		
-		"keyBindings": {
+		"homeScreen": "Ctrl+1",
+		"defenseScreen": "Ctrl+2",
+		"plantsScreen": "Ctrl+3",
+		"hardwareScreen": "Ctrl+4",
+		"configScreen": "Ctrl+5",
 		
-			"homeScreen": "Ctrl+1",
-			"defenseScreen": "Ctrl+2",
-			"plantsScreen": "Ctrl+3",
-			"hardwareScreen": "Ctrl+4",
-			"configScreen": "Ctrl+5",
-			
-			"changeInterfaceMode": "Ctrl+Q",
-			"applyAllChanges": "Ctrl+A",
-			"saveChanges": "Ctrl+S",
-			"loadChanges": "Ctrl+W"
-		}
+		"changeInterfaceMode": "Ctrl+Q",
+		"applyAllChanges": "Ctrl+A",
+		"saveChanges": "Ctrl+S",
+		"loadChanges": "Ctrl+W"
+		
 	}
 }

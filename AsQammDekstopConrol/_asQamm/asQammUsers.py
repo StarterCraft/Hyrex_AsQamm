@@ -2,6 +2,7 @@ from AsQammDekstop import *
 from _asQamm.asQammFunctions import AqCrypto
 from _asQamm.asQammUserCreation import Ui_Dlg_CreateNewUserInUserDb
 from _asQamm.asQammUserEdit import Ui_Dlg_EditUserInUserDb
+from _asQamm.asQammConfig import AqConfigSystem
 from playsound import *
 
 import json, os
@@ -12,6 +13,7 @@ class AqUsersSystem(AqMainWindow):
     def __init__(self, root):
 
         self.crypto = AqCrypto()
+        self.config = AqConfigSystem()
         self.loggedIn = bool(False)
         self.users = []
         self.sysFileNames = ["data\system\~!guest!~.asqd", "data/system/~!dev!~.asqd"]
@@ -143,9 +145,10 @@ class AqUsersSystem(AqMainWindow):
             jsonString = json.loads(jsonString)
             self.userSystemLogger.Logger.debug('Прочитан ASQD-файл, получен словарь для создания экземпляра класса пользователя')
 
-            core.guest = User(core, root, (jsonString['id']), (jsonString['type']), (jsonString['description']), 
-                              (jsonString['avatarAddress']), (jsonString['login']), (jsonString['password']), (jsonString['permits']))
-            core.guest.edited = False
+            guest = User(core, root, (jsonString['id']), (jsonString['description']), (jsonString['type']), str(self.sysFileNames[0]), 
+                              (jsonString['avatarAddress']), (jsonString['login']), (jsonString['password']), (jsonString['permits']),
+                              (jsonString['config']))
+            guest.edited = False
 
 
         with open(r'%s' % str(self.sysFileNames[1]), 'r') as dataFile:
@@ -155,9 +158,10 @@ class AqUsersSystem(AqMainWindow):
             jsonString = json.loads(jsonString)
             self.userSystemLogger.Logger.debug('Прочитан ASQD-файл, получен словарь для создания экземпляра класса пользователя')
 
-            core.dev = User(core, root, (jsonString['id']), (jsonString['type']), (jsonString['description']), 
-                              (jsonString['avatarAddress']), (jsonString['login']), (jsonString['password']), (jsonString['permits']))
-            core.dev.edited = False
+            dev = User(core, root, (jsonString['id']), (jsonString['description']), (jsonString['type']), str(self.sysFileNames[1]),  
+                              (jsonString['avatarAddress']), (jsonString['login']), (jsonString['password']), (jsonString['permits']),
+                              (jsonString['config']))
+            dev.edited = False
 
 
         self.userSystemLogger.Logger.info('Система пользователей начинает выполнение метода инициализации добавленных извне экземпляров' +
@@ -174,9 +178,10 @@ class AqUsersSystem(AqMainWindow):
                 jsonString = json.loads(jsonString)
                 self.userSystemLogger.Logger.debug('Прочитан ASQD-файл, получен словарь для создания экземпляра класса пользователя')
 
-                core.instance = User(core, root, (jsonString['id']), (jsonString['type']), (jsonString['description']), 
-                                     (jsonString['avatarAddress']), (jsonString['login']), (jsonString['password']), (jsonString['permits']))
-                core.instance.edited = False
+                core.instance = User(core, root, (jsonString['id']), (jsonString['description']), (jsonString['type']), str(self.item),  
+                                        (jsonString['avatarAddress']), (jsonString['login']), (jsonString['password']), (jsonString['permits']),
+                                        (jsonString['config']))
+                instance.edited = False
                 self.userSystemLogger.Logger.info('Создан экземпляр класса пользователя: ' + str(core.instance))
 
 
@@ -212,11 +217,9 @@ class AqUsersSystem(AqMainWindow):
     def userInit(self, root, core, login, password):
 
         self.selector = [User for User in self.users if (User.login == login and User.password == password)]
-        print(self.selector)
 
         try:
             self.selector[0].setAsCurrent(True)
-            print(self.selector[0])
             self.loggedIn = True
 
             if self.selector[0].getPermits('pxConfigAsAdmin'):
@@ -315,11 +318,17 @@ class AqUsersSystem(AqMainWindow):
         except AttributeError:
             pass
 
+
+    def generateFilenameForNewUser(self):
+        self.emptyFileNames = []
+
+        self.crypto.seekForFiles(self.possibleFileNames, self.emptyFileNames, False)
+        return str(self.emptyFileNames[0])
+
+
     def callUserCreationDlg(self, root, core):
         try:
-            self.selector = [int(User.id) for User in self.users]
-            self.creationDlgUi.lbl_CnuID.setText(str(max(self.selector) + 1 ))
-        
+            self.creationDlgUi.lbl_CnuID.setText('NaN')
             self.creationDlgUi.lbl_CnuID.setText('')
             self.creationDlgUi.lnI_CnuLogin.setText('')
             self.creationDlgUi.lnI_CnuPassword.setText('')
@@ -346,9 +355,11 @@ class AqUsersSystem(AqMainWindow):
                                             configure = self.creationDlgUi.cbb_UserPermit_9.isChecked(),
                                             configureAsAdmin = self.creationDlgUi.cbb_UserPermit_10.isChecked() )
 
-            self.creationDlg.accepted.connect ( lambda: User(core, root, (self.creationDlgUi.lbl_CnuID.text()), 1, (self.creationDlgUi.lnI_CnuDesc.text()),
-                                                            (self.creationDlgUi.lnI_CnuAvatarAddr.text()), (self.creationDlgUi.lnI_CnuLogin.text()),
-                                                            (self.creationDlgUi.lnI_CnuPassword.text()), (self.creationDlg.permits)) )
+            self.creationDlg.accepted.connect ( lambda: User(core, root, (self.creationDlgUi.lbl_CnuID.text()), 
+                                                             (self.creationDlgUi.lnI_CnuDesc.text()), 1, (self.generateFilenameForNewUser()), 
+                                                             (self.creationDlgUi.lnI_CnuAvatarAddr.text()), (self.creationDlgUi.lnI_CnuLogin.text()),
+                                                             (self.creationDlgUi.lnI_CnuPassword.text()), (self.creationDlg.permits),
+                                                             (AqConfigSystem.loadDefaultConfigDict(root))) )
 
             self.creationDlg.show()
 
@@ -404,24 +415,34 @@ class AqUsersSystem(AqMainWindow):
 
 class User(AqUsersSystem):
     
-    def __init__(self, core, root, Id, Type, Desc, AvAddr, Login, Password, Permits):
+    def __init__(self, core, root, Id, Desc, Type, Filepath, AvAddr, Login, Password, Permits, PersonalConfigDict):
        
        self.id = Id
        self.type = Type
+       self.filepath = Filepath
        self.description = Desc
        self.avatarAddress = AvAddr
        self.avatar = QPixmap((QImage(r'%s' % str(self.avatarAddress))))
        self.login = Login
        self.password = Password
        self.permits = Permits
+       self.configDict = PersonalConfigDict
+       self.configPreset = PersonalConfigDict['preset']
+       
+       if self.configPreset != None:
+           self.config = core.config.loadDefaultConfig(root)
+       else:
+           self.config = AqConfig(PersonalConfigDict)
+
        self.current = bool()
        self.edited = bool(True)
 
+       print(self.filepath)
        core.addToUserList(root, self, 0)
 
 
     def setup(self, core, root, Password, Desc, NewAvAddr, pxHomeRooms, pxDefnBasic, pxDefnDbEdit, pxDefnAsAdmin, pxPlants,
-                  pxHardware, pxHardwareAsAdmin, pxConfig, pxConfigAsAdmin):
+                  pxPlantsAsAdmin, pxHardware, pxHardwareAsAdmin, pxConfig, pxConfigAsAdmin):
 
         self.edited = True
         self.password = Password
@@ -438,12 +459,26 @@ class User(AqUsersSystem):
         self.permits['defenseAsAdmin'] = pxDefnAsAdmin
 
         self.permits['plants'] = pxPlants
+        self.permits['plantsAsAdmin'] = pxPlantsAsAdmin
 
         self.permits['hardware'] = pxHardware
         self.permits['hardwareAsAdmin'] = pxHardwareAsAdmin
 
         self.permits['configure'] = pxConfig
         self.permits['configureAsAdmin'] = pxConfigAsAdmin
+
+
+    def setupConfig(self, core, cfgLanguage, cfgTheme, cfgPopupOpacity, cfgLogging, cfgLogSaving, cfgLogSavingDuration, cfgKeyBindings):
+
+        self.config['language'] = cfgLanguage
+        self.config['theme'] = cfgTheme
+        self.config['popupOpacity'] = cfgPopupOpacity
+
+        self.config['loggingMode'] = cfgLogging
+        self.config['logSavingMode'] = cfgLogSaving
+        self.config['logSavingDuration'] = cfgLogSavingDuration
+
+        self.config['keyBindings'] = cfgKeyBindings
 
 
     def setAsCurrent(self, bool):
