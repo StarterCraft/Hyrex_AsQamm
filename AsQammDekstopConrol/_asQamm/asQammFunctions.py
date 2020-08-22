@@ -193,7 +193,7 @@ class AqCrypto:
     def seekForFiles(self, importList, exportList, flag):
 
         for item in importList:
-                self.gotName = glob.glob(str(r'data\personal\~!{0}!~.asqd'.format(str(item.decode('utf-8')))))
+                self.gotName = glob.glob(str(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8')))))
 
                 if flag:
                     if self.gotName == []:
@@ -234,7 +234,7 @@ class AqLocalFunctions(AqMainWindow):
                                   'login': (User.login), 'password': (User.password), 'avatarAddress': (User.avatarAddress),
                                   'permits': (User.permits), 'config': (User.configDict)}
 
-                jsonString = json.dumps((self.dumpData))
+                jsonString = json.dumps((self.dumpData), indent = 8)
                 jsonString = AqCrypto.encryptContent(AqCrypto, jsonString)
                 dataFile.write(jsonString)
 

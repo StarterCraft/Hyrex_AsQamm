@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dlg_EditUserInUserDb(object):
     def setupUi(self, Dlg_EditUserInUserDb):
         Dlg_EditUserInUserDb.setObjectName("Dlg_EditUserInUserDb")
-        Dlg_EditUserInUserDb.resize(401, 479)
+        Dlg_EditUserInUserDb.resize(400, 450)
         Dlg_EditUserInUserDb.setWindowOpacity(0.9595)
         Dlg_EditUserInUserDb.setStyleSheet("QDialog { background-color: rgb(45, 45, 45); color: white; }\n"
 "\n"
@@ -23,6 +23,7 @@ class Ui_Dlg_EditUserInUserDb(object):
 "QCheckBox, QLabel { font: 9pt \"Segoe UI Semilight\"; color: white; }\n"
 "QCheckBox:disabled { color: gray; }\n"
 "\n"
+"/*  QScrollBar::vertical */\n"
 "\n"
 " QScrollBar:vertical\n"
 " {\n"
@@ -92,6 +93,71 @@ class Ui_Dlg_EditUserInUserDb(object):
 "\n"
 "\n"
 " QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical\n"
+" {\n"
+"     background: none;\n"
+" }\n"
+"\n"
+"/*  QScrollBar::horizontal */\n"
+"QScrollBar:horizontal\n"
+" {\n"
+"     height: 15px;\n"
+"     margin: 3px 15px 3px 15px;\n"
+"     border: 1px transparent #2A2929;\n"
+"     background-color: #2A2929;    \n"
+" }\n"
+"\n"
+" QScrollBar::handle:horizontal\n"
+" {\n"
+"     background-color: rgb(45, 45, 45);      \n"
+"     min-width: 5px;\n"
+"     border: 2px solid white;\n"
+"     border-radius: 4px;\n"
+" }\n"
+"\n"
+" QScrollBar::add-line:horizontal\n"
+" {\n"
+"     margin: 0px 3px 0px 3px;\n"
+"     border-image: url(./images/right_arrow_disabled.png);       \n"
+"     width: 10px;\n"
+"     height: 10px;\n"
+"     subcontrol-position: right;\n"
+"     subcontrol-origin: margin;\n"
+" }\n"
+"\n"
+" QScrollBar::sub-line:horizontal\n"
+" {\n"
+"     margin: 0px 3px 0px 3px;\n"
+"     border-image: url(./images/left_arrow_disabled.png);        \n"
+"     height: 10px;\n"
+"     width: 10px;\n"
+"     subcontrol-position: left;\n"
+"     subcontrol-origin: margin;\n"
+" }\n"
+"\n"
+" QScrollBar::add-line:horizontal:hover,QScrollBar::add-line:horizontal:on\n"
+" {\n"
+"     border-image: url(./images/right_arrow.png);               \n"
+"     height: 10px;\n"
+"     width: 10px;\n"
+"     subcontrol-position: right;\n"
+"     subcontrol-origin: margin;\n"
+" }\n"
+"\n"
+" QScrollBar::sub-line:horizontal:hover, QScrollBar::sub-line:horizontal:on\n"
+" {\n"
+"     border-image: url(./images/left_arrow.png);               \n"
+"     height: 10px;\n"
+"     width: 10px;\n"
+"     subcontrol-position: left;\n"
+"     subcontrol-origin: margin;\n"
+" }\n"
+"\n"
+" QScrollBar::up-arrow:horizontal, QScrollBar::down-arrow:horizontal\n"
+" {\n"
+"     background: none;\n"
+" }\n"
+"\n"
+" QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal\n"
 " {\n"
 "     background: none;\n"
 " }\n"
@@ -205,15 +271,39 @@ class Ui_Dlg_EditUserInUserDb(object):
         self.gridLayout.setObjectName("gridLayout")
         self.lbl_EuID = QtWidgets.QLabel(self.box_MainUserProps)
         self.lbl_EuID.setObjectName("lbl_EuID")
-        self.gridLayout.addWidget(self.lbl_EuID, 2, 1, 1, 3)
+        self.gridLayout.addWidget(self.lbl_EuID, 1, 1, 1, 3)
+        self.lnI_EuDesc = QtWidgets.QLineEdit(self.box_MainUserProps)
+        self.lnI_EuDesc.setObjectName("lnI_EuDesc")
+        self.gridLayout.addWidget(self.lnI_EuDesc, 6, 1, 1, 3)
+        self.lnI_EuAvatarAddr = QtWidgets.QLineEdit(self.box_MainUserProps)
+        self.lnI_EuAvatarAddr.setObjectName("lnI_EuAvatarAddr")
+        self.gridLayout.addWidget(self.lnI_EuAvatarAddr, 5, 1, 1, 1)
+        self.tlb_Browse = QtWidgets.QToolButton(self.box_MainUserProps)
+        self.tlb_Browse.setAutoRaise(False)
+        self.tlb_Browse.setArrowType(QtCore.Qt.NoArrow)
+        self.tlb_Browse.setObjectName("tlb_Browse")
+        self.gridLayout.addWidget(self.tlb_Browse, 5, 3, 1, 1)
+        self.lbl_EuAvatarHint = QtWidgets.QLabel(self.box_MainUserProps)
+        self.lbl_EuAvatarHint.setObjectName("lbl_EuAvatarHint")
+        self.gridLayout.addWidget(self.lbl_EuAvatarHint, 5, 0, 1, 1)
+        self.lbl_EuLogin = QtWidgets.QLabel(self.box_MainUserProps)
+        self.lbl_EuLogin.setObjectName("lbl_EuLogin")
+        self.gridLayout.addWidget(self.lbl_EuLogin, 2, 0, 1, 1)
+        self.lbl_EuPassword = QtWidgets.QLabel(self.box_MainUserProps)
+        self.lbl_EuPassword.setObjectName("lbl_EuPassword")
+        self.gridLayout.addWidget(self.lbl_EuPassword, 4, 0, 1, 1)
+        self.lnI_EuPassword = QtWidgets.QLineEdit(self.box_MainUserProps)
+        self.lnI_EuPassword.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.lnI_EuPassword.setObjectName("lnI_EuPassword")
+        self.gridLayout.addWidget(self.lnI_EuPassword, 4, 1, 1, 3)
         self.gfv_EuAvatarPrev = QtWidgets.QLabel(self.box_MainUserProps)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.gfv_EuAvatarPrev.sizePolicy().hasHeightForWidth())
         self.gfv_EuAvatarPrev.setSizePolicy(sizePolicy)
-        self.gfv_EuAvatarPrev.setMinimumSize(QtCore.QSize(64, 64))
-        self.gfv_EuAvatarPrev.setMaximumSize(QtCore.QSize(64, 64))
+        self.gfv_EuAvatarPrev.setMinimumSize(QtCore.QSize(80, 80))
+        self.gfv_EuAvatarPrev.setMaximumSize(QtCore.QSize(80, 80))
         self.gfv_EuAvatarPrev.setStyleSheet("border: 1px solid grey;")
         self.gfv_EuAvatarPrev.setText("")
         self.gfv_EuAvatarPrev.setScaledContents(True)
@@ -221,166 +311,193 @@ class Ui_Dlg_EditUserInUserDb(object):
         self.gridLayout.addWidget(self.gfv_EuAvatarPrev, 0, 1, 1, 1)
         self.lbl_EuDescHint = QtWidgets.QLabel(self.box_MainUserProps)
         self.lbl_EuDescHint.setObjectName("lbl_EuDescHint")
-        self.gridLayout.addWidget(self.lbl_EuDescHint, 7, 0, 1, 1)
+        self.gridLayout.addWidget(self.lbl_EuDescHint, 6, 0, 1, 1)
+        self.lbl_EuIDHint = QtWidgets.QLabel(self.box_MainUserProps)
+        self.lbl_EuIDHint.setObjectName("lbl_EuIDHint")
+        self.gridLayout.addWidget(self.lbl_EuIDHint, 1, 0, 1, 1)
         self.lbl_EuAvatarPrevHint = QtWidgets.QLabel(self.box_MainUserProps)
         self.lbl_EuAvatarPrevHint.setObjectName("lbl_EuAvatarPrevHint")
         self.gridLayout.addWidget(self.lbl_EuAvatarPrevHint, 0, 0, 1, 1)
-        self.lbl_EuPassword = QtWidgets.QLabel(self.box_MainUserProps)
-        self.lbl_EuPassword.setObjectName("lbl_EuPassword")
-        self.gridLayout.addWidget(self.lbl_EuPassword, 5, 0, 1, 1)
-        self.lnI_EuPassword = QtWidgets.QLineEdit(self.box_MainUserProps)
-        self.lnI_EuPassword.setEchoMode(QtWidgets.QLineEdit.Password)
-        self.lnI_EuPassword.setObjectName("lnI_EuPassword")
-        self.gridLayout.addWidget(self.lnI_EuPassword, 5, 1, 1, 3)
-        self.lnI_EuDesc = QtWidgets.QLineEdit(self.box_MainUserProps)
-        self.lnI_EuDesc.setObjectName("lnI_EuDesc")
-        self.gridLayout.addWidget(self.lnI_EuDesc, 7, 1, 1, 3)
-        self.lnI_EuAvatarAddr = QtWidgets.QLineEdit(self.box_MainUserProps)
-        self.lnI_EuAvatarAddr.setObjectName("lnI_EuAvatarAddr")
-        self.gridLayout.addWidget(self.lnI_EuAvatarAddr, 6, 1, 1, 1)
-        self.lbl_EuIDHint = QtWidgets.QLabel(self.box_MainUserProps)
-        self.lbl_EuIDHint.setObjectName("lbl_EuIDHint")
-        self.gridLayout.addWidget(self.lbl_EuIDHint, 2, 0, 1, 1)
-        self.lbl_EuLogin = QtWidgets.QLabel(self.box_MainUserProps)
-        self.lbl_EuLogin.setObjectName("lbl_EuLogin")
-        self.gridLayout.addWidget(self.lbl_EuLogin, 3, 0, 1, 1)
         self.lnI_EuLogin = QtWidgets.QLineEdit(self.box_MainUserProps)
         self.lnI_EuLogin.setEnabled(True)
         self.lnI_EuLogin.setStyleSheet("background-color: rgb(218, 218, 218);")
         self.lnI_EuLogin.setReadOnly(True)
         self.lnI_EuLogin.setObjectName("lnI_EuLogin")
-        self.gridLayout.addWidget(self.lnI_EuLogin, 3, 1, 1, 3)
-        self.tlb_Browse = QtWidgets.QToolButton(self.box_MainUserProps)
-        self.tlb_Browse.setAutoRaise(False)
-        self.tlb_Browse.setArrowType(QtCore.Qt.NoArrow)
-        self.tlb_Browse.setObjectName("tlb_Browse")
-        self.gridLayout.addWidget(self.tlb_Browse, 6, 3, 1, 1)
-        self.lbl_EuAvatarHint = QtWidgets.QLabel(self.box_MainUserProps)
-        self.lbl_EuAvatarHint.setObjectName("lbl_EuAvatarHint")
-        self.gridLayout.addWidget(self.lbl_EuAvatarHint, 6, 0, 1, 1)
-        self.btn_EuAvatarPrevRef = QtWidgets.QPushButton(self.box_MainUserProps)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_EuAvatarPrevRef.sizePolicy().hasHeightForWidth())
-        self.btn_EuAvatarPrevRef.setSizePolicy(sizePolicy)
-        self.btn_EuAvatarPrevRef.setMinimumSize(QtCore.QSize(64, 18))
-        self.btn_EuAvatarPrevRef.setMaximumSize(QtCore.QSize(64, 18))
-        self.btn_EuAvatarPrevRef.setObjectName("btn_EuAvatarPrevRef")
-        self.gridLayout.addWidget(self.btn_EuAvatarPrevRef, 1, 1, 1, 1)
+        self.gridLayout.addWidget(self.lnI_EuLogin, 2, 1, 1, 3)
         self.verticalLayout.addWidget(self.box_MainUserProps)
         self.box_UserPermits = QtWidgets.QGroupBox(Dlg_EditUserInUserDb)
+        self.box_UserPermits.setMinimumSize(QtCore.QSize(137, 117))
+        self.box_UserPermits.setStyleSheet("QGroupBox { min-height: 115px; min-width: 135px; }")
         self.box_UserPermits.setObjectName("box_UserPermits")
-        self.gridLayout_2 = QtWidgets.QGridLayout(self.box_UserPermits)
-        self.gridLayout_2.setObjectName("gridLayout_2")
-        self.cbb_UserPermit_4 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_4.setChecked(True)
-        self.cbb_UserPermit_4.setObjectName("cbb_UserPermit_4")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_4, 7, 0, 1, 1)
-        self.cbb_UserPermit_2 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_2.setObjectName("cbb_UserPermit_2")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_2, 1, 0, 1, 1)
-        self.cbb_UserPermit_6 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_6.setObjectName("cbb_UserPermit_6")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_6, 0, 1, 1, 1)
-        self.cbb_UserPermit_7 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_7.setEnabled(False)
-        self.cbb_UserPermit_7.setObjectName("cbb_UserPermit_7")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_7, 1, 1, 1, 1)
-        self.line = QtWidgets.QFrame(self.box_UserPermits)
-        self.line.setFrameShape(QtWidgets.QFrame.HLine)
-        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line.setObjectName("line")
-        self.gridLayout_2.addWidget(self.line, 5, 0, 1, 2)
-        self.cbb_UserPermit_1 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_1.setEnabled(False)
-        self.cbb_UserPermit_1.setCheckable(True)
-        self.cbb_UserPermit_1.setChecked(True)
-        self.cbb_UserPermit_1.setObjectName("cbb_UserPermit_1")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_1, 0, 0, 1, 1)
-        self.cbb_UserPermit_3 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_3.setObjectName("cbb_UserPermit_3")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_3, 4, 0, 1, 1)
-        self.cbb_UserPermit_8 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_8.setEnabled(False)
-        self.cbb_UserPermit_8.setObjectName("cbb_UserPermit_8")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_8, 4, 1, 1, 1)
-        self.cbb_UserPermit_9 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_9.setChecked(True)
-        self.cbb_UserPermit_9.setObjectName("cbb_UserPermit_9")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_9, 7, 1, 1, 1)
-        self.cbb_UserPermit_5 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_5.setObjectName("cbb_UserPermit_5")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_5, 8, 0, 1, 1)
-        self.cbb_UserPermit_10 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_10.setObjectName("cbb_UserPermit_10")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_10, 8, 1, 1, 1)
-        self.verticalLayout.addWidget(self.box_UserPermits)
-        self.btb_Buttons = QtWidgets.QDialogButtonBox(Dlg_EditUserInUserDb)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum)
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.box_UserPermits)
+        self.horizontalLayout.setContentsMargins(-1, 0, -1, 9)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.scrollArea = QtWidgets.QScrollArea(self.box_UserPermits)
+        self.scrollArea.setStyleSheet("background: rgb(45, 45, 45); border: 0px transparent;")
+        self.scrollArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.scrollArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.scrollArea.setWidgetResizable(False)
+        self.scrollArea.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
+        self.scrollArea.setObjectName("scrollArea")
+        self.scrollAreaWidgetContents = QtWidgets.QWidget()
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(-301, 0, 663, 127))
+        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.scrollAreaWidgetContents)
+        self.horizontalLayout_2.setContentsMargins(0, 6, 0, 6)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.box_HomeScreen = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btb_Buttons.sizePolicy().hasHeightForWidth())
-        self.btb_Buttons.setSizePolicy(sizePolicy)
-        self.btb_Buttons.setMaximumSize(QtCore.QSize(16777215, 32))
-        self.btb_Buttons.setStyleSheet("min-height: 24px;")
-        self.btb_Buttons.setOrientation(QtCore.Qt.Horizontal)
-        self.btb_Buttons.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Save)
-        self.btb_Buttons.setCenterButtons(True)
-        self.btb_Buttons.setObjectName("btb_Buttons")
-        self.verticalLayout.addWidget(self.btb_Buttons)
+        sizePolicy.setHeightForWidth(self.box_HomeScreen.sizePolicy().hasHeightForWidth())
+        self.box_HomeScreen.setSizePolicy(sizePolicy)
+        self.box_HomeScreen.setMinimumSize(QtCore.QSize(145, 115))
+        self.box_HomeScreen.setObjectName("box_HomeScreen")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.box_HomeScreen)
+        self.verticalLayout_2.setContentsMargins(-1, 24, -1, 16)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.ckb_UserPermit_HomeScr = QtWidgets.QCheckBox(self.box_HomeScreen)
+        self.ckb_UserPermit_HomeScr.setEnabled(False)
+        self.ckb_UserPermit_HomeScr.setChecked(True)
+        self.ckb_UserPermit_HomeScr.setObjectName("ckb_UserPermit_HomeScr")
+        self.verticalLayout_2.addWidget(self.ckb_UserPermit_HomeScr)
+        self.ckb_UserPermit_HomeRooms = QtWidgets.QCheckBox(self.box_HomeScreen)
+        self.ckb_UserPermit_HomeRooms.setObjectName("ckb_UserPermit_HomeRooms")
+        self.verticalLayout_2.addWidget(self.ckb_UserPermit_HomeRooms)
+        self.ckb_UserPermit_HomeAsAdmin = QtWidgets.QCheckBox(self.box_HomeScreen)
+        self.ckb_UserPermit_HomeAsAdmin.setObjectName("ckb_UserPermit_HomeAsAdmin")
+        self.verticalLayout_2.addWidget(self.ckb_UserPermit_HomeAsAdmin)
+        self.horizontalLayout_2.addWidget(self.box_HomeScreen)
+        self.box_DefnScreen = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
+        self.box_DefnScreen.setMinimumSize(QtCore.QSize(170, 115))
+        self.box_DefnScreen.setObjectName("box_DefnScreen")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.box_DefnScreen)
+        self.verticalLayout_3.setContentsMargins(-1, 24, -1, 16)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.ckb_UserPermit_DefnScr = QtWidgets.QCheckBox(self.box_DefnScreen)
+        self.ckb_UserPermit_DefnScr.setObjectName("ckb_UserPermit_DefnScr")
+        self.verticalLayout_3.addWidget(self.ckb_UserPermit_DefnScr)
+        self.ckb_UserPermit_DefnDbEdit = QtWidgets.QCheckBox(self.box_DefnScreen)
+        self.ckb_UserPermit_DefnDbEdit.setEnabled(False)
+        self.ckb_UserPermit_DefnDbEdit.setObjectName("ckb_UserPermit_DefnDbEdit")
+        self.verticalLayout_3.addWidget(self.ckb_UserPermit_DefnDbEdit)
+        self.ckb_UserPermit_DefnAsAdmin = QtWidgets.QCheckBox(self.box_DefnScreen)
+        self.ckb_UserPermit_DefnAsAdmin.setEnabled(False)
+        self.ckb_UserPermit_DefnAsAdmin.setObjectName("ckb_UserPermit_DefnAsAdmin")
+        self.verticalLayout_3.addWidget(self.ckb_UserPermit_DefnAsAdmin)
+        self.horizontalLayout_2.addWidget(self.box_DefnScreen)
+        self.box_PtsScreen = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
+        self.box_PtsScreen.setMinimumSize(QtCore.QSize(165, 115))
+        self.box_PtsScreen.setObjectName("box_PtsScreen")
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.box_PtsScreen)
+        self.verticalLayout_4.setContentsMargins(-1, 24, -1, 16)
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.label = QtWidgets.QLabel(self.box_PtsScreen)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
+        self.label.setSizePolicy(sizePolicy)
+        self.label.setStyleSheet("color: grey;")
+        self.label.setObjectName("label")
+        self.verticalLayout_4.addWidget(self.label)
+        self.ckb_UserPermit_PtsScr = QtWidgets.QCheckBox(self.box_PtsScreen)
+        self.ckb_UserPermit_PtsScr.setObjectName("ckb_UserPermit_PtsScr")
+        self.verticalLayout_4.addWidget(self.ckb_UserPermit_PtsScr)
+        self.ckb_UserPermit_PtsAsAdmin = QtWidgets.QCheckBox(self.box_PtsScreen)
+        self.ckb_UserPermit_PtsAsAdmin.setEnabled(False)
+        self.ckb_UserPermit_PtsAsAdmin.setObjectName("ckb_UserPermit_PtsAsAdmin")
+        self.verticalLayout_4.addWidget(self.ckb_UserPermit_PtsAsAdmin)
+        self.horizontalLayout_2.addWidget(self.box_PtsScreen)
+        self.box_Others = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
+        self.box_Others.setMinimumSize(QtCore.QSize(165, 115))
+        self.box_Others.setObjectName("box_Others")
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.box_Others)
+        self.verticalLayout_5.setContentsMargins(-1, 24, -1, 16)
+        self.verticalLayout_5.setObjectName("verticalLayout_5")
+        self.ckb_UserPermit_HardwareScr = QtWidgets.QCheckBox(self.box_Others)
+        self.ckb_UserPermit_HardwareScr.setObjectName("ckb_UserPermit_HardwareScr")
+        self.verticalLayout_5.addWidget(self.ckb_UserPermit_HardwareScr)
+        self.ckb_UserPermit_HardwareAsAdmin = QtWidgets.QCheckBox(self.box_Others)
+        self.ckb_UserPermit_HardwareAsAdmin.setEnabled(False)
+        self.ckb_UserPermit_HardwareAsAdmin.setObjectName("ckb_UserPermit_HardwareAsAdmin")
+        self.verticalLayout_5.addWidget(self.ckb_UserPermit_HardwareAsAdmin)
+        self.ckb_UserPermit_CfgScr = QtWidgets.QCheckBox(self.box_Others)
+        self.ckb_UserPermit_CfgScr.setObjectName("ckb_UserPermit_CfgScr")
+        self.verticalLayout_5.addWidget(self.ckb_UserPermit_CfgScr)
+        self.ckb_UserPermit_CfgAsAdmin = QtWidgets.QCheckBox(self.box_Others)
+        self.ckb_UserPermit_CfgAsAdmin.setEnabled(False)
+        self.ckb_UserPermit_CfgAsAdmin.setObjectName("ckb_UserPermit_CfgAsAdmin")
+        self.verticalLayout_5.addWidget(self.ckb_UserPermit_CfgAsAdmin)
+        self.horizontalLayout_2.addWidget(self.box_Others)
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.horizontalLayout.addWidget(self.scrollArea)
+        self.verticalLayout.addWidget(self.box_UserPermits)
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        spacerItem = QtWidgets.QSpacerItem(90, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem)
+        self.btn_Accept = QtWidgets.QPushButton(Dlg_EditUserInUserDb)
+        self.btn_Accept.setMinimumSize(QtCore.QSize(80, 24))
+        self.btn_Accept.setObjectName("btn_Accept")
+        self.horizontalLayout_3.addWidget(self.btn_Accept)
+        self.btn_Decline = QtWidgets.QPushButton(Dlg_EditUserInUserDb)
+        self.btn_Decline.setMinimumSize(QtCore.QSize(80, 24))
+        self.btn_Decline.setObjectName("btn_Decline")
+        self.horizontalLayout_3.addWidget(self.btn_Decline)
+        spacerItem1 = QtWidgets.QSpacerItem(90, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem1)
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
 
         self.retranslateUi(Dlg_EditUserInUserDb)
-        self.btb_Buttons.accepted.connect(Dlg_EditUserInUserDb.accept)
-        self.btb_Buttons.rejected.connect(Dlg_EditUserInUserDb.reject)
-        self.cbb_UserPermit_1.toggled['bool'].connect(self.cbb_UserPermit_2.setEnabled)
-        self.cbb_UserPermit_6.toggled['bool'].connect(self.cbb_UserPermit_7.setEnabled)
-        self.cbb_UserPermit_6.toggled['bool'].connect(self.cbb_UserPermit_8.setEnabled)
-        self.cbb_UserPermit_4.toggled['bool'].connect(self.cbb_UserPermit_5.setEnabled)
-        self.cbb_UserPermit_9.toggled['bool'].connect(self.cbb_UserPermit_10.setEnabled)
+        self.btn_Accept.clicked.connect(Dlg_EditUserInUserDb.accept)
+        self.btn_Decline.clicked.connect(Dlg_EditUserInUserDb.reject)
+        self.ckb_UserPermit_HomeScr.toggled['bool'].connect(self.ckb_UserPermit_HomeRooms.setEnabled)
+        self.ckb_UserPermit_HomeScr.toggled['bool'].connect(self.ckb_UserPermit_HomeAsAdmin.setEnabled)
+        self.ckb_UserPermit_DefnScr.toggled['bool'].connect(self.ckb_UserPermit_DefnDbEdit.setEnabled)
+        self.ckb_UserPermit_DefnScr.toggled['bool'].connect(self.ckb_UserPermit_DefnAsAdmin.setEnabled)
+        self.ckb_UserPermit_PtsScr.toggled['bool'].connect(self.ckb_UserPermit_PtsAsAdmin.setEnabled)
+        self.ckb_UserPermit_HardwareScr.toggled['bool'].connect(self.ckb_UserPermit_HardwareAsAdmin.setEnabled)
+        self.ckb_UserPermit_CfgScr.toggled['bool'].connect(self.ckb_UserPermit_CfgAsAdmin.setEnabled)
         QtCore.QMetaObject.connectSlotsByName(Dlg_EditUserInUserDb)
-        Dlg_EditUserInUserDb.setTabOrder(self.btn_EuAvatarPrevRef, self.lnI_EuLogin)
         Dlg_EditUserInUserDb.setTabOrder(self.lnI_EuLogin, self.lnI_EuPassword)
         Dlg_EditUserInUserDb.setTabOrder(self.lnI_EuPassword, self.lnI_EuAvatarAddr)
         Dlg_EditUserInUserDb.setTabOrder(self.lnI_EuAvatarAddr, self.tlb_Browse)
         Dlg_EditUserInUserDb.setTabOrder(self.tlb_Browse, self.lnI_EuDesc)
-        Dlg_EditUserInUserDb.setTabOrder(self.lnI_EuDesc, self.cbb_UserPermit_1)
-        Dlg_EditUserInUserDb.setTabOrder(self.cbb_UserPermit_1, self.cbb_UserPermit_2)
-        Dlg_EditUserInUserDb.setTabOrder(self.cbb_UserPermit_2, self.cbb_UserPermit_3)
-        Dlg_EditUserInUserDb.setTabOrder(self.cbb_UserPermit_3, self.cbb_UserPermit_4)
-        Dlg_EditUserInUserDb.setTabOrder(self.cbb_UserPermit_4, self.cbb_UserPermit_5)
-        Dlg_EditUserInUserDb.setTabOrder(self.cbb_UserPermit_5, self.cbb_UserPermit_6)
-        Dlg_EditUserInUserDb.setTabOrder(self.cbb_UserPermit_6, self.cbb_UserPermit_7)
-        Dlg_EditUserInUserDb.setTabOrder(self.cbb_UserPermit_7, self.cbb_UserPermit_8)
-        Dlg_EditUserInUserDb.setTabOrder(self.cbb_UserPermit_8, self.cbb_UserPermit_9)
-        Dlg_EditUserInUserDb.setTabOrder(self.cbb_UserPermit_9, self.cbb_UserPermit_10)
 
     def retranslateUi(self, Dlg_EditUserInUserDb):
         _translate = QtCore.QCoreApplication.translate
         Dlg_EditUserInUserDb.setWindowTitle(_translate("Dlg_EditUserInUserDb", "Редактировать существоющего пользователя"))
         self.box_MainUserProps.setTitle(_translate("Dlg_EditUserInUserDb", "Основные настройки"))
         self.lbl_EuID.setText(_translate("Dlg_EditUserInUserDb", "(id)"))
-        self.lbl_EuDescHint.setText(_translate("Dlg_EditUserInUserDb", "Описание:"))
-        self.lbl_EuAvatarPrevHint.setText(_translate("Dlg_EditUserInUserDb", "Просмотр:"))
-        self.lbl_EuPassword.setText(_translate("Dlg_EditUserInUserDb", "Пароль:"))
-        self.lbl_EuIDHint.setText(_translate("Dlg_EditUserInUserDb", "ID:"))
-        self.lbl_EuLogin.setText(_translate("Dlg_EditUserInUserDb", "Логин:"))
-        self.lnI_EuLogin.setToolTip(_translate("Dlg_EditUserInUserDb", "Вы не можете редактировать логин существующего пользователя"))
         self.tlb_Browse.setText(_translate("Dlg_EditUserInUserDb", "..."))
         self.lbl_EuAvatarHint.setText(_translate("Dlg_EditUserInUserDb", "Аватарка:"))
-        self.btn_EuAvatarPrevRef.setText(_translate("Dlg_EditUserInUserDb", "Обновить"))
-        self.box_UserPermits.setTitle(_translate("Dlg_EditUserInUserDb", "Настройки разрешений"))
-        self.cbb_UserPermit_4.setText(_translate("Dlg_EditUserInUserDb", "Экран \"Оборудование\""))
-        self.cbb_UserPermit_2.setText(_translate("Dlg_EditUserInUserDb", "Управление комнатами"))
-        self.cbb_UserPermit_6.setText(_translate("Dlg_EditUserInUserDb", "Защита"))
-        self.cbb_UserPermit_7.setText(_translate("Dlg_EditUserInUserDb", "Изменение БД защиты"))
-        self.cbb_UserPermit_1.setToolTip(_translate("Dlg_EditUserInUserDb", "Отключить возможность открытия экрана статистики дома нельзя, так как это - базовая функциональность"))
-        self.cbb_UserPermit_1.setText(_translate("Dlg_EditUserInUserDb", "Экран \"Статистика дома\""))
-        self.cbb_UserPermit_3.setText(_translate("Dlg_EditUserInUserDb", "Экран \"Растения\""))
-        self.cbb_UserPermit_8.setText(_translate("Dlg_EditUserInUserDb", "Управление системой защиты"))
-        self.cbb_UserPermit_9.setText(_translate("Dlg_EditUserInUserDb", "Экран \"Конфигурация\""))
-        self.cbb_UserPermit_5.setText(_translate("Dlg_EditUserInUserDb", "Доб/удл. оборудование"))
-        self.cbb_UserPermit_10.setText(_translate("Dlg_EditUserInUserDb", "Настройки суперадмина"))
+        self.lbl_EuLogin.setText(_translate("Dlg_EditUserInUserDb", "Логин:"))
+        self.lbl_EuPassword.setText(_translate("Dlg_EditUserInUserDb", "Пароль:"))
+        self.lbl_EuDescHint.setText(_translate("Dlg_EditUserInUserDb", "Описание:"))
+        self.lbl_EuIDHint.setText(_translate("Dlg_EditUserInUserDb", "ID:"))
+        self.lbl_EuAvatarPrevHint.setText(_translate("Dlg_EditUserInUserDb", "Просмотр:"))
+        self.lnI_EuLogin.setToolTip(_translate("Dlg_EditUserInUserDb", "Вы не можете редактировать логин существующего пользователя"))
+        self.box_UserPermits.setTitle(_translate("Dlg_EditUserInUserDb", "Настройки разрешений (пермитов)"))
+        self.box_HomeScreen.setTitle(_translate("Dlg_EditUserInUserDb", "Экран \"Наш дом\""))
+        self.ckb_UserPermit_HomeScr.setText(_translate("Dlg_EditUserInUserDb", "Статистика дома"))
+        self.ckb_UserPermit_HomeRooms.setText(_translate("Dlg_EditUserInUserDb", "Упр. комнатами"))
+        self.ckb_UserPermit_HomeAsAdmin.setText(_translate("Dlg_EditUserInUserDb", "Настройки админа"))
+        self.box_DefnScreen.setTitle(_translate("Dlg_EditUserInUserDb", "Экран \"Защита\""))
+        self.ckb_UserPermit_DefnScr.setText(_translate("Dlg_EditUserInUserDb", "Статус защиты"))
+        self.ckb_UserPermit_DefnDbEdit.setText(_translate("Dlg_EditUserInUserDb", "Изменение БД защиты"))
+        self.ckb_UserPermit_DefnAsAdmin.setText(_translate("Dlg_EditUserInUserDb", "Управление сис. защиты"))
+        self.box_PtsScreen.setTitle(_translate("Dlg_EditUserInUserDb", "Экран \"Растения\""))
+        self.label.setText(_translate("Dlg_EditUserInUserDb", "здесь пусто =D"))
+        self.ckb_UserPermit_PtsScr.setText(_translate("Dlg_EditUserInUserDb", "Статус теплиц"))
+        self.ckb_UserPermit_PtsAsAdmin.setText(_translate("Dlg_EditUserInUserDb", "Управление теплицами"))
+        self.box_Others.setTitle(_translate("Dlg_EditUserInUserDb", "Прочие экраны"))
+        self.ckb_UserPermit_HardwareScr.setText(_translate("Dlg_EditUserInUserDb", "Экран \"Оборудование\""))
+        self.ckb_UserPermit_HardwareAsAdmin.setText(_translate("Dlg_EditUserInUserDb", "Доб./удл. оборудование"))
+        self.ckb_UserPermit_CfgScr.setText(_translate("Dlg_EditUserInUserDb", "Экран \"Конфигурация\""))
+        self.ckb_UserPermit_CfgAsAdmin.setText(_translate("Dlg_EditUserInUserDb", "Конфигурация админа"))
+        self.btn_Accept.setText(_translate("Dlg_EditUserInUserDb", "Сохранить"))
+        self.btn_Decline.setText(_translate("Dlg_EditUserInUserDb", "Отменить"))
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dlg_CreateNewUserInUserDb(object):
     def setupUi(self, Dlg_CreateNewUserInUserDb):
         Dlg_CreateNewUserInUserDb.setObjectName("Dlg_CreateNewUserInUserDb")
-        Dlg_CreateNewUserInUserDb.resize(401, 477)
+        Dlg_CreateNewUserInUserDb.resize(400, 450)
         Dlg_CreateNewUserInUserDb.setWindowOpacity(0.9595)
         Dlg_CreateNewUserInUserDb.setStyleSheet("QDialog { background-color: rgb(45, 45, 45); color: white; }\n"
 "\n"
@@ -23,6 +23,7 @@ class Ui_Dlg_CreateNewUserInUserDb(object):
 "QCheckBox, QLabel { font: 9pt \"Segoe UI Semilight\"; color: white; }\n"
 "QCheckBox:disabled { color: gray; }\n"
 "\n"
+"/*  QScrollBar::vertical */\n"
 "\n"
 " QScrollBar:vertical\n"
 " {\n"
@@ -92,6 +93,71 @@ class Ui_Dlg_CreateNewUserInUserDb(object):
 "\n"
 "\n"
 " QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical\n"
+" {\n"
+"     background: none;\n"
+" }\n"
+"\n"
+"/*  QScrollBar::horizontal */\n"
+"QScrollBar:horizontal\n"
+" {\n"
+"     height: 15px;\n"
+"     margin: 3px 15px 3px 15px;\n"
+"     border: 1px transparent #2A2929;\n"
+"     background-color: #2A2929;    \n"
+" }\n"
+"\n"
+" QScrollBar::handle:horizontal\n"
+" {\n"
+"     background-color: rgb(45, 45, 45);      \n"
+"     min-width: 5px;\n"
+"     border: 2px solid white;\n"
+"     border-radius: 4px;\n"
+" }\n"
+"\n"
+" QScrollBar::add-line:horizontal\n"
+" {\n"
+"     margin: 0px 3px 0px 3px;\n"
+"     border-image: url(./images/right_arrow_disabled.png);       \n"
+"     width: 10px;\n"
+"     height: 10px;\n"
+"     subcontrol-position: right;\n"
+"     subcontrol-origin: margin;\n"
+" }\n"
+"\n"
+" QScrollBar::sub-line:horizontal\n"
+" {\n"
+"     margin: 0px 3px 0px 3px;\n"
+"     border-image: url(./images/left_arrow_disabled.png);        \n"
+"     height: 10px;\n"
+"     width: 10px;\n"
+"     subcontrol-position: left;\n"
+"     subcontrol-origin: margin;\n"
+" }\n"
+"\n"
+" QScrollBar::add-line:horizontal:hover,QScrollBar::add-line:horizontal:on\n"
+" {\n"
+"     border-image: url(./images/right_arrow.png);               \n"
+"     height: 10px;\n"
+"     width: 10px;\n"
+"     subcontrol-position: right;\n"
+"     subcontrol-origin: margin;\n"
+" }\n"
+"\n"
+" QScrollBar::sub-line:horizontal:hover, QScrollBar::sub-line:horizontal:on\n"
+" {\n"
+"     border-image: url(./images/left_arrow.png);               \n"
+"     height: 10px;\n"
+"     width: 10px;\n"
+"     subcontrol-position: left;\n"
+"     subcontrol-origin: margin;\n"
+" }\n"
+"\n"
+" QScrollBar::up-arrow:horizontal, QScrollBar::down-arrow:horizontal\n"
+" {\n"
+"     background: none;\n"
+" }\n"
+"\n"
+" QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal\n"
 " {\n"
 "     background: none;\n"
 " }\n"
@@ -191,8 +257,8 @@ class Ui_Dlg_CreateNewUserInUserDb(object):
 "    border-color: rgb(42, 105, 23);\n"
 "}")
         Dlg_CreateNewUserInUserDb.setModal(False)
-        self.verticalLayout = QtWidgets.QVBoxLayout(Dlg_CreateNewUserInUserDb)
-        self.verticalLayout.setObjectName("verticalLayout")
+        self.verticalLayout_6 = QtWidgets.QVBoxLayout(Dlg_CreateNewUserInUserDb)
+        self.verticalLayout_6.setObjectName("verticalLayout_6")
         self.box_MainUserProps = QtWidgets.QGroupBox(Dlg_CreateNewUserInUserDb)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
@@ -202,44 +268,45 @@ class Ui_Dlg_CreateNewUserInUserDb(object):
         self.box_MainUserProps.setObjectName("box_MainUserProps")
         self.gridLayout = QtWidgets.QGridLayout(self.box_MainUserProps)
         self.gridLayout.setObjectName("gridLayout")
-        self.lbl_CnuAvatarPrevHint = QtWidgets.QLabel(self.box_MainUserProps)
-        self.lbl_CnuAvatarPrevHint.setObjectName("lbl_CnuAvatarPrevHint")
-        self.gridLayout.addWidget(self.lbl_CnuAvatarPrevHint, 1, 0, 1, 1)
-        self.lbl_CnuPassword = QtWidgets.QLabel(self.box_MainUserProps)
-        self.lbl_CnuPassword.setObjectName("lbl_CnuPassword")
-        self.gridLayout.addWidget(self.lbl_CnuPassword, 5, 0, 1, 1)
-        self.lbl_CnuLogin = QtWidgets.QLabel(self.box_MainUserProps)
-        self.lbl_CnuLogin.setObjectName("lbl_CnuLogin")
-        self.gridLayout.addWidget(self.lbl_CnuLogin, 4, 0, 1, 1)
         self.lbl_CnuAvatarHint = QtWidgets.QLabel(self.box_MainUserProps)
         self.lbl_CnuAvatarHint.setObjectName("lbl_CnuAvatarHint")
-        self.gridLayout.addWidget(self.lbl_CnuAvatarHint, 6, 0, 1, 1)
+        self.gridLayout.addWidget(self.lbl_CnuAvatarHint, 5, 0, 1, 1)
+        self.lnI_CnuDesc = QtWidgets.QLineEdit(self.box_MainUserProps)
+        self.lnI_CnuDesc.setObjectName("lnI_CnuDesc")
+        self.gridLayout.addWidget(self.lnI_CnuDesc, 6, 1, 1, 3)
+        self.lnI_CnuAvatarAddr = QtWidgets.QLineEdit(self.box_MainUserProps)
+        self.lnI_CnuAvatarAddr.setObjectName("lnI_CnuAvatarAddr")
+        self.gridLayout.addWidget(self.lnI_CnuAvatarAddr, 5, 1, 1, 2)
         self.lbl_CnuID = QtWidgets.QLabel(self.box_MainUserProps)
         self.lbl_CnuID.setObjectName("lbl_CnuID")
-        self.gridLayout.addWidget(self.lbl_CnuID, 3, 1, 1, 1)
+        self.gridLayout.addWidget(self.lbl_CnuID, 2, 1, 1, 1)
+        self.lnI_CnuPassword = QtWidgets.QLineEdit(self.box_MainUserProps)
+        self.lnI_CnuPassword.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.lnI_CnuPassword.setObjectName("lnI_CnuPassword")
+        self.gridLayout.addWidget(self.lnI_CnuPassword, 4, 1, 1, 3)
+        self.lbl_CnuLogin = QtWidgets.QLabel(self.box_MainUserProps)
+        self.lbl_CnuLogin.setObjectName("lbl_CnuLogin")
+        self.gridLayout.addWidget(self.lbl_CnuLogin, 3, 0, 1, 1)
         self.lbl_CnuIDHint = QtWidgets.QLabel(self.box_MainUserProps)
         self.lbl_CnuIDHint.setObjectName("lbl_CnuIDHint")
-        self.gridLayout.addWidget(self.lbl_CnuIDHint, 3, 0, 1, 1)
-        self.tlb_Browse = QtWidgets.QToolButton(self.box_MainUserProps)
-        self.tlb_Browse.setObjectName("tlb_Browse")
-        self.gridLayout.addWidget(self.tlb_Browse, 6, 3, 1, 1)
+        self.gridLayout.addWidget(self.lbl_CnuIDHint, 2, 0, 1, 1)
         self.gfv_CnuAvatarPrev = QtWidgets.QLabel(self.box_MainUserProps)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.gfv_CnuAvatarPrev.sizePolicy().hasHeightForWidth())
         self.gfv_CnuAvatarPrev.setSizePolicy(sizePolicy)
-        self.gfv_CnuAvatarPrev.setMinimumSize(QtCore.QSize(64, 64))
-        self.gfv_CnuAvatarPrev.setMaximumSize(QtCore.QSize(64, 64))
+        self.gfv_CnuAvatarPrev.setMinimumSize(QtCore.QSize(80, 80))
+        self.gfv_CnuAvatarPrev.setMaximumSize(QtCore.QSize(80, 80))
         self.gfv_CnuAvatarPrev.setStyleSheet("border: 1px solid grey;")
         self.gfv_CnuAvatarPrev.setText("")
         self.gfv_CnuAvatarPrev.setScaledContents(True)
         self.gfv_CnuAvatarPrev.setWordWrap(False)
         self.gfv_CnuAvatarPrev.setObjectName("gfv_CnuAvatarPrev")
         self.gridLayout.addWidget(self.gfv_CnuAvatarPrev, 1, 1, 1, 1)
-        self.lnI_CnuAvatarAddr = QtWidgets.QLineEdit(self.box_MainUserProps)
-        self.lnI_CnuAvatarAddr.setObjectName("lnI_CnuAvatarAddr")
-        self.gridLayout.addWidget(self.lnI_CnuAvatarAddr, 6, 1, 1, 2)
+        self.tlb_Browse = QtWidgets.QToolButton(self.box_MainUserProps)
+        self.tlb_Browse.setObjectName("tlb_Browse")
+        self.gridLayout.addWidget(self.tlb_Browse, 5, 3, 1, 1)
         self.lbl_CnuDesc = QtWidgets.QLabel(self.box_MainUserProps)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -247,140 +314,194 @@ class Ui_Dlg_CreateNewUserInUserDb(object):
         sizePolicy.setHeightForWidth(self.lbl_CnuDesc.sizePolicy().hasHeightForWidth())
         self.lbl_CnuDesc.setSizePolicy(sizePolicy)
         self.lbl_CnuDesc.setObjectName("lbl_CnuDesc")
-        self.gridLayout.addWidget(self.lbl_CnuDesc, 7, 0, 1, 1)
-        self.btn_CnuAvatarPrevRef = QtWidgets.QPushButton(self.box_MainUserProps)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_CnuAvatarPrevRef.sizePolicy().hasHeightForWidth())
-        self.btn_CnuAvatarPrevRef.setSizePolicy(sizePolicy)
-        self.btn_CnuAvatarPrevRef.setMinimumSize(QtCore.QSize(64, 18))
-        self.btn_CnuAvatarPrevRef.setMaximumSize(QtCore.QSize(64, 18))
-        self.btn_CnuAvatarPrevRef.setObjectName("btn_CnuAvatarPrevRef")
-        self.gridLayout.addWidget(self.btn_CnuAvatarPrevRef, 2, 1, 1, 1)
+        self.gridLayout.addWidget(self.lbl_CnuDesc, 6, 0, 1, 1)
+        self.lbl_CnuAvatarPrevHint = QtWidgets.QLabel(self.box_MainUserProps)
+        self.lbl_CnuAvatarPrevHint.setObjectName("lbl_CnuAvatarPrevHint")
+        self.gridLayout.addWidget(self.lbl_CnuAvatarPrevHint, 1, 0, 1, 1)
+        self.lbl_CnuPassword = QtWidgets.QLabel(self.box_MainUserProps)
+        self.lbl_CnuPassword.setObjectName("lbl_CnuPassword")
+        self.gridLayout.addWidget(self.lbl_CnuPassword, 4, 0, 1, 1)
         self.lnI_CnuLogin = QtWidgets.QLineEdit(self.box_MainUserProps)
         self.lnI_CnuLogin.setObjectName("lnI_CnuLogin")
-        self.gridLayout.addWidget(self.lnI_CnuLogin, 4, 1, 1, 3)
-        self.lnI_CnuPassword = QtWidgets.QLineEdit(self.box_MainUserProps)
-        self.lnI_CnuPassword.setEchoMode(QtWidgets.QLineEdit.Password)
-        self.lnI_CnuPassword.setObjectName("lnI_CnuPassword")
-        self.gridLayout.addWidget(self.lnI_CnuPassword, 5, 1, 1, 3)
-        self.lnI_CnuDesc = QtWidgets.QLineEdit(self.box_MainUserProps)
-        self.lnI_CnuDesc.setObjectName("lnI_CnuDesc")
-        self.gridLayout.addWidget(self.lnI_CnuDesc, 7, 1, 1, 3)
-        self.verticalLayout.addWidget(self.box_MainUserProps)
+        self.gridLayout.addWidget(self.lnI_CnuLogin, 3, 1, 1, 3)
+        self.verticalLayout_6.addWidget(self.box_MainUserProps)
         self.box_UserPermits = QtWidgets.QGroupBox(Dlg_CreateNewUserInUserDb)
-        self.box_UserPermits.setObjectName("box_UserPermits")
-        self.gridLayout_2 = QtWidgets.QGridLayout(self.box_UserPermits)
-        self.gridLayout_2.setObjectName("gridLayout_2")
-        self.cbb_UserPermit_4 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_4.setChecked(True)
-        self.cbb_UserPermit_4.setObjectName("cbb_UserPermit_4")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_4, 7, 0, 1, 1)
-        self.cbb_UserPermit_7 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_7.setEnabled(False)
-        self.cbb_UserPermit_7.setObjectName("cbb_UserPermit_7")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_7, 4, 1, 1, 1)
-        self.cbb_UserPermit_2 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_2.setObjectName("cbb_UserPermit_2")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_2, 1, 0, 1, 1)
-        self.cbb_UserPermit_8 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_8.setChecked(True)
-        self.cbb_UserPermit_8.setObjectName("cbb_UserPermit_8")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_8, 7, 1, 1, 1)
-        self.cbb_UserPermit_9 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_9.setObjectName("cbb_UserPermit_9")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_9, 8, 0, 1, 1)
-        self.cbb_UserPermit_6 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_6.setEnabled(False)
-        self.cbb_UserPermit_6.setObjectName("cbb_UserPermit_6")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_6, 1, 1, 1, 1)
-        self.line = QtWidgets.QFrame(self.box_UserPermits)
-        self.line.setFrameShape(QtWidgets.QFrame.HLine)
-        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line.setObjectName("line")
-        self.gridLayout_2.addWidget(self.line, 5, 0, 1, 2)
-        self.cbb_UserPermit_1 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_1.setEnabled(False)
-        self.cbb_UserPermit_1.setCheckable(True)
-        self.cbb_UserPermit_1.setChecked(True)
-        self.cbb_UserPermit_1.setObjectName("cbb_UserPermit_1")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_1, 0, 0, 1, 1)
-        self.cbb_UserPermit_3 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_3.setObjectName("cbb_UserPermit_3")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_3, 4, 0, 1, 1)
-        self.cbb_UserPermit_5 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_5.setObjectName("cbb_UserPermit_5")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_5, 0, 1, 1, 1)
-        self.cbb_UserPermit_10 = QtWidgets.QCheckBox(self.box_UserPermits)
-        self.cbb_UserPermit_10.setObjectName("cbb_UserPermit_10")
-        self.gridLayout_2.addWidget(self.cbb_UserPermit_10, 8, 1, 1, 1)
-        self.verticalLayout.addWidget(self.box_UserPermits)
-        self.btb_Buttons = QtWidgets.QDialogButtonBox(Dlg_CreateNewUserInUserDb)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btb_Buttons.sizePolicy().hasHeightForWidth())
-        self.btb_Buttons.setSizePolicy(sizePolicy)
-        self.btb_Buttons.setMaximumSize(QtCore.QSize(16777215, 32))
-        self.btb_Buttons.setStyleSheet("min-height: 24px;")
-        self.btb_Buttons.setLocale(QtCore.QLocale(QtCore.QLocale.Russian, QtCore.QLocale.Russia))
-        self.btb_Buttons.setOrientation(QtCore.Qt.Horizontal)
-        self.btb_Buttons.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Save)
-        self.btb_Buttons.setCenterButtons(True)
-        self.btb_Buttons.setObjectName("btb_Buttons")
-        self.verticalLayout.addWidget(self.btb_Buttons)
+        sizePolicy.setHeightForWidth(self.box_UserPermits.sizePolicy().hasHeightForWidth())
+        self.box_UserPermits.setSizePolicy(sizePolicy)
+        self.box_UserPermits.setMinimumSize(QtCore.QSize(137, 117))
+        self.box_UserPermits.setStyleSheet("QGroupBox { min-height: 115px; min-width: 135px; }")
+        self.box_UserPermits.setObjectName("box_UserPermits")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.box_UserPermits)
+        self.verticalLayout.setContentsMargins(-1, 0, -1, -1)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.scrollArea = QtWidgets.QScrollArea(self.box_UserPermits)
+        self.scrollArea.setStyleSheet("background: rgb(45, 45, 45); border: 0px transparent;")
+        self.scrollArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.scrollArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.scrollArea.setWidgetResizable(False)
+        self.scrollArea.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
+        self.scrollArea.setObjectName("scrollArea")
+        self.scrollAreaWidgetContents = QtWidgets.QWidget()
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(-86, 0, 663, 127))
+        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.scrollAreaWidgetContents)
+        self.horizontalLayout_2.setContentsMargins(0, 6, 0, 6)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.box_HomeScreen = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.box_HomeScreen.sizePolicy().hasHeightForWidth())
+        self.box_HomeScreen.setSizePolicy(sizePolicy)
+        self.box_HomeScreen.setMinimumSize(QtCore.QSize(135, 115))
+        self.box_HomeScreen.setObjectName("box_HomeScreen")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.box_HomeScreen)
+        self.verticalLayout_2.setContentsMargins(-1, 24, -1, 16)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.ckb_UserPermit_HomeScr = QtWidgets.QCheckBox(self.box_HomeScreen)
+        self.ckb_UserPermit_HomeScr.setEnabled(False)
+        self.ckb_UserPermit_HomeScr.setChecked(True)
+        self.ckb_UserPermit_HomeScr.setObjectName("ckb_UserPermit_HomeScr")
+        self.verticalLayout_2.addWidget(self.ckb_UserPermit_HomeScr)
+        self.ckb_UserPermit_HomeRooms = QtWidgets.QCheckBox(self.box_HomeScreen)
+        self.ckb_UserPermit_HomeRooms.setObjectName("ckb_UserPermit_HomeRooms")
+        self.verticalLayout_2.addWidget(self.ckb_UserPermit_HomeRooms)
+        self.ckb_UserPermit_HomeAsAdmin = QtWidgets.QCheckBox(self.box_HomeScreen)
+        self.ckb_UserPermit_HomeAsAdmin.setObjectName("ckb_UserPermit_HomeAsAdmin")
+        self.verticalLayout_2.addWidget(self.ckb_UserPermit_HomeAsAdmin)
+        self.horizontalLayout_2.addWidget(self.box_HomeScreen)
+        self.box_DefnScreen = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
+        self.box_DefnScreen.setMinimumSize(QtCore.QSize(135, 115))
+        self.box_DefnScreen.setObjectName("box_DefnScreen")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.box_DefnScreen)
+        self.verticalLayout_3.setContentsMargins(-1, 24, -1, 16)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.ckb_UserPermit_DefnScr = QtWidgets.QCheckBox(self.box_DefnScreen)
+        self.ckb_UserPermit_DefnScr.setObjectName("ckb_UserPermit_DefnScr")
+        self.verticalLayout_3.addWidget(self.ckb_UserPermit_DefnScr)
+        self.ckb_UserPermit_DefnDbEdit = QtWidgets.QCheckBox(self.box_DefnScreen)
+        self.ckb_UserPermit_DefnDbEdit.setEnabled(False)
+        self.ckb_UserPermit_DefnDbEdit.setObjectName("ckb_UserPermit_DefnDbEdit")
+        self.verticalLayout_3.addWidget(self.ckb_UserPermit_DefnDbEdit)
+        self.ckb_UserPermit_DefnAsAdmin = QtWidgets.QCheckBox(self.box_DefnScreen)
+        self.ckb_UserPermit_DefnAsAdmin.setEnabled(False)
+        self.ckb_UserPermit_DefnAsAdmin.setObjectName("ckb_UserPermit_DefnAsAdmin")
+        self.verticalLayout_3.addWidget(self.ckb_UserPermit_DefnAsAdmin)
+        self.horizontalLayout_2.addWidget(self.box_DefnScreen)
+        self.box_PtsScreen = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
+        self.box_PtsScreen.setMinimumSize(QtCore.QSize(135, 115))
+        self.box_PtsScreen.setObjectName("box_PtsScreen")
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.box_PtsScreen)
+        self.verticalLayout_4.setContentsMargins(-1, 24, -1, 16)
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.label = QtWidgets.QLabel(self.box_PtsScreen)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
+        self.label.setSizePolicy(sizePolicy)
+        self.label.setStyleSheet("color: grey;")
+        self.label.setObjectName("label")
+        self.verticalLayout_4.addWidget(self.label)
+        self.ckb_UserPermit_PtsScr = QtWidgets.QCheckBox(self.box_PtsScreen)
+        self.ckb_UserPermit_PtsScr.setObjectName("ckb_UserPermit_PtsScr")
+        self.verticalLayout_4.addWidget(self.ckb_UserPermit_PtsScr)
+        self.ckb_UserPermit_PtsAsAdmin = QtWidgets.QCheckBox(self.box_PtsScreen)
+        self.ckb_UserPermit_PtsAsAdmin.setEnabled(False)
+        self.ckb_UserPermit_PtsAsAdmin.setObjectName("ckb_UserPermit_PtsAsAdmin")
+        self.verticalLayout_4.addWidget(self.ckb_UserPermit_PtsAsAdmin)
+        self.horizontalLayout_2.addWidget(self.box_PtsScreen)
+        self.box_Others = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
+        self.box_Others.setMinimumSize(QtCore.QSize(135, 115))
+        self.box_Others.setObjectName("box_Others")
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.box_Others)
+        self.verticalLayout_5.setContentsMargins(-1, 24, -1, 16)
+        self.verticalLayout_5.setObjectName("verticalLayout_5")
+        self.ckb_UserPermit_HardwareScr = QtWidgets.QCheckBox(self.box_Others)
+        self.ckb_UserPermit_HardwareScr.setObjectName("ckb_UserPermit_HardwareScr")
+        self.verticalLayout_5.addWidget(self.ckb_UserPermit_HardwareScr)
+        self.ckb_UserPermit_HardwareAsAdmin = QtWidgets.QCheckBox(self.box_Others)
+        self.ckb_UserPermit_HardwareAsAdmin.setEnabled(False)
+        self.ckb_UserPermit_HardwareAsAdmin.setObjectName("ckb_UserPermit_HardwareAsAdmin")
+        self.verticalLayout_5.addWidget(self.ckb_UserPermit_HardwareAsAdmin)
+        self.ckb_UserPermit_CfgScr = QtWidgets.QCheckBox(self.box_Others)
+        self.ckb_UserPermit_CfgScr.setObjectName("ckb_UserPermit_CfgScr")
+        self.verticalLayout_5.addWidget(self.ckb_UserPermit_CfgScr)
+        self.ckb_UserPermit_CfgAsAdmin = QtWidgets.QCheckBox(self.box_Others)
+        self.ckb_UserPermit_CfgAsAdmin.setEnabled(False)
+        self.ckb_UserPermit_CfgAsAdmin.setObjectName("ckb_UserPermit_CfgAsAdmin")
+        self.verticalLayout_5.addWidget(self.ckb_UserPermit_CfgAsAdmin)
+        self.horizontalLayout_2.addWidget(self.box_Others)
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.verticalLayout.addWidget(self.scrollArea)
+        self.verticalLayout_6.addWidget(self.box_UserPermits)
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem)
+        self.btn_Accept = QtWidgets.QPushButton(Dlg_CreateNewUserInUserDb)
+        self.btn_Accept.setMinimumSize(QtCore.QSize(80, 24))
+        self.btn_Accept.setObjectName("btn_Accept")
+        self.horizontalLayout_3.addWidget(self.btn_Accept)
+        self.btn_Decline = QtWidgets.QPushButton(Dlg_CreateNewUserInUserDb)
+        self.btn_Decline.setMinimumSize(QtCore.QSize(80, 24))
+        self.btn_Decline.setObjectName("btn_Decline")
+        self.horizontalLayout_3.addWidget(self.btn_Decline)
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem1)
+        self.verticalLayout_6.addLayout(self.horizontalLayout_3)
 
         self.retranslateUi(Dlg_CreateNewUserInUserDb)
-        self.btb_Buttons.accepted.connect(Dlg_CreateNewUserInUserDb.accept)
-        self.btb_Buttons.rejected.connect(Dlg_CreateNewUserInUserDb.reject)
-        self.cbb_UserPermit_1.toggled['bool'].connect(self.cbb_UserPermit_2.setEnabled)
-        self.cbb_UserPermit_5.toggled['bool'].connect(self.cbb_UserPermit_6.setEnabled)
-        self.cbb_UserPermit_5.toggled['bool'].connect(self.cbb_UserPermit_7.setEnabled)
-        self.cbb_UserPermit_4.toggled['bool'].connect(self.cbb_UserPermit_9.setEnabled)
-        self.cbb_UserPermit_8.toggled['bool'].connect(self.cbb_UserPermit_10.setEnabled)
+        self.btn_Accept.clicked.connect(Dlg_CreateNewUserInUserDb.accept)
+        self.btn_Decline.clicked.connect(Dlg_CreateNewUserInUserDb.reject)
+        self.ckb_UserPermit_HomeScr.toggled['bool'].connect(self.ckb_UserPermit_HomeRooms.setEnabled)
+        self.ckb_UserPermit_HomeScr.toggled['bool'].connect(self.ckb_UserPermit_HomeAsAdmin.setEnabled)
+        self.ckb_UserPermit_DefnScr.toggled['bool'].connect(self.ckb_UserPermit_DefnDbEdit.setEnabled)
+        self.ckb_UserPermit_DefnScr.toggled['bool'].connect(self.ckb_UserPermit_DefnAsAdmin.setEnabled)
+        self.ckb_UserPermit_PtsScr.toggled['bool'].connect(self.ckb_UserPermit_PtsAsAdmin.setEnabled)
+        self.ckb_UserPermit_HardwareScr.toggled['bool'].connect(self.ckb_UserPermit_HardwareAsAdmin.setEnabled)
+        self.ckb_UserPermit_CfgScr.toggled['bool'].connect(self.ckb_UserPermit_CfgAsAdmin.setEnabled)
         QtCore.QMetaObject.connectSlotsByName(Dlg_CreateNewUserInUserDb)
-        Dlg_CreateNewUserInUserDb.setTabOrder(self.btn_CnuAvatarPrevRef, self.lnI_CnuLogin)
         Dlg_CreateNewUserInUserDb.setTabOrder(self.lnI_CnuLogin, self.lnI_CnuPassword)
         Dlg_CreateNewUserInUserDb.setTabOrder(self.lnI_CnuPassword, self.lnI_CnuAvatarAddr)
         Dlg_CreateNewUserInUserDb.setTabOrder(self.lnI_CnuAvatarAddr, self.tlb_Browse)
         Dlg_CreateNewUserInUserDb.setTabOrder(self.tlb_Browse, self.lnI_CnuDesc)
-        Dlg_CreateNewUserInUserDb.setTabOrder(self.lnI_CnuDesc, self.cbb_UserPermit_1)
-        Dlg_CreateNewUserInUserDb.setTabOrder(self.cbb_UserPermit_1, self.cbb_UserPermit_2)
-        Dlg_CreateNewUserInUserDb.setTabOrder(self.cbb_UserPermit_2, self.cbb_UserPermit_3)
-        Dlg_CreateNewUserInUserDb.setTabOrder(self.cbb_UserPermit_3, self.cbb_UserPermit_4)
-        Dlg_CreateNewUserInUserDb.setTabOrder(self.cbb_UserPermit_4, self.cbb_UserPermit_9)
-        Dlg_CreateNewUserInUserDb.setTabOrder(self.cbb_UserPermit_9, self.cbb_UserPermit_5)
-        Dlg_CreateNewUserInUserDb.setTabOrder(self.cbb_UserPermit_5, self.cbb_UserPermit_6)
-        Dlg_CreateNewUserInUserDb.setTabOrder(self.cbb_UserPermit_6, self.cbb_UserPermit_7)
-        Dlg_CreateNewUserInUserDb.setTabOrder(self.cbb_UserPermit_7, self.cbb_UserPermit_8)
-        Dlg_CreateNewUserInUserDb.setTabOrder(self.cbb_UserPermit_8, self.cbb_UserPermit_10)
 
     def retranslateUi(self, Dlg_CreateNewUserInUserDb):
         _translate = QtCore.QCoreApplication.translate
         Dlg_CreateNewUserInUserDb.setWindowTitle(_translate("Dlg_CreateNewUserInUserDb", "Создать нового пользователя AsQamm"))
         self.box_MainUserProps.setTitle(_translate("Dlg_CreateNewUserInUserDb", "Основные настройки"))
-        self.lbl_CnuAvatarPrevHint.setText(_translate("Dlg_CreateNewUserInUserDb", "Просмотр:"))
-        self.lbl_CnuPassword.setText(_translate("Dlg_CreateNewUserInUserDb", "Пароль:"))
-        self.lbl_CnuLogin.setText(_translate("Dlg_CreateNewUserInUserDb", "Логин:"))
         self.lbl_CnuAvatarHint.setText(_translate("Dlg_CreateNewUserInUserDb", "Аватарка:"))
         self.lbl_CnuID.setText(_translate("Dlg_CreateNewUserInUserDb", "(id)"))
+        self.lbl_CnuLogin.setText(_translate("Dlg_CreateNewUserInUserDb", "Логин:"))
         self.lbl_CnuIDHint.setText(_translate("Dlg_CreateNewUserInUserDb", "ID:"))
         self.tlb_Browse.setText(_translate("Dlg_CreateNewUserInUserDb", "..."))
         self.lbl_CnuDesc.setText(_translate("Dlg_CreateNewUserInUserDb", "Описание:"))
-        self.btn_CnuAvatarPrevRef.setText(_translate("Dlg_CreateNewUserInUserDb", "Обновить"))
-        self.box_UserPermits.setTitle(_translate("Dlg_CreateNewUserInUserDb", "Настройки разрешений"))
-        self.cbb_UserPermit_4.setText(_translate("Dlg_CreateNewUserInUserDb", "Экран \"Оборудование\""))
-        self.cbb_UserPermit_7.setText(_translate("Dlg_CreateNewUserInUserDb", "Управление системой защиты"))
-        self.cbb_UserPermit_2.setText(_translate("Dlg_CreateNewUserInUserDb", "Управление комнатами"))
-        self.cbb_UserPermit_8.setText(_translate("Dlg_CreateNewUserInUserDb", "Экран \"Конфигурация\""))
-        self.cbb_UserPermit_9.setText(_translate("Dlg_CreateNewUserInUserDb", "Доб/удл. оборудование"))
-        self.cbb_UserPermit_6.setText(_translate("Dlg_CreateNewUserInUserDb", "Изменение БД защиты"))
-        self.cbb_UserPermit_1.setToolTip(_translate("Dlg_CreateNewUserInUserDb", "Отключить возможность открытия экрана статистики дома нельзя, так как это - базовая функциональность"))
-        self.cbb_UserPermit_1.setText(_translate("Dlg_CreateNewUserInUserDb", "Экран \"Статистика дома\""))
-        self.cbb_UserPermit_3.setText(_translate("Dlg_CreateNewUserInUserDb", "Экран \"Растения\""))
-        self.cbb_UserPermit_5.setText(_translate("Dlg_CreateNewUserInUserDb", "Защита"))
-        self.cbb_UserPermit_10.setText(_translate("Dlg_CreateNewUserInUserDb", "Настройки суперадмина"))
+        self.lbl_CnuAvatarPrevHint.setText(_translate("Dlg_CreateNewUserInUserDb", "Просмотр:"))
+        self.lbl_CnuPassword.setText(_translate("Dlg_CreateNewUserInUserDb", "Пароль:"))
+        self.box_UserPermits.setTitle(_translate("Dlg_CreateNewUserInUserDb", "Настройки разрешений (пермитов)"))
+        self.box_HomeScreen.setTitle(_translate("Dlg_CreateNewUserInUserDb", "Экран \"Наш дом\""))
+        self.ckb_UserPermit_HomeScr.setText(_translate("Dlg_CreateNewUserInUserDb", "Статистика дома"))
+        self.ckb_UserPermit_HomeRooms.setText(_translate("Dlg_CreateNewUserInUserDb", "Упр. комнатами"))
+        self.ckb_UserPermit_HomeAsAdmin.setText(_translate("Dlg_CreateNewUserInUserDb", "Настройки админа"))
+        self.box_DefnScreen.setTitle(_translate("Dlg_CreateNewUserInUserDb", "Экран \"Защита\""))
+        self.ckb_UserPermit_DefnScr.setText(_translate("Dlg_CreateNewUserInUserDb", "Статус защиты"))
+        self.ckb_UserPermit_DefnDbEdit.setText(_translate("Dlg_CreateNewUserInUserDb", "Изменение БД защиты"))
+        self.ckb_UserPermit_DefnAsAdmin.setText(_translate("Dlg_CreateNewUserInUserDb", "Управление сис. защиты"))
+        self.box_PtsScreen.setTitle(_translate("Dlg_CreateNewUserInUserDb", "Экран \"Растения\""))
+        self.label.setText(_translate("Dlg_CreateNewUserInUserDb", "здесь пусто =D"))
+        self.ckb_UserPermit_PtsScr.setText(_translate("Dlg_CreateNewUserInUserDb", "Статус теплиц"))
+        self.ckb_UserPermit_PtsAsAdmin.setText(_translate("Dlg_CreateNewUserInUserDb", "Управление теплицами"))
+        self.box_Others.setTitle(_translate("Dlg_CreateNewUserInUserDb", "Прочие экраны"))
+        self.ckb_UserPermit_HardwareScr.setText(_translate("Dlg_CreateNewUserInUserDb", "Экран \"Оборудование\""))
+        self.ckb_UserPermit_HardwareAsAdmin.setText(_translate("Dlg_CreateNewUserInUserDb", "Доб./удл. оборудование"))
+        self.ckb_UserPermit_CfgScr.setText(_translate("Dlg_CreateNewUserInUserDb", "Экран \"Конфигурация\""))
+        self.ckb_UserPermit_CfgAsAdmin.setText(_translate("Dlg_CreateNewUserInUserDb", "Конфигурация админа"))
+        self.btn_Accept.setText(_translate("Dlg_CreateNewUserInUserDb", "Сохранить"))
+        self.btn_Decline.setText(_translate("Dlg_CreateNewUserInUserDb", "Отменить"))
 
 
 if __name__ == "__main__":
