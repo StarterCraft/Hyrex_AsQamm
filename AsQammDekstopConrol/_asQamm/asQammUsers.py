@@ -165,7 +165,7 @@ class AqUsersSystem(AqMainWindow):
                                            ' класса пользователя')
 
         self.crypto.getFileNamesList(self.possibleFileNames)
-        self.crypto.seekForFiles(self.possibleFileNames, self.availableFileNames, True)
+        self.crypto.seekForFiles(root, self.possibleFileNames, self.availableFileNames, True)
 
         for item in self.availableFileNames:
             with open(r'%s' % item, 'r') as dataFile:
@@ -256,59 +256,63 @@ class AqUsersSystem(AqMainWindow):
 
     def callUserSetupDlg(self, root, core, userToEdit):
         try:
-            self.userSystemLogger.Logger.debug('Инициирован вызов диалога редактирования пользователя {0}'.format(str(userToEdit.login)))
+            if (userToEdit.getPermits('pxConfigAsAdmin') and (userToEdit.current)):
+                self.callCurrentUserSetupDlg(root, core, userToEdit)
+            else:
+                self.userSystemLogger.Logger.debug('Инициирован вызов диалога редактирования пользователя {0}'.format(str(userToEdit.login)))
 
-            self.editDlgUi.gfv_EuAvatarPrev.setPixmap(userToEdit.avatar)
-            self.editDlgUi.lbl_EuID.setText(str(userToEdit.id))
-            self.editDlgUi.lnI_EuLogin.setText(str(userToEdit.login))
-            self.editDlgUi.lnI_EuPassword.setText(str(userToEdit.password))
-            self.editDlgUi.lnI_EuDesc.setText(str(userToEdit.description))
-            self.editDlgUi.lnI_EuAvatarAddr.setText(str(userToEdit.avatarAddress))
+                self.editDlgUi.gfv_EuAvatarPrev.setPixmap(userToEdit.avatar)
+                self.editDlgUi.lbl_EuID.setText(str(userToEdit.id))
+                self.editDlgUi.lnI_EuLogin.setText(str(userToEdit.login))
+                self.editDlgUi.lnI_EuPassword.setText(str(userToEdit.password))
+                self.editDlgUi.lnI_EuDesc.setText(str(userToEdit.description))
+                self.editDlgUi.lnI_EuAvatarAddr.setText(str(userToEdit.avatarAddress))
 
-            self.editDlgUi.filedialog = QFileDialog()
-            self.editDlgUi.filedialog.setFileMode(QFileDialog.ExistingFile)
-            self.editDlgUi.filedialog.fileSelected.connect( lambda: self.editDlgUi.lnI_EuAvatarAddr.setText(str(
-                                                                    self.editDlgUi.filedialog.selectedFiles()[0])) )
-            self.userSystemLogger.Logger.debug('Инициирован вызов QFileDialog')
+                self.editDlgUi.filedialog = QFileDialog()
+                self.editDlgUi.filedialog.setFileMode(QFileDialog.ExistingFile)
+                self.editDlgUi.filedialog.fileSelected.connect( lambda: self.editDlgUi.lnI_EuAvatarAddr.setText(str(
+                                                                        self.editDlgUi.filedialog.selectedFiles()[0])) )
+                self.userSystemLogger.Logger.debug('Инициирован вызов QFileDialog')
 
-            self.editDlgUi.tlb_Browse.clicked.connect( lambda:  self.editDlgUi.filedialog.show() )
-            self.editDlgUi.lnI_EuAvatarAddr.textChanged.connect( lambda: self.editDlgUi.gfv_EuAvatarPrev.setPixmap(QPixmap(QImage(str(
-                                                                self.editDlgUi.lnI_EuAvatarAddr.text())))) )
+                self.editDlgUi.tlb_Browse.clicked.connect( lambda:  self.editDlgUi.filedialog.show() )
+                self.editDlgUi.lnI_EuAvatarAddr.textChanged.connect( lambda: self.editDlgUi.gfv_EuAvatarPrev.setPixmap(QPixmap(QImage(str(
+                                                                    self.editDlgUi.lnI_EuAvatarAddr.text())))) )
 
-            self.editDlgUi.ckb_UserPermit_HomeRooms.setChecked(userToEdit.getPermits('pxHomeRooms'))
-            self.editDlgUi.ckb_UserPermit_HomeAsAdmin.setChecked(userToEdit.getPermits('pxHomeAsAdmin'))
-            self.editDlgUi.ckb_UserPermit_DefnScr.setChecked(userToEdit.getPermits('pxDefnBasic'))
-            self.editDlgUi.ckb_UserPermit_DefnDbEdit.setChecked(userToEdit.getPermits('pxDefnDbEdit'))
-            self.editDlgUi.ckb_UserPermit_DefnAsAdmin.setChecked(userToEdit.getPermits('pxDefnAsAdmin'))
-            self.editDlgUi.ckb_UserPermit_PtsScr.setChecked(userToEdit.getPermits('pxPlants'))
-            self.editDlgUi.ckb_UserPermit_PtsAsAdmin.setChecked(userToEdit.getPermits('pxPlantsAsAdmin'))
-            self.editDlgUi.ckb_UserPermit_HardwareScr.setChecked(userToEdit.getPermits('pxHardware'))
-            self.editDlgUi.ckb_UserPermit_HardwareAsAdmin.setChecked(userToEdit.getPermits('pxHardwareAsAdmin'))
-            self.editDlgUi.ckb_UserPermit_CfgScr.setChecked(userToEdit.getPermits('pxConfig'))
-            self.editDlgUi.ckb_UserPermit_CfgAsAdmin.setChecked(userToEdit.getPermits('pxConfigAsAdmin'))
+                self.editDlgUi.ckb_UserPermit_HomeRooms.setChecked(userToEdit.getPermits('pxHomeRooms'))
+                self.editDlgUi.ckb_UserPermit_HomeAsAdmin.setChecked(userToEdit.getPermits('pxHomeAsAdmin'))
+                self.editDlgUi.ckb_UserPermit_DefnScr.setChecked(userToEdit.getPermits('pxDefnBasic'))
+                self.editDlgUi.ckb_UserPermit_DefnDbEdit.setChecked(userToEdit.getPermits('pxDefnDbEdit'))
+                self.editDlgUi.ckb_UserPermit_DefnAsAdmin.setChecked(userToEdit.getPermits('pxDefnAsAdmin'))
+                self.editDlgUi.ckb_UserPermit_PtsScr.setChecked(userToEdit.getPermits('pxPlants'))
+                self.editDlgUi.ckb_UserPermit_PtsAsAdmin.setChecked(userToEdit.getPermits('pxPlantsAsAdmin'))
+                self.editDlgUi.ckb_UserPermit_HardwareScr.setChecked(userToEdit.getPermits('pxHardware'))
+                self.editDlgUi.ckb_UserPermit_HardwareAsAdmin.setChecked(userToEdit.getPermits('pxHardwareAsAdmin'))
+                self.editDlgUi.ckb_UserPermit_CfgScr.setChecked(userToEdit.getPermits('pxConfig'))
+                self.editDlgUi.ckb_UserPermit_CfgAsAdmin.setChecked(userToEdit.getPermits('pxConfigAsAdmin'))
+                                       
 
-            self.editDlg.permits = dict( homeRooms = self.editDlgUi.ckb_UserPermit_HomeRooms.isChecked(),
-                                         homeAsAdmin = self.editDlgUi.ckb_UserPermit_HomeAsAdmin.isChecked(),
-                                         defenseBasic = self.editDlgUi.ckb_UserPermit_DefnScr.isChecked(),
-                                         defenseDbEdit = self.editDlgUi.ckb_UserPermit_DefnDbEdit.isChecked(),
-                                         defenseAsAdmin = self.editDlgUi.ckb_UserPermit_DefnAsAdmin.isChecked(),
-                                         plants = self.editDlgUi.ckb_UserPermit_PtsScr.isChecked(),
-                                         plantsAsAdmin = self.editDlgUi.ckb_UserPermit_PtsScr.isChecked(),
-                                         hardware = self.editDlgUi.ckb_UserPermit_PtsAsAdmin.isChecked(),
-                                         hardwareAsAdmin = self.editDlgUi.ckb_UserPermit_HardwareScr.isChecked(),
-                                         configure = self.editDlgUi.ckb_UserPermit_CfgScr.isChecked(),
-                                         configureAsAdmin = self.editDlgUi.ckb_UserPermit_CfgAsAdmin.isChecked())
+                self.editDlg.accepted.connect ( lambda: userToEdit.setup(core, root, (self.editDlgUi.lnI_EuPassword.text()), (self.editDlgUi.lnI_EuDesc.text()),
+                                                                        (self.editDlgUi.lnI_EuAvatarAddr.text()),
+                                                                        { 'homeRooms': (self.editDlgUi.ckb_UserPermit_HomeRooms.isChecked()),
+                                                                          'homeAsAdmin': (self.editDlgUi.ckb_UserPermit_HomeAsAdmin.isChecked()),
+                                                                          'defenseBasic': (self.editDlgUi.ckb_UserPermit_DefnScr.isChecked()),
+                                                                          'defenseDbEdit': (self.editDlgUi.ckb_UserPermit_DefnDbEdit.isChecked()),
+                                                                          'defenseAsAdmin': (self.editDlgUi.ckb_UserPermit_DefnAsAdmin.isChecked()),
+                                                                          'plants': (self.editDlgUi.ckb_UserPermit_PtsScr.isChecked()),
+                                                                          'plantsAsAdmin': (self.editDlgUi.ckb_UserPermit_PtsScr.isChecked()),
+                                                                          'hardware': (self.editDlgUi.ckb_UserPermit_PtsAsAdmin.isChecked()),
+                                                                          'hardwareAsAdmin': (self.editDlgUi.ckb_UserPermit_HardwareScr.isChecked()),
+                                                                          'configure': (self.editDlgUi.ckb_UserPermit_CfgScr.isChecked()),
+                                                                          'configureAsAdmin': (self.editDlgUi.ckb_UserPermit_CfgAsAdmin.isChecked()) } ))
 
-            self.editDlg.accepted.connect ( lambda: userToEdit.setup(core, root, (self.editDlgUi.lnI_EuPassword.text()), (self.editDlgUi.lnI_EuDesc.text()), 
-                                                                    (self.editDlgUi.lnI_EuAvatarAddr.text()), (self.editDlg.permits)))
-            self.editDlg.show()
-            self.userSystemLogger.Logger.debug('Диалог редактирования пользователя {0} открыт'.format(str(userToEdit.login)))
+                self.editDlg.show()
+                self.userSystemLogger.Logger.debug('Диалог редактирования пользователя {0} открыт'.format(str(userToEdit.login)))
 
         except AttributeError:
             pass
 
 
-    def callCurrentUserSetupDlg(self, root, userToEdit):
+    def callCurrentUserSetupDlg(self, root, core, userToEdit):
         try:
             self.userSystemLogger.Logger.debug('Инициирован вызов диалога самостоятельного редактирования пользователя {0}'.format(str(userToEdit.login)))
 
@@ -329,8 +333,11 @@ class AqUsersSystem(AqMainWindow):
             self.selfEditDlgUi.lnI_EuAvatarAddr.textChanged.connect( lambda: self.selfEditDlgUi.gfv_EuAvatarPrev.setPixmap(QPixmap(QImage(str(
                                                                 self.selfEditDlgUi.lnI_EuAvatarAddr.text())))) )
             
-            self.editDlg.accepted.connect ( lambda: userToEdit.setup(core, root, (self.editDlgUi.lnI_EuPassword.text()), (self.editDlgUi.lnI_EuDesc.text()), 
+            self.selfEditDlg.accepted.connect ( lambda: userToEdit.setup(core, root, (self.editDlgUi.lnI_EuPassword.text()), (self.editDlgUi.lnI_EuDesc.text()), 
                                                                     (self.editDlgUi.lnI_EuAvatarAddr.text()), (userToEdit.permits)))
+
+            self.selfEditDlg.show()
+            self.userSystemLogger.Logger.debug('Диалог редактирования пользователя {0} открыт'.format(str(userToEdit.login)))
 
         except AttributeError:
             pass
@@ -341,11 +348,14 @@ class AqUsersSystem(AqMainWindow):
             self.msg = QMessageBox.question(root, 'Подтверждение действия', 'Вы действительно хотите удалить пользователя %s? Это необратимое действие!' % userToDelete.login)
 
             if self.msg == QMessageBox.Yes:
-                if userToDelete.type == 0 or '0':
+                if (userToDelete.type == (0 or '0') or userToDelete.description == 'Guest'):
                     self.msg = QMessageBox.critical(root, 'Действие невозможно', 'Вы не можете удалить системного пользователя!')
 
                 else:
-                    os.remove((userToDelete.filepath))
+                    try:
+                        os.remove((userToDelete.filepath))
+                    except FileNotFoundError:
+                        pass
                     self.users.remove(userToDelete)
                     root.ui.liw_UsersDbList.clear()
                     self.addToUserList(root, (self.users), 1)
@@ -359,10 +369,10 @@ class AqUsersSystem(AqMainWindow):
             pass
 
 
-    def generateFilenameForNewUser(self):
+    def generateFilenameForNewUser(self, root):
         self.emptyFileNames = []
 
-        self.crypto.seekForFiles(self.possibleFileNames, self.emptyFileNames, False)
+        self.crypto.seekForFiles(root, self.possibleFileNames, self.emptyFileNames, False)
         return str(self.emptyFileNames[0])
 
 
@@ -398,7 +408,7 @@ class AqUsersSystem(AqMainWindow):
                                             configureAsAdmin = self.creationDlgUi.ckb_UserPermit_CfgAsAdmin.isChecked() )
 
             self.creationDlg.accepted.connect ( lambda: User(core, root, (self.creationDlgUi.lbl_CnuID.text()), 
-                                                             (self.creationDlgUi.lnI_CnuDesc.text()), 1, (self.generateFilenameForNewUser()), 
+                                                             (self.creationDlgUi.lnI_CnuDesc.text()), 1, (self.generateFilenameForNewUser(root)), 
                                                              (self.creationDlgUi.lnI_CnuAvatarAddr.text()), (self.creationDlgUi.lnI_CnuLogin.text()),
                                                              (self.creationDlgUi.lnI_CnuPassword.text()), (self.creationDlg.permits),
                                                              (AqConfigSystem.loadDefaultConfigDict(AqConfigSystem, root))) )

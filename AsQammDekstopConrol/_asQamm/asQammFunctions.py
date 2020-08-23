@@ -190,7 +190,7 @@ class AqCrypto:
         self.cryptoLogger.Logger.debug('Созданы возможные имена файлов профилей пользователей')
 
 
-    def seekForFiles(self, importList, exportList, flag):
+    def seekForFiles(self, root, importList, exportList, flag):
 
         for item in importList:
                 self.gotName = glob.glob(str(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8')))))
@@ -200,6 +200,14 @@ class AqCrypto:
                         continue
                     else:
                         exportList.append(r'{0}'.format(self.gotName[0]))
+
+                    if len(exportList) == 0:
+                        QMessageBox.warning(root, 'Ошибка инициализации системы пользователей', '''Не удалось найти ни одного аккаунта
+                                            пользователя, за исключением аккаунта гостя. Большая часть функциональности недоступна.
+                                            Проверьте, что вы создали хотя бы одного пользователя с правами админинстратора.''')
+                    else:
+                        pass
+
                 else:
                     if self.gotName != []:
                         continue
