@@ -64,6 +64,7 @@ if __name__ == "__main__":
     usersCore.userSystemLogger.Logger.debug('Экземпляр класса системы пользователей успешно создан: ' + str(usersCore))
 
     localFunc = AqLocalFunctions()
+    root.rootLogger.Logger.debug('Инициализирована система локальных данных')
 
     AqUIFunctions.createLabelsAtMainMenu(root)
     root.rootLogger.Logger.info('Всплывающие подсказки меню успешно сгенерированы! ')
