@@ -16,6 +16,7 @@ class AqConfigSystem:
 
 class AqConfig(AqConfigSystem):
     def __init__(self, configDict):
+        
         self.language = configDict['language']
         self.theme = configDict['theme']
         self.popupOpacity = configDict['popupOpacity']

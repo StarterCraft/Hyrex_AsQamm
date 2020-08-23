@@ -232,11 +232,12 @@ class AqLocalFunctions(AqMainWindow):
 
                 self.dumpData = { 'id': (User.id), 'description': (User.description), 'type': (User.type), 'filepath': (User.filepath),
                                   'login': (User.login), 'password': (User.password), 'avatarAddress': (User.avatarAddress),
-                                  'permits': (User.permits), 'config': (User.configDict)}
+                                  'permits': (User.permits), 'config': (User.configDict) }
 
                 jsonString = json.dumps((self.dumpData), indent = 8)
                 jsonString = AqCrypto.encryptContent(AqCrypto, jsonString)
                 dataFile.write(jsonString)
+                User.edited = False
 
                 self.checker += 1
 
