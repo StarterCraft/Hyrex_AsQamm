@@ -1,9 +1,9 @@
 from AsQammDekstop import *
-from _asQamm.asQammFunctions import AqCrypto
-from _asQamm.asQammUserCreation import Ui_Dlg_CreateNewUserInUserDb
-from _asQamm.asQammUserEdit import Ui_Dlg_EditUserInUserDb
-from _asQamm.asQammUserSelfEdit import Ui_Dlg_EditCurrentUserInUserDb
-from _asQamm.asQammConfig import AqConfigSystem
+from _asQammDekstopLibs.functions import AqCrypto
+from _asQammDekstopUI.userCreationDlg import Ui_Dlg_CreateNewUserInUserDb
+from _asQammDekstopUI.userEditDlg import Ui_Dlg_EditUserInUserDb
+from _asQammDekstopUI.userSelfEditDlg import Ui_Dlg_EditCurrentUserInUserDb
+from _asQammDekstopLibs.config import AqConfigSystem
 from playsound import *
 
 import json, os

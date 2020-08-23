@@ -5,10 +5,10 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from playsound import playsound, PlaysoundException
 
-from _asQamm.asQammUI import *
-from _asQamm.asQammResources import *
-from _asQamm.asQammLogging import *
-from _asQamm.asQammConfig import *
+from _asQammDekstopUI.rootUI import *
+from _asQammDekstopLibs.resources import *
+from _asQammDekstopLibs.logging import *
+from _asQammDekstopLibs.config import *
 
 
 class AqMainWindow(QMainWindow):
@@ -49,8 +49,8 @@ class AqMainWindow(QMainWindow):
         sys.exit(app.exec_())
         
 
-from _asQamm.asQammUsers import *
-from _asQamm.asQammFunctions import AqUIFunctions, AqLocalFunctions
+from _asQammDekstopLibs.users import *
+from _asQammDekstopLibs.functions import AqUIFunctions, AqLocalFunctions
 
 
 if __name__ == "__main__":
