@@ -1,25 +1,20 @@
 {
-	"preset": null,
-	"language": 0,
-	"theme": 0,
-	"popupOpacity": 92,
-	
-	"loggingMode": true,
-	"logSavingMode": true,
-	"logSavingDuration": "1mon",
-	
-	"keyBindings": {
-		
-		"homeScreen": "Ctrl+1",
-		"defenseScreen": "Ctrl+2",
-		"plantsScreen": "Ctrl+3",
-		"hardwareScreen": "Ctrl+4",
-		"configScreen": "Ctrl+5",
-		
-		"changeInterfaceMode": "Ctrl+Q",
-		"applyChanges": "Ctrl+A",
-		"saveChanges": "Ctrl+S",
-		"loadChanges": "Ctrl+W"
-		
-	}
+        "preset": null,
+        "language": 0,
+        "theme": 0,
+        "popupOpacity": 91,
+        "loggingMode": true,
+        "logSavingMode": true,
+        "logSavingDuration": 5,
+        "keyBindings": {
+                "homeScreen": "",
+                "defenseScreen": "2",
+                "plantsScreen": "3",
+                "hardwareScreen": "4",
+                "configScreen": "5",
+                "changeInterfaceMode": "Ctrl+Q",
+                "applyChanges": "Ctrl+A",
+                "saveChanges": "Ctrl+S",
+                "loadChanges": "Ctrl+W"
+        }
 }

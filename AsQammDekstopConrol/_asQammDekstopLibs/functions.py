@@ -142,12 +142,12 @@ class AqUIFunctions():
                 root.ui.lbl_DefnCurrSetCamId.show()
                 root.ui.lbl_ReadOnly10.show()
                 root.ui.gvf_DefnCamView.show()
+            root.ui.stack.setCurrentWidget(root.ui.page_1)
 
 
     def selectSkin(id, root):
 
         if id == 1:
-            root.ui.stack.setCurrentWidget(root.ui.page_1)
             root.ui.lbl_SkinName.setText('Наш дом')
 
         elif id == 2:
@@ -235,14 +235,21 @@ class AqLocalFunctions(AqMainWindow):
         self.unsaved = []
 
 
-    def apply(self, root, userscore):
-        AqConfigSystem.saveConfig(AqConfigSystem, root, userscore)
-        self.saveUnsavedUsers(userscore, root)
+    def apply(self, root, usersCore):
+        if QApplication.keyboardModifiers() == Qt.AltModifier:
+            AqConfigSystem.saveDefaultConfig(AqConfigSystem, root, usersCore)
+        else:
+            AqConfigSystem.saveConfig(AqConfigSystem, root, usersCore)
+
+        self.saveUnsavedUsers(usersCore, root)
 
 
     def saveUnsavedUsers(self, userscore, root):
         self.unsaved = [AqUser for AqUser in userscore.users if (AqUser.edited == True)]
         self.checker = int()
+
+        if len(self.unsaved) == 0:
+            QMessageBox.information(root, 'Сохранение завершено', 'Конфигурация сохранена')
 
         for AqUser in self.unsaved:
             with open((AqUser.filepath), mode = 'w+', encoding = 'utf-8') as dataFile:

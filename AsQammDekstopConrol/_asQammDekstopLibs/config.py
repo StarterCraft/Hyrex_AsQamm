@@ -1,5 +1,6 @@
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from PyQt5.QtWidgets import QMessageBox
 import json
 
 
@@ -37,7 +38,38 @@ class AqConfigSystem:
 		                                        'saveChanges': ((root.ui.keySequenceEdit_8.keySequence()).toString()),
 		                		                'loadChanges': ((root.ui.keySequenceEdit_9.keySequence()).toString()) })
         self.currentUser.edited = True
-        del (self.currentUser)
+        del self.currentUser
+
+
+    def saveDefaultConfig(self, root, usersCore):
+        self.currentUser = usersCore.getCurrentUser()
+
+        if (self.currentUser.getPermits('pxConfigAsAdmin')):
+            with open('data/config/~!default!~.asqd', 'w', encoding = 'utf-8') as configFile:
+                jsonString = str(json.dumps(({ 'preset': None, 'language': (root.ui.cbb_Language.currentIndex()),
+                                                               'theme': (root.ui.cbb_Theme.currentIndex()),
+                                                               'popupOpacity': (root.ui.sld_WindowsOpacitySct.value()),
+                                                               'loggingMode': (root.ui.ckb_ToggleLogs.isChecked()),
+                                                               'logSavingMode': (root.ui.ckb_ToggleLogsArch.isChecked()),
+                                                               'logSavingDuration': (root.ui.cbb_LogsArchMode.currentIndex()),
+                                                               'keyBindings': {
+                                                                   'homeScreen': ((root.ui.keySequenceEdit.keySequence()).toString()),
+		                                                           'defenseScreen': ((root.ui.keySequenceEdit_2.keySequence()).toString()),
+		                                                           'plantsScreen': ((root.ui.keySequenceEdit_3.keySequence()).toString()),
+		                                                           'hardwareScreen': ((root.ui.keySequenceEdit_4.keySequence()).toString()),
+		                                                           'configScreen': ((root.ui.keySequenceEdit_5.keySequence()).toString()),
+		
+		                                                           'changeInterfaceMode': ((root.ui.keySequenceEdit_6.keySequence()).toString()),
+		                                                           'applyChanges': ((root.ui.keySequenceEdit_7.keySequence()).toString()),
+		                                                           'saveChanges': ((root.ui.keySequenceEdit_8.keySequence()).toString()),
+		                		                                   'loadChanges': ((root.ui.keySequenceEdit_9.keySequence()).toString()) 
+                                                                   }
+                                                               }), indent = 8))
+                configFile.seek(0)
+                configFile.write(jsonString)
+
+        else:
+            QMessageBox.critical(root, 'Действие запрещено', 'Вы не имеете права на осуществление этого действия')
 
 
     def applyConfig(self, root, usersCore):
@@ -101,6 +133,7 @@ class AqConfig(AqConfigSystem):
 
 
     def setupByParam(self, param, value):
+        
         if param == 'language':
             self.language = value
         elif param == 'theme':
