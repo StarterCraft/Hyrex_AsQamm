@@ -58,13 +58,16 @@ class AqUIFunctions():
 
 
     def changeInterfaceMode(self, root, userscore):
-        if (root.ui.stack.currentWidget()) == (root.ui.page_3):
-            self.selector = [User for User in userscore.users if (User.current == True)]
+        if ((root.ui.stack.currentWidget()) == (root.ui.page_3)) or ((root.ui.stack.currentWidget()) == (root.ui.page_6)):
 
-            if self.selector[0].permits['plants'] == True:
-                root.ui.stack.setCurrentWidget(root.ui.page_6)
+            if userscore.getCurrentUser().getPermits('pxPlants') == True:
+
+                if root.ui.stack.currentWidget() == (root.ui.page_3):
+                    root.ui.stack.setCurrentWidget(root.ui.page_6)
+                elif root.ui.stack.currentWidget() == (root.ui.page_6):
+                    root.ui.stack.setCurrentWidget(root.ui.page_3)
             else:
-                root.msg = QMessageBox.critical('Действие запрещено', 'Вы не имеете права на осуществление этого действия')
+                root.msg = QMessageBox.critical(root, 'Действие запрещено', 'Вы не имеете права на осуществление этого действия')
 
 
     # Функция toggleSimpleWidgetInteraction может быть использована для анимирования виджетов простой
@@ -141,27 +144,27 @@ class AqUIFunctions():
                 root.ui.gvf_DefnCamView.show()
 
 
-    def selectSkin(id, main):
+    def selectSkin(id, root):
 
         if id == 1:
-            main.ui.stack.setCurrentWidget(main.ui.page_1)
-            main.ui.lbl_SkinName.setText('Наш дом')
+            root.ui.stack.setCurrentWidget(root.ui.page_1)
+            root.ui.lbl_SkinName.setText('Наш дом')
 
         elif id == 2:
-            main.ui.stack.setCurrentWidget(main.ui.page_2)
-            main.ui.lbl_SkinName.setText('Защита')
+            root.ui.stack.setCurrentWidget(root.ui.page_2)
+            root.ui.lbl_SkinName.setText('Защита')
 
         elif id == 3:
-            main.ui.stack.setCurrentWidget(main.ui.page_3)
-            main.ui.lbl_SkinName.setText('Растения')
+            root.ui.stack.setCurrentWidget(root.ui.page_3)
+            root.ui.lbl_SkinName.setText('Растения')
 
         elif id == 4:
-            main.ui.stack.setCurrentWidget(main.ui.page_4)
-            main.ui.lbl_SkinName.setText('Управление')
+            root.ui.stack.setCurrentWidget(root.ui.page_4)
+            root.ui.lbl_SkinName.setText('Управление')
 
         elif id == 5:
-            main.ui.stack.setCurrentWidget(main.ui.page_5)
-            main.ui.lbl_SkinName.setText('Конфигурация')
+            root.ui.stack.setCurrentWidget(root.ui.page_5)
+            root.ui.lbl_SkinName.setText('Конфигурация')
 
 
     def setPopupsOpacity(root):
@@ -231,21 +234,28 @@ class AqLocalFunctions(AqMainWindow):
     def __init__(self):
         self.unsaved = []
 
+
+    def apply(self, root, userscore):
+        AqConfigSystem.saveConfig(AqConfigSystem, root, userscore)
+        self.saveUnsavedUsers(userscore, root)
+
+
     def saveUnsavedUsers(self, userscore, root):
-        self.unsaved = [User for User in userscore.users if (User.edited == True)]
+        self.unsaved = [AqUser for AqUser in userscore.users if (AqUser.edited == True)]
         self.checker = int()
 
-        for User in self.unsaved:
-            with open((User.filepath), mode = 'w+', encoding = 'utf-8') as dataFile:
+        for AqUser in self.unsaved:
+            with open((AqUser.filepath), mode = 'w+', encoding = 'utf-8') as dataFile:
 
-                self.dumpData = { 'id': (User.id), 'description': (User.description), 'type': (User.type), 'filepath': (User.filepath),
-                                  'login': (User.login), 'password': (User.password), 'avatarAddress': (User.avatarAddress),
-                                  'permits': (User.permits), 'config': (User.configDict) }
+                self.dumpData = { 'id': (AqUser.id), 'description': (AqUser.description),
+                                  'type': (AqUser.type), 'filepath': (AqUser.filepath),
+                                  'login': (AqUser.login), 'password': (AqUser.password), 'avatarAddress': (AqUser.avatarAddress),
+                                  'permits': (AqUser.permits), 'config': (AqUser.config.getDict()) }
 
                 jsonString = json.dumps((self.dumpData), indent = 8)
                 jsonString = AqCrypto.encryptContent(AqCrypto, jsonString)
                 dataFile.write(jsonString)
-                User.edited = False
+                AqUser.edited = False
 
                 self.checker += 1
 

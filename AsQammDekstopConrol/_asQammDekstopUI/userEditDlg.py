@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'userEdit.ui'
+# Form implementation generated from reading ui file 'uisrc\userEdit.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.0
 #
@@ -340,7 +340,7 @@ class Ui_Dlg_EditUserInUserDb(object):
         self.scrollArea.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(-301, 0, 663, 127))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 663, 127))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.scrollAreaWidgetContents)
         self.horizontalLayout_2.setContentsMargins(0, 6, 0, 6)
@@ -351,7 +351,7 @@ class Ui_Dlg_EditUserInUserDb(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.box_HomeScreen.sizePolicy().hasHeightForWidth())
         self.box_HomeScreen.setSizePolicy(sizePolicy)
-        self.box_HomeScreen.setMinimumSize(QtCore.QSize(145, 115))
+        self.box_HomeScreen.setMinimumSize(QtCore.QSize(135, 115))
         self.box_HomeScreen.setObjectName("box_HomeScreen")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.box_HomeScreen)
         self.verticalLayout_2.setContentsMargins(-1, 24, -1, 16)
@@ -369,7 +369,7 @@ class Ui_Dlg_EditUserInUserDb(object):
         self.verticalLayout_2.addWidget(self.ckb_UserPermit_HomeAsAdmin)
         self.horizontalLayout_2.addWidget(self.box_HomeScreen)
         self.box_DefnScreen = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
-        self.box_DefnScreen.setMinimumSize(QtCore.QSize(170, 115))
+        self.box_DefnScreen.setMinimumSize(QtCore.QSize(135, 115))
         self.box_DefnScreen.setObjectName("box_DefnScreen")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.box_DefnScreen)
         self.verticalLayout_3.setContentsMargins(-1, 24, -1, 16)
@@ -387,7 +387,7 @@ class Ui_Dlg_EditUserInUserDb(object):
         self.verticalLayout_3.addWidget(self.ckb_UserPermit_DefnAsAdmin)
         self.horizontalLayout_2.addWidget(self.box_DefnScreen)
         self.box_PtsScreen = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
-        self.box_PtsScreen.setMinimumSize(QtCore.QSize(165, 115))
+        self.box_PtsScreen.setMinimumSize(QtCore.QSize(135, 115))
         self.box_PtsScreen.setObjectName("box_PtsScreen")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.box_PtsScreen)
         self.verticalLayout_4.setContentsMargins(-1, 24, -1, 16)
@@ -410,7 +410,7 @@ class Ui_Dlg_EditUserInUserDb(object):
         self.verticalLayout_4.addWidget(self.ckb_UserPermit_PtsAsAdmin)
         self.horizontalLayout_2.addWidget(self.box_PtsScreen)
         self.box_Others = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
-        self.box_Others.setMinimumSize(QtCore.QSize(165, 115))
+        self.box_Others.setMinimumSize(QtCore.QSize(135, 115))
         self.box_Others.setObjectName("box_Others")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.box_Others)
         self.verticalLayout_5.setContentsMargins(-1, 24, -1, 16)
@@ -467,7 +467,7 @@ class Ui_Dlg_EditUserInUserDb(object):
 
     def retranslateUi(self, Dlg_EditUserInUserDb):
         _translate = QtCore.QCoreApplication.translate
-        Dlg_EditUserInUserDb.setWindowTitle(_translate("Dlg_EditUserInUserDb", "Редактировать существоющего пользователя"))
+        Dlg_EditUserInUserDb.setWindowTitle(_translate("Dlg_EditUserInUserDb", "Редактировать существующего пользователя"))
         self.box_MainUserProps.setTitle(_translate("Dlg_EditUserInUserDb", "Основные настройки"))
         self.lbl_EuID.setText(_translate("Dlg_EditUserInUserDb", "(id)"))
         self.tlb_Browse.setText(_translate("Dlg_EditUserInUserDb", "..."))

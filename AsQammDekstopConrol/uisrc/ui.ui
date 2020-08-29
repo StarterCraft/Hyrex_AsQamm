@@ -32,7 +32,7 @@
    <string>AsQamm Dekstop Alpha</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources.qrc">
+   <iconset resource="../resources.qrc">
     <normaloff>:/main/AsQamm/icon.ico</normaloff>:/main/AsQamm/icon.ico</iconset>
   </property>
   <property name="styleSheet">
@@ -231,7 +231,7 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset resource="resources.qrc">
+                  <iconset resource="../resources.qrc">
                    <normaloff>:/images/house_ico.png</normaloff>
                    <disabledoff>:/images/house_ico_-i_.png</disabledoff>:/images/house_ico.png</iconset>
                  </property>
@@ -289,7 +289,7 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset resource="resources.qrc">
+                  <iconset resource="../resources.qrc">
                    <normaloff>:/images/defense_ico.png</normaloff>
                    <disabledoff>:/images/defense_ico_-i_.png</disabledoff>:/images/defense_ico.png</iconset>
                  </property>
@@ -347,7 +347,7 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset resource="resources.qrc">
+                  <iconset resource="../resources.qrc">
                    <normaloff>:/images/plants_ico.png</normaloff>
                    <disabledoff>:/images/plants_ico_-i_.png</disabledoff>:/images/plants_ico.png</iconset>
                  </property>
@@ -418,7 +418,7 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset resource="resources.qrc">
+                  <iconset resource="../resources.qrc">
                    <normaloff>:/images/control_ico.png</normaloff>
                    <disabledoff>:/images/control_ico_-i_.png</disabledoff>:/images/control_ico.png</iconset>
                  </property>
@@ -476,7 +476,7 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset resource="resources.qrc">
+                  <iconset resource="../resources.qrc">
                    <normaloff>:/images/config_ico.png</normaloff>
                    <disabledoff>:/images/config_ico_-i_.png</disabledoff>:/images/config_ico.png</iconset>
                  </property>
@@ -810,7 +810,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
 </string>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>4</number>
             </property>
             <widget class="QWidget" name="page_1">
              <property name="styleSheet">
@@ -1049,7 +1049,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
                        <string>Добавить пользователя</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset resource="../resources.qrc">
                         <normaloff>:/images/plus_ico.png</normaloff>:/images/plus_ico.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1078,7 +1078,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
                        <string>Настроить пользователя</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset resource="../resources.qrc">
                         <normaloff>:/images/more_ico.png</normaloff>:/images/more_ico.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1107,7 +1107,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
                        <string>Исключить пользователя</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset resource="../resources.qrc">
                         <normaloff>:/images/minus_ico.png</normaloff>:/images/minus_ico.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1136,7 +1136,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
                        <string>Локальные функции...</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset resource="../resources.qrc">
                         <normaloff>:/images/save_ico_-d_.png</normaloff>:/images/save_ico_-d_.png</iconset>
                       </property>
                       <property name="iconSize">
@@ -1195,7 +1195,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
                       <string>Список камер</string>
                      </property>
                      <property name="icon">
-                      <iconset resource="resources.qrc">
+                      <iconset resource="../resources.qrc">
                        <normaloff>:/images/arrowDown_ico.png</normaloff>:/images/arrowDown_ico.png</iconset>
                      </property>
                      <property name="checkable">
@@ -2480,21 +2480,7 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
               </layout>
              </widget>
             </widget>
-            <widget class="QWidget" name="page_4">
-             <widget class="QLabel" name="label_3">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>130</y>
-                <width>471</width>
-                <height>131</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Hardware placehoolder</string>
-              </property>
-             </widget>
-            </widget>
+            <widget class="QWidget" name="page_4"/>
             <widget class="QWidget" name="page_5">
              <widget class="QGroupBox" name="box_CfgInterface">
               <property name="geometry">
@@ -2523,32 +2509,32 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                 <widget class="QComboBox" name="cbb_Language">
                  <item>
                   <property name="text">
-                   <string>Русский</string>
+                   <string notr="true">Русский</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>Казақ</string>
+                   <string notr="true">Казақ</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>Кыргыз тили</string>
+                   <string notr="true">Кыргыз тили</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>Саха</string>
+                   <string notr="true">Саха</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>中文</string>
+                   <string notr="true">中文</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>English</string>
+                   <string notr="true">English</string>
                   </property>
                  </item>
                 </widget>
@@ -2861,7 +2847,7 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
               </widget>
               <widget class="QCheckBox" name="ckb_ToggleLogsArch">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <property name="geometry">
                 <rect>
@@ -2949,9 +2935,9 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                   <colorrole role="PlaceholderText">
                    <brush brushstyle="NoBrush">
                     <color alpha="128">
-                     <red>128</red>
-                     <green>128</green>
-                     <blue>128</blue>
+                     <red>255</red>
+                     <green>255</green>
+                     <blue>255</blue>
                     </color>
                    </brush>
                   </colorrole>
@@ -3032,9 +3018,9 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                   <colorrole role="PlaceholderText">
                    <brush brushstyle="NoBrush">
                     <color alpha="128">
-                     <red>128</red>
-                     <green>128</green>
-                     <blue>128</blue>
+                     <red>255</red>
+                     <green>255</green>
+                     <blue>255</blue>
                     </color>
                    </brush>
                   </colorrole>
@@ -3115,9 +3101,9 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                   <colorrole role="PlaceholderText">
                    <brush brushstyle="NoBrush">
                     <color alpha="128">
-                     <red>128</red>
-                     <green>128</green>
-                     <blue>128</blue>
+                     <red>255</red>
+                     <green>255</green>
+                     <blue>255</blue>
                     </color>
                    </brush>
                   </colorrole>
@@ -3142,10 +3128,13 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                <property name="text">
                 <string>Сохранять старые логи:</string>
                </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
               </widget>
               <widget class="QComboBox" name="cbb_LogsArchMode">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <property name="geometry">
                 <rect>
@@ -3657,7 +3646,7 @@ QPushButton:hover {
                    <string>Добавить пользователя</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="resources.qrc">
+                   <iconset resource="../resources.qrc">
                     <normaloff>:/images/plus_ico.png</normaloff>:/images/plus_ico.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -3686,7 +3675,7 @@ QPushButton:hover {
                    <string>Настроить пользователя</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="resources.qrc">
+                   <iconset resource="../resources.qrc">
                     <normaloff>:/images/more_ico.png</normaloff>:/images/more_ico.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -3715,7 +3704,7 @@ QPushButton:hover {
                    <string>Исключить пользователя</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="resources.qrc">
+                   <iconset resource="../resources.qrc">
                     <normaloff>:/images/minus_ico.png</normaloff>:/images/minus_ico.png</iconset>
                   </property>
                   <property name="iconSize">
@@ -3994,7 +3983,7 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources.qrc">:/main/AsQamm/logo-alpha.png</pixmap>
+               <pixmap resource="../resources.qrc">:/main/AsQamm/logo-alpha.png</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -4096,7 +4085,7 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="resources.qrc">
+             <iconset resource="../resources.qrc">
               <normaloff>:/images/menu_ico.png</normaloff>
               <disabledoff>:/images/menu_ico_-i_.png</disabledoff>:/images/menu_ico.png</iconset>
             </property>
@@ -4279,7 +4268,7 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="resources.qrc">
+             <iconset resource="../resources.qrc">
               <normaloff>:/images/interfacemode_ico.png</normaloff>
               <disabledoff>:/images/interfacemode_ico_-i_.png</disabledoff>:/images/interfacemode_ico.png</iconset>
             </property>
@@ -4321,7 +4310,7 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="resources.qrc">
+             <iconset resource="../resources.qrc">
               <normaloff>:/images/apply_ico.png</normaloff>
               <disabledoff>:/images/apply_ico_-i_.png</disabledoff>:/images/apply_ico.png</iconset>
             </property>
@@ -4363,7 +4352,7 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="resources.qrc">
+             <iconset resource="../resources.qrc">
               <normaloff>:/images/save_ico.png</normaloff>
               <disabledoff>:/images/save_ico_-i_.png</disabledoff>:/images/save_ico.png</iconset>
             </property>
@@ -4405,7 +4394,7 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="resources.qrc">
+             <iconset resource="../resources.qrc">
               <normaloff>:/images/open_ico.png</normaloff>
               <disabledoff>:/images/open_ico_-i_.png</disabledoff>:/images/open_ico.png</iconset>
             </property>
@@ -4478,7 +4467,9 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
   <tabstop>keySequenceEdit_9</tabstop>
  </tabstops>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="../resources.qrc"/>
+  <include location="../resources.qrc"/>
+  <include location="../resources.qrc"/>
  </resources>
  <connections>
   <connection>
@@ -4536,12 +4527,12 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>181</x>
-     <y>162</y>
+     <x>252</x>
+     <y>151</y>
     </hint>
     <hint type="destinationlabel">
-     <x>161</x>
-     <y>186</y>
+     <x>232</x>
+     <y>171</y>
     </hint>
    </hints>
   </connection>
@@ -4552,12 +4543,12 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>226</x>
-     <y>166</y>
+     <x>292</x>
+     <y>151</y>
     </hint>
     <hint type="destinationlabel">
-     <x>216</x>
-     <y>205</y>
+     <x>214</x>
+     <y>191</y>
     </hint>
    </hints>
   </connection>
@@ -4568,12 +4559,12 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>124</x>
-     <y>207</y>
+     <x>195</x>
+     <y>191</y>
     </hint>
     <hint type="destinationlabel">
-     <x>280</x>
-     <y>220</y>
+     <x>302</x>
+     <y>196</y>
     </hint>
    </hints>
   </connection>
@@ -4584,12 +4575,12 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>117</x>
-     <y>269</y>
+     <x>188</x>
+     <y>259</y>
     </hint>
     <hint type="destinationlabel">
-     <x>118</x>
-     <y>292</y>
+     <x>189</x>
+     <y>281</y>
     </hint>
    </hints>
   </connection>
@@ -4600,12 +4591,12 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>143</x>
-     <y>274</y>
+     <x>214</x>
+     <y>259</y>
     </hint>
     <hint type="destinationlabel">
-     <x>144</x>
-     <y>315</y>
+     <x>215</x>
+     <y>301</y>
     </hint>
    </hints>
   </connection>
@@ -4616,12 +4607,12 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>209</x>
-     <y>312</y>
+     <x>250</x>
+     <y>301</y>
     </hint>
     <hint type="destinationlabel">
-     <x>268</x>
-     <y>323</y>
+     <x>297</x>
+     <y>303</y>
     </hint>
    </hints>
   </connection>
@@ -4632,12 +4623,12 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>200</x>
-     <y>348</y>
+     <x>271</x>
+     <y>329</y>
     </hint>
     <hint type="destinationlabel">
-     <x>203</x>
-     <y>362</y>
+     <x>274</x>
+     <y>351</y>
     </hint>
    </hints>
   </connection>
@@ -4648,12 +4639,12 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>159</x>
-     <y>349</y>
+     <x>230</x>
+     <y>329</y>
     </hint>
     <hint type="destinationlabel">
-     <x>159</x>
-     <y>387</y>
+     <x>230</x>
+     <y>371</y>
     </hint>
    </hints>
   </connection>
@@ -4664,12 +4655,12 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>239</x>
-     <y>381</y>
+     <x>250</x>
+     <y>371</y>
     </hint>
     <hint type="destinationlabel">
-     <x>272</x>
-     <y>388</y>
+     <x>297</x>
+     <y>373</y>
     </hint>
    </hints>
   </connection>
@@ -4680,8 +4671,8 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>377</x>
-     <y>144</y>
+     <x>448</x>
+     <y>130</y>
     </hint>
     <hint type="destinationlabel">
      <x>380</x>
@@ -4696,8 +4687,8 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>400</x>
-     <y>300</y>
+     <x>470</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
      <x>412</x>
@@ -4712,8 +4703,8 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>373</x>
-     <y>302</y>
+     <x>444</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
      <x>621</x>
@@ -4728,12 +4719,12 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>641</x>
-     <y>352</y>
+     <x>685</x>
+     <y>330</y>
     </hint>
     <hint type="destinationlabel">
-     <x>645</x>
-     <y>383</y>
+     <x>683</x>
+     <y>371</y>
     </hint>
    </hints>
   </connection>
@@ -4744,12 +4735,12 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>617</x>
-     <y>350</y>
+     <x>685</x>
+     <y>330</y>
     </hint>
     <hint type="destinationlabel">
-     <x>629</x>
-     <y>417</y>
+     <x>683</x>
+     <y>396</y>
     </hint>
    </hints>
   </connection>

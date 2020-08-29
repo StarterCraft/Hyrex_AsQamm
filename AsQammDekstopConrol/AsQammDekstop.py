@@ -5,7 +5,12 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from playsound import playsound, PlaysoundException
 
-from _asQammDekstopUI.rootUI import *
+from _asQammDekstopUI.userCreationDlg import Ui_Dlg_CreateNewUserInUserDb
+from _asQammDekstopUI.userEditDlg import Ui_Dlg_EditUserInUserDb
+from _asQammDekstopUI.userSelfEditDlg import Ui_Dlg_EditCurrentUserInUserDb
+from _asQammDekstopUI.applyChangesDlg import Ui_Dlg_ApplyChanges
+
+from _asQammDekstopUI import *
 from _asQammDekstopLibs.resources import *
 from _asQammDekstopLibs.logging import *
 from _asQammDekstopLibs.config import *
@@ -22,14 +27,14 @@ class AqMainWindow(QMainWindow):
         self.mkdirs()
 
         self.rootLogger = AqLogger('Main')
-        self.rootLogger.Logger.info('Инициализация корневого класса')
-
 
         self.popups = []
         self.sounds = {
             'error': 'data/system/sounds/error.mp3',
             'login': 'data/system/sounds/login.mp3', 
             'logOut': 'data/system/sounds/logout.mp3'}
+        
+        self.getPopups()
 
 
     def mkdirs(self):
@@ -42,6 +47,33 @@ class AqMainWindow(QMainWindow):
             except FileExistsError:
                 continue
             
+    
+    def getPopups(self):
+        
+        self.applyChangesDlg = QtWidgets.QDialog()
+        self.popups.append(self.applyChangesDlg)
+
+        self.userCreationDlg = QtWidgets.QDialog()
+        self.popups.append(self.userCreationDlg)
+
+        self.userEditDlg = QtWidgets.QDialog()
+        self.popups.append(self.userEditDlg)
+
+        self.userSelfEditDlg = QtWidgets.QDialog()
+        self.popups.append(self.userSelfEditDlg)
+
+        self.applyChangesDlgUi = Ui_Dlg_ApplyChanges()
+        self.applyChangesDlgUi.setupUi(self.applyChangesDlg)
+
+        self.userCreationDlgUi = Ui_Dlg_CreateNewUserInUserDb()
+        self.userCreationDlgUi.setupUi(self.userCreationDlg)
+
+        self.userEditDlgUi = Ui_Dlg_EditUserInUserDb()
+        self.userEditDlgUi.setupUi(self.userEditDlg)
+
+        self.userSelfEditDlgUi = Ui_Dlg_EditCurrentUserInUserDb()
+        self.userSelfEditDlgUi.setupUi(self.userSelfEditDlg)
+        
 
     def mainloop(self, app):
         self.rootLogger.Logger.info('Запуск главного цикла приложения')
@@ -52,13 +84,12 @@ class AqMainWindow(QMainWindow):
 from _asQammDekstopLibs.users import *
 from _asQammDekstopLibs.functions import AqUIFunctions, AqLocalFunctions
 
-
 if __name__ == "__main__":
 
     app = QApplication(sys.argv)
 
     root = AqMainWindow()
-    root.rootLogger.Logger.info('Экземпляр корневого класса успешно создан: ' + str(root))
+    root.rootLogger.Logger.info('HYREX ASQAMM Pre-aplha 0.-01a Dekstop')
 
     usersCore = AqUsersSystem(root)
     usersCore.userSystemLogger.Logger.debug('Экземпляр класса системы пользователей успешно создан: ' + str(usersCore))
@@ -102,8 +133,9 @@ if __name__ == "__main__":
     root.ui.liw_UsersDbList.itemSelectionChanged.connect( lambda: usersCore.updateListWidget(root, usersCore) )
     root.ui.sld_WindowsOpacitySct.valueChanged.connect( lambda: AqUIFunctions.setPopupsOpacity(root) )
     root.ui.btn_InterfaceMode.clicked.connect( lambda: AqUIFunctions.changeInterfaceMode(AqUIFunctions, root, usersCore) )
-    root.ui.btn_Apply.clicked.connect( lambda: localFunc.saveUnsavedUsers(usersCore, root) )
+    root.ui.btn_Apply.clicked.connect( lambda: localFunc.apply(root, usersCore) )
     root.ui.btn_OpenLogFolder.clicked.connect( lambda: root.rootLogger.openLogFolder() )
+    
 
     root.rootLogger.Logger.info('Привязка кнопок в интерфейсе приложения завершена успешно')
 

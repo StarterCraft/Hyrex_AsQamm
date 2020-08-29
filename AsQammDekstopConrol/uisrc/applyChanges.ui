@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dlg_EditUserInUserDb</class>
- <widget class="QDialog" name="Dlg_EditUserInUserDb">
+ <class>Dlg_ApplyChanges</class>
+ <widget class="QDialog" name="Dlg_ApplyChanges">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -291,12 +291,35 @@ QLineEdit:hover {
         <property name="horizontalScrollBarPolicy">
          <enum>Qt::ScrollBarAlwaysOff</enum>
         </property>
-        <property name="columnCount">
-         <number>1</number>
+        <property name="autoExpandDelay">
+         <number>-1</number>
         </property>
+        <property name="indentation">
+         <number>20</number>
+        </property>
+        <property name="itemsExpandable">
+         <bool>false</bool>
+        </property>
+        <property name="columnCount">
+         <number>2</number>
+        </property>
+        <attribute name="headerDefaultSectionSize">
+         <number>39</number>
+        </attribute>
+        <attribute name="headerHighlightSections">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="headerStretchLastSection">
+         <bool>true</bool>
+        </attribute>
         <column>
          <property name="text">
-          <string>Объекты</string>
+          <string>сохр.</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Объект</string>
          </property>
         </column>
        </widget>
@@ -373,7 +396,7 @@ QLineEdit:hover {
   <connection>
    <sender>btn_Accept</sender>
    <signal>clicked()</signal>
-   <receiver>Dlg_EditUserInUserDb</receiver>
+   <receiver>Dlg_ApplyChanges</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -389,7 +412,7 @@ QLineEdit:hover {
   <connection>
    <sender>btn_Decline</sender>
    <signal>clicked()</signal>
-   <receiver>Dlg_EditUserInUserDb</receiver>
+   <receiver>Dlg_ApplyChanges</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

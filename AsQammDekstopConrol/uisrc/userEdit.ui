@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Редактировать существоющего пользователя</string>
+   <string>Редактировать существующего пользователя</string>
   </property>
   <property name="windowOpacity">
    <double>0.959500000000000</double>
@@ -443,7 +443,7 @@ QLineEdit:hover {
         <widget class="QWidget" name="scrollAreaWidgetContents">
          <property name="geometry">
           <rect>
-           <x>-301</x>
+           <x>0</x>
            <y>0</y>
            <width>663</width>
            <height>127</height>
@@ -472,7 +472,7 @@ QLineEdit:hover {
             </property>
             <property name="minimumSize">
              <size>
-              <width>145</width>
+              <width>135</width>
               <height>115</height>
              </size>
             </property>
@@ -520,7 +520,7 @@ QLineEdit:hover {
            <widget class="QGroupBox" name="box_DefnScreen">
             <property name="minimumSize">
              <size>
-              <width>170</width>
+              <width>135</width>
               <height>115</height>
              </size>
             </property>
@@ -568,7 +568,7 @@ QLineEdit:hover {
            <widget class="QGroupBox" name="box_PtsScreen">
             <property name="minimumSize">
              <size>
-              <width>165</width>
+              <width>135</width>
               <height>115</height>
              </size>
             </property>
@@ -622,7 +622,7 @@ QLineEdit:hover {
            <widget class="QGroupBox" name="box_Others">
             <property name="minimumSize">
              <size>
-              <width>165</width>
+              <width>135</width>
               <height>115</height>
              </size>
             </property>

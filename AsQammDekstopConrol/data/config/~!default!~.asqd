@@ -1,7 +1,7 @@
 {
 	"preset": null,
-	"language": "ru-RU",
-	"theme": "dark",
+	"language": 0,
+	"theme": 0,
 	"popupOpacity": 92,
 	
 	"loggingMode": true,
@@ -17,7 +17,7 @@
 		"configScreen": "Ctrl+5",
 		
 		"changeInterfaceMode": "Ctrl+Q",
-		"applyAllChanges": "Ctrl+A",
+		"applyChanges": "Ctrl+A",
 		"saveChanges": "Ctrl+S",
 		"loadChanges": "Ctrl+W"
 		

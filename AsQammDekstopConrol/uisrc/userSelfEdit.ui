@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Редактировать существоющего пользователя</string>
+   <string>Редактировать существующего пользователя</string>
   </property>
   <property name="windowOpacity">
    <double>0.959500000000000</double>
