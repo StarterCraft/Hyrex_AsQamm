@@ -123,7 +123,7 @@ if __name__ == "__main__":
     usersCore.loadUsers(usersCore, root)
 
 
-    root.ui.btn_UserInit.clicked.connect( lambda: usersCore.userInit(root, usersCore, root.ui.lnI_Login.text(), root.ui.lnI_Password.text()) )
+    root.ui.btn_UserInit.clicked.connect( lambda: usersCore.userInit(root, usersCore) )
     root.ui.btn_UserInitAsGuest.clicked.connect( lambda: usersCore.guestUserInit(usersCore, root) )
     root.ui.btn_LogOut.clicked.connect( lambda: usersCore.logOut(usersCore, root) )
     root.ui.btn_ChangeCurrentUserSrtt.clicked.connect ( lambda: usersCore.callCurrentUserSetupDlg(root, usersCore, usersCore.getInstance(root, True)) )

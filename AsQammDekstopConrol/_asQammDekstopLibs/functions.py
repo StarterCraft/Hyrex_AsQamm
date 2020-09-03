@@ -1,5 +1,5 @@
 from AsQammDekstop import *
-import json, base64, os, glob, ffmpeg
+import json, base64, os, glob, ffmpeg, hashlib
 from playsound import *
 
 
@@ -187,6 +187,9 @@ class AqCrypto:
             self.initialFilename = str(r'customuser_' + str(r'{0}').format(i))
             self.initialFilename = self.initialFilename.encode('utf-8')
             self.initialFilename = base64.b64encode(self.initialFilename)
+            self.initialFilename = self.initialFilename.decode('utf-8')
+            self.initialFilename = self.initialFilename[0:-2]
+            self.initialFilename = self.initialFilename.encode('utf-8')
             
             exportList.append(self.initialFilename)
 
@@ -204,13 +207,6 @@ class AqCrypto:
                     else:
                         exportList.append(r'{0}'.format(self.gotName[0]))
 
-                    if len(exportList) == 0:
-                        QMessageBox.warning(root, 'Ошибка инициализации системы пользователей', '''Не удалось найти ни одного аккаунта
-                                            пользователя, за исключением аккаунта гостя. Большая часть функциональности недоступна.
-                                            Проверьте, что вы создали хотя бы одного пользователя с правами админинстратора.''')
-                    else:
-                        pass
-
                 else:
                     if self.gotName != []:
                         continue
@@ -218,16 +214,25 @@ class AqCrypto:
                         exportList.append(r'data\personal\~!{0}!~.asqd'.format(str(item.decode('utf-8'))))
 
 
-    def decryptContent(self, str):
-        return (base64.b64decode(str.encode('utf-8'))).decode('utf-8')
+    def decryptContent(self, s):
+        return (base64.b64decode(s.encode('utf-8'))).decode('utf-8')
 
 
-    def encryptContent(self, str):
-        return (base64.b64encode(str.encode('utf-8'))).decode('utf-8')
+    def encryptContent(self, s):
+        return (base64.b64encode(s.encode('utf-8'))).decode('utf-8')
 
 
     def rawContent(s):
         return str(r'{0}'.format(s))
+
+
+    def getHmta(self):
+        return os.urandom(32)
+
+
+    def getCut(self, _str, bytes):
+        print(hashlib.pbkdf2_hmac('sha256', _str.encode('utf-8'), bytes, 256256).hex())
+        return (hashlib.pbkdf2_hmac('sha256', _str.encode('utf-8'), bytes, 256256).hex())
 
 
 class AqLocalFunctions(AqMainWindow):
