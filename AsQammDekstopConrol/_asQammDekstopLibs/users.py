@@ -11,7 +11,7 @@ from _asQammDekstopLibs.logging import AqLogger
 from random import choice
 from playsound import *
 
-import json, os
+import json, os, requests
 
 
 class AqUsersSystem(AqMainWindow):
@@ -132,18 +132,14 @@ class AqUsersSystem(AqMainWindow):
 
     def loadUsers(self, usersCore, root):
 
-        self.userSystemLogger.Logger.info('Система пользователей начинает выполнение метода инициализации системных экземпляров' +
-                                           ' класса пользователя')
-
         with open(r'%s' % str(self.sysFileNames[0]), 'r') as dataFile:
 
             fileString = dataFile.readline()
             jsonString = self.crypto.decryptContent(fileString)
             jsonString = json.loads(jsonString)
-            self.userSystemLogger.Logger.debug('Прочитан ASQD-файл, получен словарь для создания экземпляра класса пользователя')
 
             usersCore.guest = AqUser(usersCore, root, int(jsonString['id']), (jsonString['description']), (jsonString['type']), str(self.sysFileNames[0]), 
-                              (jsonString['avatarAddress']), (jsonString['login']), (jsonString['password']), str(0), (jsonString['permits']),
+                              (jsonString['avatarAddress']), (jsonString['login']), (jsonString['password']), (jsonString['permits']),
                               (jsonString['config']))
             usersCore.guest.edited = False
 
@@ -151,35 +147,29 @@ class AqUsersSystem(AqMainWindow):
         self.userSystemLogger.Logger.info('Система пользователей начинает выполнение метода инициализации добавленных извне экземпляров' +
                                            ' класса пользователя')
 
-        self.crypto.getFileNamesList(self.possibleFileNames)
-        self.crypto.seekForFiles(root, self.possibleFileNames, self.availableFileNames, True)
 
-        if (len(self.availableFileNames)) == 0:
-                        QMessageBox.warning(root, 'Ошибка инициализации системы пользователей', 
-                                            '''Не удалось найти ни одного аккаунта пользователя, за исключением аккаунта гостя. Большая часть функциональности недоступна. Проверьте, что вы создали хотя бы одного пользователя с правами админинстратора.''')
+        r = requests.get(str('http://' + root.serverIP + ':' + root.serverPort + '/getUserdata'))
+        self.userSystemLogger.Logger.info('Подключение к серверу установлено')
 
-        for item in self.availableFileNames:
-            with open(r'%s' % item, 'r') as dataFile:
+        if (len(list(r.json()))) == 0:
+            QMessageBox.warning(root, 'Ошибка инициализации системы пользователей', 
+                                      '''Не удалось найти ни одного аккаунта пользователя, за исключением аккаунта гостя. Большая часть функциональности недоступна. Проверьте, что вы создали хотя бы одного пользователя с правами админинстратора.''')
 
-                fileString = dataFile.readline()
-                jsonString = self.crypto.decryptContent(fileString)
-                jsonString = json.loads(jsonString)
-                print(jsonString['password'] + ' ' + str(jsonString['hmta']))
-                self.userSystemLogger.Logger.debug('Прочитан ASQD-файл, получен словарь для создания экземпляра класса пользователя')
+        for item in r.json():
+            self.userSystemLogger.Logger.debug('Прочитан ASQD-файл, получен словарь для создания экземпляра класса пользователя')
 
-                usersCore.instance = AqUser(usersCore, root, int(jsonString['id']), (jsonString['description']), (jsonString['type']), (str(item)),  
-                              (jsonString['avatarAddress']), (jsonString['login']), (jsonString['password']), (jsonString['hmta']), (jsonString['permits']),
-                              (jsonString['config']))
-                usersCore.instance.edited = False
-                self.userSystemLogger.Logger.info('Создан экземпляр класса пользователя: ' + str(usersCore.instance))
+            usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
+                              (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
+            usersCore.instance.edited = False
+            self.userSystemLogger.Logger.info('Создан экземпляр класса пользователя ' + str(usersCore.instance.login))
 
 
     def addToUserList(self, root, object, mode):
         if mode == 0:
             self.users.append(object)
             root.ui.liw_UsersDbList.addItems([object.login])
-            self.userSystemLogger.Logger.debug('Экземпляр класса пользователя ({0}) был добавлен в лист экземпляров класса пользователя'.format(
-                                                str(object)))
+            self.userSystemLogger.Logger.debug('Экземпляр класса пользователя {0} был добавлен в лист экземпляров класса пользователя'.format(
+                                                str(object.login)))
         elif mode == 1:
             for AqUser in object:
                 root.ui.liw_UsersDbList.addItems([(AqUser.login)])
@@ -194,58 +184,67 @@ class AqUsersSystem(AqMainWindow):
 
         for AqUser in self.checker:
             self.users.remove(AqUser)
-
-        try:
-            self.userSystemLogger.Logger.info('Система пользователей успешно завершила выполнение очистки списка экземпляров класса пользователей.' + 
-                                          ' В списке остаётся только активный пользователь: {0}'.format(str(self.users[0])))
-        except IndexError:
-            self.userSystemLogger.Logger.info('Система пользователей успешно завершила выполнение очистки списка экземпляров класса пользователей.' + 
-                                          ' Список остаётся пустым, так как выполнен выход из системы')
-
+            
              
     def userInit(self, root, usersCore):
 
-        self.selector = [AqUser for AqUser in self.users if (AqUser.login == root.ui.lnI_Login.text() and
-                                                             AqUser.password == self.crypto.getCut(((root.ui.lnI_Password.text()).encode('utf-8')).decode('utf-8'),
-                                                             AqUser.hmta))]
+        self.selector = [AqUser for AqUser in self.users if (AqUser.login == root.ui.lnI_Login.text())]
+        self.matches = []
 
-        try:
-            self.selector[0].setAsCurrent(True)
-            self.loggedIn = True
+        r = requests.get(str('http://' + root.serverIP + ':' + root.serverPort + '/getUserRg'))
+        print(r.text)
 
-            if self.selector[0].getPermits('pxConfigAsAdmin'):
-                self.lockApp(root, usersCore)
-            else:
-                self.cleanUserList()
-                self.lockApp(root, usersCore)
-            playsound(root.sounds['login'], False)
+        for i in json.loads(r.text):
+            try:
+                print(i)
+                if self.selector[0].password == self.crypto.getCut(root.ui.lnI_Password.text(), bytes.fromhex(i)):
+                    self.selector[0].setAsCurrent(True)
+                    self.loggedIn = True
 
-            self.userSystemLogger.Logger.info('Вход в систему произведён')
-
-        except IndexError:
+                    if self.selector[0].getPermits('pxConfigAsAdmin'):
+                        self.lockApp(root, usersCore)
+                    else:
+                        self.cleanUserList()
+                        self.lockApp(root, usersCore)
+                    
+                    playsound(root.sounds['login'], False)
+                    self.userSystemLogger.Logger.info('Вход в систему произведён пользователем {0}'.format(self.selector[0].login))
+                    self.matches.append(True)
+                    break
+                else:
+                    self.matches.append(False)
+                    continue
+            
+            except IndexError:
+                root.ui.box_Login.setGeometry(QtCore.QRect(360, 130, 280, 150))
+                root.ui.lbl_LoginStatus.show()
+                root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
+                root.ui.lbl_LoginStatus.setText('Неверный логин или пароль!')
+                self.userSystemLogger.Logger.info('Вход в систему не произведён по причине: 0 — неверный логин или пароль')
+                playsound(root.sounds['error'], False)
+        
+        if [bool for bool in self.matches if (bool == True)] == []:
             root.ui.box_Login.setGeometry(QtCore.QRect(360, 130, 280, 150))
             root.ui.lbl_LoginStatus.show()
             root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
             root.ui.lbl_LoginStatus.setText('Неверный логин или пароль!')
             self.userSystemLogger.Logger.info('Вход в систему не произведён по причине: 0 — неверный логин или пароль')
             playsound(root.sounds['error'], False)
+        else:
+            pass
 
 
     def guestUserInit(self, usersCore, root):
-        self.userSystemLogger.Logger.info('Система пользователей начинает выполнение метода инициализации пользователя Гость')
 
         usersCore.users[0].setAsCurrent(True)
-        
         self.userSystemLogger.Logger.info('У активного экземпляра класса пользователя ' + str(usersCore.users[0]) + ' установлен параметр активности: ' + 
                                           str(usersCore.users[0].current) + ', экземпляр назначен активным пользователем')
 
         self.loggedIn = True
-        self.userSystemLogger.Logger.debug('Система пользователей перешла в состояние: (Вход в систему произведён)')
-
         self.cleanUserList()
-
         self.lockApp(root, usersCore)
-        self.userSystemLogger.Logger.debug('Система пользователей после входа в систему успешно завершила разблокировку интерфейса приложения')
+
+        self.userSystemLogger.Logger.info('Вход в систему произведён в режиме гостя')
 
 
     def callUserSetupDlg(self, root, usersCore, userToEdit):
@@ -266,7 +265,6 @@ class AqUsersSystem(AqMainWindow):
                 root.userEditDlgUi.filedialog.setFileMode(QFileDialog.ExistingFile)
                 root.userEditDlgUi.filedialog.fileSelected.connect( lambda: root.userEditDlgUi.lnI_EuAvatarAddr.setText(str(
                                                                         root.userEditDlgUi.filedialog.selectedFiles()[0])) )
-                self.userSystemLogger.Logger.debug('Инициирован вызов QFileDialog')
 
                 root.userEditDlgUi.tlb_Browse.clicked.connect( lambda:  root.userEditDlgUi.filedialog.show() )
                 root.userEditDlgUi.lnI_EuAvatarAddr.textChanged.connect( lambda: root.userEditDlgUi.gfv_EuAvatarPrev.setPixmap(QPixmap(QImage(str(
@@ -321,7 +319,6 @@ class AqUsersSystem(AqMainWindow):
             root.userSelfEditDlgUi.filedialog.setFileMode(QFileDialog.ExistingFile)
             root.userSelfEditDlgUi.filedialog.fileSelected.connect( lambda: root.userSelfEditDlgUi.lnI_EuAvatarAddr.setText(str(
                                                                     root.userSelfEditDlgUi.filedialog.selectedFiles()[0])) )
-            self.userSystemLogger.Logger.debug('Инициирован вызов QFileDialog')
 
             root.userSelfEditDlgUi.tlb_Browse.clicked.connect( lambda:  root.userSelfEditDlgUi.filedialog.show() )
             root.userSelfEditDlgUi.lnI_EuAvatarAddr.textChanged.connect( lambda: root.userSelfEditDlgUi.gfv_EuAvatarPrev.setPixmap(QPixmap(QImage(str(
@@ -331,7 +328,6 @@ class AqUsersSystem(AqMainWindow):
                                                                        (root.userSelfEditDlgUi.lnI_EuAvatarAddr.text()), (userToEdit.permits)))
 
             root.userSelfEditDlg.show()
-            self.userSystemLogger.Logger.debug('Диалог самостоятельного редактирования пользователя {0} открыт'.format(str(userToEdit.login)))
 
         except AttributeError:
             pass
@@ -340,6 +336,7 @@ class AqUsersSystem(AqMainWindow):
     def callUserDeletionDlg(self, root, userToDelete):
         try:
             self.msg = QMessageBox.question(root, 'Подтверждение действия', 'Вы действительно хотите удалить пользователя %s? Это необратимое действие!' % userToDelete.login)
+            self.userSystemLogger.Logger.debug('Инициирован вызов диалога удаления пользователя {0}'.format(userToDelete.login))
 
             if self.msg == QMessageBox.Yes:
                 if (userToDelete.type == (0 or '0') or userToDelete.description == 'Guest'):
@@ -387,6 +384,7 @@ class AqUsersSystem(AqMainWindow):
 
     def callUserCreationDlg(self, root, usersCore):
 
+            self.userSystemLogger.Logger.debug('Инициирован вызов диалога создания нового пользователя')
             root.userCreationDlgUi.lbl_CnuID.setText(str(self.generateIdForNewUser()))
             root.userCreationDlgUi.lnI_CnuLogin.setText('')
             root.userCreationDlgUi.lnI_CnuPassword.setText('')
@@ -422,6 +420,7 @@ class AqUsersSystem(AqMainWindow):
                                                                   (self.creationDlg.permits), (AqConfigSystem.loadDefaultConfigDict(AqConfigSystem, root))) )
 
             root.userCreationDlg.show()
+
 
 
     def getInstance(self, root, flag):
@@ -477,7 +476,7 @@ from _asQammDekstopLibs.config import AqConfig
 
 class AqUser(AqUsersSystem):
     
-    def __init__(self, usersCore, root, Id, Desc, Type, Filepath, AvAddr, Login, Password, Cut, Permits, ConfigDict):
+    def __init__(self, usersCore, root, Id, Desc, Type, Filepath, AvAddr, Login, Password, Permits, ConfigDict):
        
        self.id = Id
        self.type = Type
@@ -490,12 +489,7 @@ class AqUser(AqUsersSystem):
        self.permits = Permits
        self.configDict = ConfigDict
        self.configPreset = ConfigDict['preset']
-
-       if Type == 0:
-           pass
-       else:
-           self.hmta = (bytes.fromhex(Cut))
-
+       
        if self.configPreset != None:
            self.config = usersCore.config.loadDefaultConfig(root)
        else:
@@ -556,4 +550,16 @@ class AqUser(AqUsersSystem):
             return self.permits['configure']
         elif permitToKnow == 'pxConfigAsAdmin':
             return self.permits['configureAsAdmin']
+
+
+    def getDict(self):
+        return {'id': self.id,
+                'description': self.description,
+                'type': self.type,
+                'filepath': self.filepath,
+                'login': self.login,
+                'password': self.password,
+                'avatarAddress': self.avatarAddress,
+                'permits': self.permits,
+                'config': self.configDict}
     

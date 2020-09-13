@@ -148,6 +148,7 @@ class AqUIFunctions():
     def selectSkin(id, root):
 
         if id == 1:
+            root.ui.stack.setCurrentWidget(root.ui.page_1)
             root.ui.lbl_SkinName.setText('Наш дом')
 
         elif id == 2:

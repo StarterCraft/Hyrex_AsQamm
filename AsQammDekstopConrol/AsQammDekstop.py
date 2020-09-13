@@ -26,6 +26,9 @@ class AqMainWindow(QMainWindow):
         self.ui.setupUi(self)
         self.mkdirs()
 
+        self.serverIP = '127.0.0.1'
+        self.serverPort = '8000'
+
         self.rootLogger = AqLogger('Main')
 
         self.popups = []
@@ -98,7 +101,7 @@ if __name__ == "__main__":
     root.rootLogger.Logger.debug('Инициализирована система локальных данных')
 
     AqUIFunctions.createLabelsAtMainMenu(root)
-    root.rootLogger.Logger.info('Всплывающие подсказки меню успешно сгенерированы! ')
+    root.rootLogger.Logger.info('Всплывающие подсказки меню успешно сгенерированы')
 
     # Добавляем привязки клавиш к анимациям
     root.ui.btn_Toggle.clicked.connect(lambda: AqUIFunctions.toggleSimpleWidgetInteraction(root, 190, 1))

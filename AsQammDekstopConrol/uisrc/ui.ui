@@ -810,7 +810,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
 </string>
             </property>
             <property name="currentIndex">
-             <number>5</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="page_1">
              <property name="styleSheet">
@@ -819,25 +819,6 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
              <layout class="QVBoxLayout" name="verticalLayout_7">
               <item>
                <layout class="QGridLayout" name="grd_HomeRootWidget">
-                <item row="1" column="0" colspan="2">
-                 <widget class="QGroupBox" name="box_WaterConOwv">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="title">
-                   <string>Водопровод</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="2" column="0">
                  <widget class="QGroupBox" name="box_DefenseOwv">
                   <property name="sizePolicy">
@@ -857,13 +838,6 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="1">
-                 <widget class="QGroupBox" name="box_NetworkOvw">
-                  <property name="title">
-                   <string>Сеть</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="0" column="0" colspan="2">
                  <widget class="QGroupBox" name="box_EnergyConOwv">
                   <property name="sizePolicy">
@@ -880,6 +854,39 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
                   </property>
                   <property name="title">
                    <string>Электропитание</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2" rowspan="3">
+                 <widget class="QGroupBox" name="groupBox">
+                  <property name="title">
+                   <string>Здесь что-то должно быть</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QGroupBox" name="box_NetworkOvw">
+                  <property name="title">
+                   <string>Сеть</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0" colspan="2">
+                 <widget class="QGroupBox" name="box_WaterConOwv">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="title">
+                   <string>Водопровод</string>
                   </property>
                  </widget>
                 </item>
@@ -2480,7 +2487,264 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
               </layout>
              </widget>
             </widget>
-            <widget class="QWidget" name="page_4"/>
+            <widget class="QWidget" name="page_4">
+             <widget class="QWidget" name="gridLayoutWidget_2">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>10</y>
+                <width>901</width>
+                <height>401</height>
+               </rect>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_5">
+               <item row="0" column="0">
+                <widget class="QGroupBox" name="box_AqServer">
+                 <property name="maximumSize">
+                  <size>
+                   <width>200</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="title">
+                  <string>Сервер</string>
+                 </property>
+                 <widget class="QLabel" name="lbl_ReadOnly45">
+                  <property name="geometry">
+                   <rect>
+                    <x>6</x>
+                    <y>208</y>
+                    <width>51</width>
+                    <height>20</height>
+                   </rect>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">font: 10pt &quot;Segoe UI Semibold&quot;</string>
+                  </property>
+                  <property name="text">
+                   <string>IP:Порт</string>
+                  </property>
+                 </widget>
+                 <widget class="QLineEdit" name="lnI_AqServerIP">
+                  <property name="geometry">
+                   <rect>
+                    <x>60</x>
+                    <y>210</y>
+                    <width>85</width>
+                    <height>20</height>
+                   </rect>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>85</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="inputMask">
+                   <string>900.900.900.900</string>
+                  </property>
+                  <property name="text">
+                   <string>000.000.000.0</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="lbl_ReadOnly46">
+                  <property name="geometry">
+                   <rect>
+                    <x>149</x>
+                    <y>210</y>
+                    <width>8</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">font: 10pt &quot;Segoe UI Semibold&quot;</string>
+                  </property>
+                  <property name="text">
+                   <string>:</string>
+                  </property>
+                 </widget>
+                 <widget class="QLineEdit" name="lbI_AqServerPort">
+                  <property name="geometry">
+                   <rect>
+                    <x>156</x>
+                    <y>210</y>
+                    <width>38</width>
+                    <height>20</height>
+                   </rect>
+                  </property>
+                  <property name="inputMask">
+                   <string>99990</string>
+                  </property>
+                  <property name="text">
+                   <string>00000</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="lbl_ReadOnly42">
+                  <property name="geometry">
+                   <rect>
+                    <x>6</x>
+                    <y>22</y>
+                    <width>81</width>
+                    <height>20</height>
+                   </rect>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">font: 10pt &quot;Segoe UI Semibold&quot;</string>
+                  </property>
+                  <property name="text">
+                   <string>Соединение:</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="lbl_AqServerConnectionStat">
+                  <property name="geometry">
+                   <rect>
+                    <x>100</x>
+                    <y>26</y>
+                    <width>91</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;не установлено&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="lbl_ReadOnly43">
+                  <property name="geometry">
+                   <rect>
+                    <x>6</x>
+                    <y>45</y>
+                    <width>101</width>
+                    <height>20</height>
+                   </rect>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">font: 10pt &quot;Segoe UI Semibold&quot;</string>
+                  </property>
+                  <property name="text">
+                   <string>Скорость соед.:</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="lbl_AqServerConnectionSpeed">
+                  <property name="geometry">
+                   <rect>
+                    <x>140</x>
+                    <y>47</y>
+                    <width>51</width>
+                    <height>19</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;0 КБит/с&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="lbl_AqServerConnectionSpeed_2">
+                  <property name="geometry">
+                   <rect>
+                    <x>140</x>
+                    <y>70</y>
+                    <width>51</width>
+                    <height>19</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;нет&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="lbl_ReadOnly44">
+                  <property name="geometry">
+                   <rect>
+                    <x>6</x>
+                    <y>68</y>
+                    <width>101</width>
+                    <height>20</height>
+                   </rect>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">font: 10pt &quot;Segoe UI Semibold&quot;</string>
+                  </property>
+                  <property name="text">
+                   <string>Режим соед.:</string>
+                  </property>
+                 </widget>
+                 <widget class="Line" name="line_6">
+                  <property name="geometry">
+                   <rect>
+                    <x>10</x>
+                    <y>90</y>
+                    <width>181</width>
+                    <height>20</height>
+                   </rect>
+                  </property>
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                 </widget>
+                 <widget class="QPushButton" name="pushButton">
+                  <property name="geometry">
+                   <rect>
+                    <x>10</x>
+                    <y>110</y>
+                    <width>181</width>
+                    <height>23</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>Подключиться</string>
+                  </property>
+                 </widget>
+                 <widget class="QPushButton" name="pushButton_2">
+                  <property name="geometry">
+                   <rect>
+                    <x>10</x>
+                    <y>140</y>
+                    <width>80</width>
+                    <height>23</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>Обновить</string>
+                  </property>
+                 </widget>
+                 <widget class="QPushButton" name="pushButton_3">
+                  <property name="geometry">
+                   <rect>
+                    <x>110</x>
+                    <y>140</y>
+                    <width>80</width>
+                    <height>23</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>Авторежим</string>
+                  </property>
+                 </widget>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QGroupBox" name="box_Hardware">
+                 <property name="title">
+                  <string>Оборудование</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
             <widget class="QWidget" name="page_5">
              <widget class="QGroupBox" name="box_CfgInterface">
               <property name="geometry">
