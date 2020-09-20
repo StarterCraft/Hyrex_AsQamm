@@ -747,6 +747,24 @@ QPushButton:pressed {
 	background-color: rgb(221, 221, 221);
 }
 
+QToolButton { 
+	color: black;
+    background-color: rgb(215, 215, 215);
+	border: 1px solid gray;
+	border-radius: 3px;
+	font: 8pt &quot;Segoe UI Semibold&quot;;
+}
+
+
+QToolButton:hover { 
+	background-color: rgb(235, 235, 235);
+}
+
+
+QToolButton:pressed { 
+	background-color: rgb(221, 221, 221);
+}
+
 QComboBox:disabled { color: gray; background-color: rgb(35, 35, 35); }
 
 
@@ -810,7 +828,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
 </string>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>4</number>
             </property>
             <widget class="QWidget" name="page_1">
              <property name="styleSheet">
@@ -820,7 +838,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
               <item>
                <layout class="QGridLayout" name="grd_HomeRootWidget">
                 <item row="2" column="0">
-                 <widget class="QGroupBox" name="box_DefenseOwv">
+                 <widget class="QGroupBox" name="box_HotWaterCon">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -829,50 +847,496 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>16777215</width>
+                    <width>300</width>
                     <height>16777215</height>
                    </size>
                   </property>
                   <property name="title">
-                   <string>Защита</string>
+                   <string>Водопотребление (ГВС, м³)</string>
                   </property>
+                  <layout class="QGridLayout" name="gridLayout_6">
+                   <property name="leftMargin">
+                    <number>7</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>4</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>7</number>
+                   </property>
+                   <item row="0" column="0">
+                    <layout class="QFormLayout" name="formLayout_9">
+                     <property name="topMargin">
+                      <number>8</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>4</number>
+                     </property>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly65">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;ЧАС&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QPushButton" name="lbl_HourHWaterConsumption">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly66">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffee00;&quot;&gt;ДЕН&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QPushButton" name="lbl_DailyHWaterConsumption">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly67">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#66b036;&quot;&gt;НЕД&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QPushButton" name="lbl_WeeklyHWaterConsumption">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly68">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#00aaff;&quot;&gt;МЕС&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="1">
+                      <widget class="QPushButton" name="lbl_MonthlyHWaterConsumption">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="Line" name="line_11">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QGraphicsView" name="graphicsView_3">
+                     <property name="minimumSize">
+                      <size>
+                       <width>196</width>
+                       <height>97</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>196</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">border: none</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </widget>
                 </item>
-                <item row="0" column="0" colspan="2">
-                 <widget class="QGroupBox" name="box_EnergyConOwv">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
+                <item row="0" column="1">
+                 <widget class="QGroupBox" name="box_EnergyOvw">
+                  <property name="minimumSize">
+                   <size>
+                    <width>300</width>
+                    <height>129</height>
+                   </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>16777215</width>
+                    <width>300</width>
                     <height>16777215</height>
                    </size>
                   </property>
                   <property name="title">
                    <string>Электропитание</string>
                   </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_5">
+                   <property name="leftMargin">
+                    <number>7</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>4</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>7</number>
+                   </property>
+                   <item>
+                    <layout class="QFormLayout" name="formLayout_6">
+                     <property name="topMargin">
+                      <number>8</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>4</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>4</number>
+                     </property>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly55">
+                       <property name="text">
+                        <string>Сеть</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QLabel" name="lbl_DirectESStatus">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;неактив&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly56">
+                       <property name="text">
+                        <string>Резервн. пит.</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QLabel" name="lbl_ReserveESStatus">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;неактив&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <spacer name="verticalSpacer">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Minimum</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>12</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item row="1" column="1">
+                      <spacer name="verticalSpacer_2">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Minimum</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>12</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item row="3" column="0" colspan="2">
+                      <widget class="QPushButton" name="btn_ESStatusSwitch">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>80</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Переключить</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <widget class="Line" name="line_7">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <layout class="QFormLayout" name="formLayout_7">
+                     <property name="leftMargin">
+                      <number>4</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>8</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>4</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly57">
+                       <property name="text">
+                        <string>Заряд</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QLabel" name="lbl_ReserveESBattery">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;0%&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly58">
+                       <property name="text">
+                        <string>Поток энерг.</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QLabel" name="lbl_ReserveESFlow">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly59">
+                       <property name="text">
+                        <string>Генератор</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QLabel" name="lbl_ReserveESGenStatus">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;неактив&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly60">
+                       <property name="text">
+                        <string>Вывод генер.</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="1">
+                      <widget class="QLabel" name="lbl_ReserveESGenFlow">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
                  </widget>
                 </item>
-                <item row="0" column="2" rowspan="3">
-                 <widget class="QGroupBox" name="groupBox">
-                  <property name="title">
-                   <string>Здесь что-то должно быть</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QGroupBox" name="box_NetworkOvw">
-                  <property name="title">
-                   <string>Сеть</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0" colspan="2">
-                 <widget class="QGroupBox" name="box_WaterConOwv">
+                <item row="1" column="0">
+                 <widget class="QGroupBox" name="box_ColdWaterCon">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -881,13 +1345,1149 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>16777215</width>
+                    <width>300</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="title">
+                   <string>Водопотребление (ХВС, м³)</string>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_7">
+                   <property name="leftMargin">
+                    <number>7</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>4</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>7</number>
+                   </property>
+                   <item>
+                    <layout class="QFormLayout" name="formLayout_5">
+                     <property name="topMargin">
+                      <number>8</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>4</number>
+                     </property>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly51">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;ЧАС&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QPushButton" name="lbl_HourCWaterConsumption">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly52">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffee00;&quot;&gt;ДЕН&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QPushButton" name="lbl_DailyCWaterConsumption">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly53">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#66b036;&quot;&gt;НЕД&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QPushButton" name="lbl_WeeklyCWaterConsumption">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly54">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#00aaff;&quot;&gt;МЕС&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="1">
+                      <widget class="QPushButton" name="lbl_MonthlyCWaterConsumption">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <widget class="Line" name="line_9">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QGraphicsView" name="graphicsView_2">
+                     <property name="minimumSize">
+                      <size>
+                       <width>196</width>
+                       <height>97</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>196</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">border: none</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QGroupBox" name="box_NetworkOvw">
+                  <property name="minimumSize">
+                   <size>
+                    <width>300</width>
+                    <height>129</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>300</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="title">
+                   <string>Сеть</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_7">
+                   <property name="leftMargin">
+                    <number>7</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>4</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>7</number>
+                   </property>
+                   <item row="0" column="0">
+                    <layout class="QFormLayout" name="formLayout_10">
+                     <property name="topMargin">
+                      <number>8</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>4</number>
+                     </property>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly69">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;ТЕК&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QPushButton" name="lbl_CurrentDataFlow">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly70">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffee00;&quot;&gt;ЧАС&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QPushButton" name="lbl_HourDataFlow">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly71">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#66b036;&quot;&gt;ДЕН&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QPushButton" name="lbl_DailyDataFlow">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly72">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#55aaff;&quot;&gt;НЕД&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="1">
+                      <widget class="QPushButton" name="lbl_WeeklyDataFlow">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="Line" name="line_12">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QGraphicsView" name="graphicsView_4">
+                     <property name="minimumSize">
+                      <size>
+                       <width>196</width>
+                       <height>97</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>196</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">border: none</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="0" column="3" rowspan="3">
+                 <widget class="QGroupBox" name="box_GraphsViewer">
+                  <property name="title">
+                   <string>Просмотр статистики</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_8">
+                   <property name="leftMargin">
+                    <number>7</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>4</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>7</number>
+                   </property>
+                   <item row="3" column="1">
+                    <layout class="QHBoxLayout" name="horizontalLayout_10">
+                     <item>
+                      <widget class="QLabel" name="label_4">
+                       <property name="text">
+                        <string>Время</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QRadioButton" name="radioButton">
+                       <property name="maximumSize">
+                        <size>
+                         <width>40</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>ТЕК</string>
+                       </property>
+                       <property name="checked">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QRadioButton" name="radioButton_2">
+                       <property name="maximumSize">
+                        <size>
+                         <width>42</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>ЧАС</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QRadioButton" name="radioButton_3">
+                       <property name="maximumSize">
+                        <size>
+                         <width>42</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>ДЕН</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QRadioButton" name="radioButton_4">
+                       <property name="maximumSize">
+                        <size>
+                         <width>42</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>НЕД</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="0" column="1">
+                    <layout class="QHBoxLayout" name="horizontalLayout_9">
+                     <item>
+                      <widget class="QLabel" name="lbl_ReadOnly73">
+                       <property name="text">
+                        <string>Графики</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QToolButton" name="toolButton_2">
+                       <property name="styleSheet">
+                        <string notr="true">min-height: 20</string>
+                       </property>
+                       <property name="text">
+                        <string>Энергия</string>
+                       </property>
+                       <property name="checkable">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QToolButton" name="toolButton_3">
+                       <property name="styleSheet">
+                        <string notr="true">min-height: 20</string>
+                       </property>
+                       <property name="text">
+                        <string>ХВС</string>
+                       </property>
+                       <property name="checkable">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QToolButton" name="toolButton">
+                       <property name="styleSheet">
+                        <string notr="true">min-height: 20</string>
+                       </property>
+                       <property name="text">
+                        <string>ГВС</string>
+                       </property>
+                       <property name="checkable">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QToolButton" name="toolButton_4">
+                       <property name="styleSheet">
+                        <string notr="true">min-height: 20</string>
+                       </property>
+                       <property name="text">
+                        <string>Сеть</string>
+                       </property>
+                       <property name="checkable">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QGraphicsView" name="graphicsView_5"/>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QGroupBox" name="box_WaterOvw">
+                  <property name="minimumSize">
+                   <size>
+                    <width>300</width>
+                    <height>129</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>300</width>
                     <height>16777215</height>
                    </size>
                   </property>
                   <property name="title">
                    <string>Водопровод</string>
                   </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_8">
+                   <property name="leftMargin">
+                    <number>7</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>4</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>7</number>
+                   </property>
+                   <item>
+                    <layout class="QFormLayout" name="formLayout_8">
+                     <property name="topMargin">
+                      <number>8</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>4</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>4</number>
+                     </property>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly61">
+                       <property name="text">
+                        <string>Насос скваж.</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QLabel" name="lbl_WaterPumpStat">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;неактив&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly62">
+                       <property name="text">
+                        <string>Поток скваж.</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QLabel" name="lbl_WaterPumpFlow">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly63">
+                       <property name="text">
+                        <string>Септик (зап.)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QLabel" name="lbl_WaterSewageFull">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;0%&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                       <property name="textInteractionFlags">
+                        <set>Qt::NoTextInteraction</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly64">
+                       <property name="text">
+                        <string>Септик (отк.)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="1">
+                      <widget class="QLabel" name="lbl_WaterSewagePumpOutStat">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;неактив&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <widget class="Line" name="line_8">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_4">
+                     <property name="leftMargin">
+                      <number>7</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>7</number>
+                     </property>
+                     <item>
+                      <widget class="QPushButton" name="btn_WaterPumpPowerStat">
+                       <property name="minimumSize">
+                        <size>
+                         <width>80</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Питание насоса</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="btn_WaterPumpPowerMode">
+                       <property name="minimumSize">
+                        <size>
+                         <width>80</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Режим насоса</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="btn_WaterSewagePumpPowerStat">
+                       <property name="minimumSize">
+                        <size>
+                         <width>80</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Питание помпы септ.</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="btn_WaterSewagePumpPowerMode">
+                       <property name="minimumSize">
+                        <size>
+                         <width>80</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Режим помпы септ.</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QGroupBox" name="box_EnergyCon">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>300</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="title">
+                   <string>Электропотребление (квт/ч)</string>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_6">
+                   <property name="leftMargin">
+                    <number>7</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>4</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>7</number>
+                   </property>
+                   <item>
+                    <layout class="QFormLayout" name="formLayout_4">
+                     <property name="topMargin">
+                      <number>8</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>4</number>
+                     </property>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly47">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;ТЕК&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QPushButton" name="lbl_CurrentEnergyConsumption">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly48">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffee00;&quot;&gt;ЧАС&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QPushButton" name="lbl_HourEnergyConsumption">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly49">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#66b036;&quot;&gt;ДЕН&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QPushButton" name="lbl_DailyEnergyConsumption">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="0">
+                      <widget class="QLabel" name="lbl_ReadOnly50">
+                       <property name="maximumSize">
+                        <size>
+                         <width>22</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#00aaff;&quot;&gt;НЕД&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="1">
+                      <widget class="QPushButton" name="lbl_WeeklyEnergyConsumption">
+                       <property name="minimumSize">
+                        <size>
+                         <width>41</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="baseSize">
+                        <size>
+                         <width>40</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {	
+	border: none;
+	background: none;
+	color: white; 
+	font: 9pt &quot;Segoe UI Semilight&quot;; 
+	text-align: right; 
+	padding-right: 1px;
+	min-width: 40px;
+}
+
+QPushButton:hover {
+	color: rgb(70, 175, 38);
+}
+
+QPushButton:pressed {
+	color: rgb(47, 105, 23);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>0.0</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <widget class="Line" name="line_10">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QGraphicsView" name="graphicsView">
+                     <property name="minimumSize">
+                      <size>
+                       <width>196</width>
+                       <height>97</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>196</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">border: none</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </widget>
                 </item>
                </layout>
@@ -1416,11 +3016,6 @@ QPushButton:hover {
                    <string> Теплица 1 </string>
                   </attribute>
                  </widget>
-                 <widget class="QWidget" name="tab_2">
-                  <attribute name="title">
-                   <string> Теплица 2 </string>
-                  </attribute>
-                 </widget>
                 </widget>
                </item>
                <item>
@@ -1751,7 +3346,7 @@ QPushButton:hover {
                   <string notr="true"/>
                  </property>
                  <property name="currentIndex">
-                  <number>0</number>
+                  <number>1</number>
                  </property>
                  <widget class="QWidget" name="tab1">
                   <attribute name="title">
@@ -2498,6 +4093,13 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_5">
+               <item row="0" column="1">
+                <widget class="QGroupBox" name="box_Hardware">
+                 <property name="title">
+                  <string>Оборудование</string>
+                 </property>
+                </widget>
+               </item>
                <item row="0" column="0">
                 <widget class="QGroupBox" name="box_AqServer">
                  <property name="maximumSize">
@@ -2513,7 +4115,7 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                   <property name="geometry">
                    <rect>
                     <x>6</x>
-                    <y>208</y>
+                    <y>142</y>
                     <width>51</width>
                     <height>20</height>
                    </rect>
@@ -2529,7 +4131,7 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                   <property name="geometry">
                    <rect>
                     <x>60</x>
-                    <y>210</y>
+                    <y>144</y>
                     <width>85</width>
                     <height>20</height>
                    </rect>
@@ -2546,18 +4148,15 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                     <height>16777215</height>
                    </size>
                   </property>
-                  <property name="inputMask">
-                   <string>900.900.900.900</string>
-                  </property>
                   <property name="text">
-                   <string>000.000.000.0</string>
+                   <string>localhost</string>
                   </property>
                  </widget>
                  <widget class="QLabel" name="lbl_ReadOnly46">
                   <property name="geometry">
                    <rect>
                     <x>149</x>
-                    <y>210</y>
+                    <y>144</y>
                     <width>8</width>
                     <height>16</height>
                    </rect>
@@ -2573,7 +4172,7 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                   <property name="geometry">
                    <rect>
                     <x>156</x>
-                    <y>210</y>
+                    <y>144</y>
                     <width>38</width>
                     <height>20</height>
                    </rect>
@@ -2582,7 +4181,7 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                    <string>99990</string>
                   </property>
                   <property name="text">
-                   <string>00000</string>
+                   <string>8000</string>
                   </property>
                  </widget>
                  <widget class="QLabel" name="lbl_ReadOnly42">
@@ -2694,24 +4293,11 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                    <enum>Qt::Horizontal</enum>
                   </property>
                  </widget>
-                 <widget class="QPushButton" name="pushButton">
-                  <property name="geometry">
-                   <rect>
-                    <x>10</x>
-                    <y>110</y>
-                    <width>181</width>
-                    <height>23</height>
-                   </rect>
-                  </property>
-                  <property name="text">
-                   <string>Подключиться</string>
-                  </property>
-                 </widget>
                  <widget class="QPushButton" name="pushButton_2">
                   <property name="geometry">
                    <rect>
                     <x>10</x>
-                    <y>140</y>
+                    <y>114</y>
                     <width>80</width>
                     <height>23</height>
                    </rect>
@@ -2724,7 +4310,7 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                   <property name="geometry">
                    <rect>
                     <x>110</x>
-                    <y>140</y>
+                    <y>114</y>
                     <width>80</width>
                     <height>23</height>
                    </rect>
@@ -2733,13 +4319,6 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                    <string>Авторежим</string>
                   </property>
                  </widget>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QGroupBox" name="box_Hardware">
-                 <property name="title">
-                  <string>Оборудование</string>
-                 </property>
                 </widget>
                </item>
               </layout>

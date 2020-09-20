@@ -142,7 +142,6 @@ class AqUIFunctions():
                 root.ui.lbl_DefnCurrSetCamId.show()
                 root.ui.lbl_ReadOnly10.show()
                 root.ui.gvf_DefnCamView.show()
-            root.ui.stack.setCurrentWidget(root.ui.page_1)
 
 
     def selectSkin(id, root):
@@ -175,8 +174,6 @@ class AqUIFunctions():
         for item in root.popups:
             item.setWindowOpacity(root.popupOpacity)
 
-        root.rootLogger.Logger.debug('Установлено новое значение popupOpacity: {0}'.format(root.popupOpacity))
-
 
 class AqCrypto:
     def __init__(self):
@@ -194,7 +191,7 @@ class AqCrypto:
             
             exportList.append(self.initialFilename)
 
-        self.cryptoLogger.Logger.debug('Созданы возможные имена файлов профилей пользователей')
+        self.cryptoLogger.debug('Созданы возможные имена файлов профилей пользователей')
 
 
     def seekForFiles(self, root, importList, exportList, flag):
@@ -232,7 +229,6 @@ class AqCrypto:
 
 
     def getCut(self, _str, bytes):
-        print(hashlib.pbkdf2_hmac('sha256', _str.encode('utf-8'), bytes, 256256).hex())
         return (hashlib.pbkdf2_hmac('sha256', _str.encode('utf-8'), bytes, 256256).hex())
 
 
@@ -241,35 +237,66 @@ class AqLocalFunctions(AqMainWindow):
         self.unsaved = []
 
 
-    def apply(self, root, usersCore):
+    def merge(self, list1, list2):
+        merged_list = list(zip(list1, list2))  
+        return merged_list 
+
+
+    def apply(self, root, server, usersCore):
         if QApplication.keyboardModifiers() == Qt.AltModifier:
             AqConfigSystem.saveDefaultConfig(AqConfigSystem, root, usersCore)
         else:
             AqConfigSystem.saveConfig(AqConfigSystem, root, usersCore)
 
-        self.saveUnsavedUsers(usersCore, root)
+        self.saveUnsavedUsers(root, server, usersCore)
 
 
-    def saveUnsavedUsers(self, userscore, root):
-        self.unsaved = [AqUser for AqUser in userscore.users if (AqUser.edited == True)]
+    def saveUnsavedUsers(self, root, server, usersСore):
+        self.unsaved = [AqUser for AqUser in usersСore.users if (AqUser.edited == True)]
+        self.toDeleteList = [AqUser for AqUser in usersСore.users if (AqUser.toDelete == True)]
         self.checker = int()
+        self.dumpList = []
+        self.dumpList2 = []
+        print(self.unsaved[0].login)
 
+        root.rootLogger.info('Инициировано сохранение {0} пользователей с изменениями')
         if len(self.unsaved) == 0:
             QMessageBox.information(root, 'Сохранение завершено', 'Конфигурация сохранена')
 
         for AqUser in self.unsaved:
-            with open((AqUser.filepath), mode = 'w+', encoding = 'utf-8') as dataFile:
+            self.dumpData = ({ 'id': (AqUser.id), 'description': (AqUser.description),
+                              'type': (AqUser.type), 'filepath': (AqUser.filepath),
+                              'login': (AqUser.login), 'password': (AqUser.password), 'avatarAddress': (AqUser.avatarAddress),
+                              'permits': (AqUser.permits), 'config': (AqUser.config.getDict()) })
 
-                self.dumpData = { 'id': (AqUser.id), 'description': (AqUser.description),
-                                  'type': (AqUser.type), 'filepath': (AqUser.filepath),
-                                  'login': (AqUser.login), 'password': (AqUser.password), 'avatarAddress': (AqUser.avatarAddress),
-                                  'permits': (AqUser.permits), 'config': (AqUser.config.getDict()) }
+            self.dumpList.append(self.dumpData)    
+            self.checker += 1
 
-                jsonString = json.dumps((self.dumpData), indent = 8)
-                jsonString = AqCrypto.encryptContent(AqCrypto, jsonString)
-                dataFile.write(jsonString)
-                AqUser.edited = False
+        for AqUser in self.toDeleteList:
+            self.dumpData = str(AqUser.login)
+            self.dumpList2.append(self.dumpData)
 
-                self.checker += 1
+        if len(self.dumpList) != 0:
+            server.commutatorLogger.debug('Передача информации серверу...')
+            print(self.dumpList)
+            merger = []
+            integer = int()
+            for i in self.dumpList:
+                integer += 1
+                merger.append(integer)
+                continue
 
-        QMessageBox.information(root, 'Операция завершена', 'Сохранено {0} пользователей!'.format((self.checker)))
+            r = server.post('updateUserdata', json, int, self.dumpList)
+            if r == 422:
+                QMessageBox.critical(root, '422', '422')
+            else:
+                server.commutatorLogger.debug('Передача информации серверу завершена')
+
+        if len(self.dumpList2) != 0:
+            server.commutatorLogger.debug('Передача информации серверу...')
+            r = server.delete('delUserAcc', list, self.dumpList2)
+            server.commutatorLogger.debug('Передача информации серверу завершена')
+
+
+        root.rootLogger.info('Сохранение {0} пользователей с изменениями успешно завершено'.format(self.checker))
+        QMessageBox.information(root, 'Сохранение завершено', 'Сохранено {0} пользователей!'.format(self.checker))

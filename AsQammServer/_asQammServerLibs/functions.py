@@ -1,5 +1,7 @@
-import json, base64, os, glob, ffmpeg, hashlib, logging, time
+import json, base64, os, glob, ffmpeg, hashlib, logging, time, secrets
+from colorama import Fore as Fore, Style as Style, init as initColorama
 from playsound import *
+initColorama()
 
 
 class AqCrypto:
@@ -18,8 +20,6 @@ class AqCrypto:
             
             exportList.append(self.initialFilename)
 
-        self.cryptoLogger.Logger.debug('Созданы возможные имена файлов профилей пользователей')
-
 
     def seekForFiles(self, importList, exportList, flag):
 
@@ -36,7 +36,7 @@ class AqCrypto:
                     if self.gotName != []:
                         continue
                     else:
-                        exportList.append(r'data\personal\~!{0}!~.asqd'.format(str(item.decode('utf-8'))))
+                        exportList.append(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8'))))
 
 
     def decryptContent(self, s):
@@ -47,10 +47,6 @@ class AqCrypto:
         return (base64.b64encode(s.encode('utf-8'))).decode('utf-8')
 
 
-    def rawContent(s):
-        return str(r'{0}'.format(s))
-
-
     def getHmta(self):
         return os.urandom(32)
 
@@ -58,6 +54,16 @@ class AqCrypto:
     def getCut(self, _str, bytes):
         print(hashlib.pbkdf2_hmac('sha256', _str.encode('utf-8'), bytes, 256256).hex())
         return (hashlib.pbkdf2_hmac('sha256', _str.encode('utf-8'), bytes, 256256).hex())
+
+
+    def createInstanceToken(self):
+        __sig__ = secrets.token_urlsafe(128)
+        with open('data/ffd32.bin', 'rb+') as dataFile:
+            fileByteString = dataFile.readline()
+            fileString = fileByteString.decode('ascii')
+            jsonObject = json.loads(fileString)
+            jsonObject.append(str(__sig__))
+        return __sig__
 
 
 class AqConfig():
@@ -118,8 +124,8 @@ class AqConfig():
 
 class AqLogger:
 
-    def __init__(self, name):
-
+    def __init__(self, name: str):
+        self.name = name
         self.filenames = list()
         self.Logger = logging.getLogger(name)
         self.getFilename()
@@ -132,6 +138,31 @@ class AqLogger:
 
         self.Logger.addHandler(handler)
 
+
     def getFilename(self):
         self.filenames.append(str( 'log/' + (time.strftime("""%d.%m.%Y_%H%M%S""", (time.localtime())))  + '_AsQammLog.log'))
+
+
+    def debug(self, message: str):
+        self.Logger.debug(message)
+        print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.YELLOW}DEBUG{Style.RESET_ALL}]: {message}')
         
+
+    def info(self, message: str):
+        self.Logger.info(message)
+        print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.YELLOW}INFO{Style.RESET_ALL}]: {message}')
+
+
+    def warning(self, message: str):
+        self.Logger.warning(message)
+        print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.YELLOW}WARN{Style.RESET_ALL}]: {message}')
+
+
+    def error(self, message: str):
+        self.Logger.error(message)
+        print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.YELLOW}ERROR{Style.RESET_ALL}]: {message}')
+
+
+    def critical(self, message: str):
+        self.Logger.critical(message)
+        print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.YELLOW}CRITICAL{Style.RESET_ALL}]: {message}')

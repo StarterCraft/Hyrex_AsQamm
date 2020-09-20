@@ -14,8 +14,16 @@ class AqConfigSystem:
             self.defaultConfig = AqConfig(jsonString)
             return self.defaultConfig
 
-    def loadDefaultConfigDict(self, root):
+
+    def loadDefaultConfigDict(self):
         return {'preset': 'default'}
+
+
+    def loadServerConfig(self):
+        with open('data/config/~!serverdata!~.asqd') as configFile:
+            fileString = configFile.read()
+            jsonString = json.loads(fileString)
+
 
     def saveConfig(self, root, usersCore):
         self.currentUser = usersCore.getCurrentUser()

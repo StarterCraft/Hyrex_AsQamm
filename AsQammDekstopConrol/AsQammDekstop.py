@@ -14,6 +14,7 @@ from _asQammDekstopUI import *
 from _asQammDekstopLibs.resources import *
 from _asQammDekstopLibs.logging import *
 from _asQammDekstopLibs.config import *
+from _asQammDekstopLibs.server import *
 
 
 class AqMainWindow(QMainWindow):
@@ -25,9 +26,6 @@ class AqMainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.mkdirs()
-
-        self.serverIP = '127.0.0.1'
-        self.serverPort = '8000'
 
         self.rootLogger = AqLogger('Main')
 
@@ -79,7 +77,7 @@ class AqMainWindow(QMainWindow):
         
 
     def mainloop(self, app):
-        self.rootLogger.Logger.info('Запуск главного цикла приложения')
+        self.rootLogger.info('Запуск главного цикла приложения')
         self.show()
         sys.exit(app.exec_())
         
@@ -87,22 +85,24 @@ class AqMainWindow(QMainWindow):
 from _asQammDekstopLibs.users import *
 from _asQammDekstopLibs.functions import AqUIFunctions, AqLocalFunctions
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
 
     app = QApplication(sys.argv)
 
     root = AqMainWindow()
-    root.rootLogger.Logger.info('HYREX ASQAMM Pre-aplha 0.-01a Dekstop')
+    root.rootLogger.info('HYREX ASQAMM Pre-aplha 0.-01a Dekstop')
+
+    server = AqServerCommutator(root, '127.0.0.1', '8000')
+    server.commutatorLogger.info('Коммутатор сервера инициализирован')
 
     usersCore = AqUsersSystem(root)
-    usersCore.userSystemLogger.Logger.debug('Экземпляр класса системы пользователей успешно создан: ' + str(usersCore))
+    usersCore.userSystemLogger.debug('Cистема пользователей инициализирована')
 
     localFunc = AqLocalFunctions()
-    root.rootLogger.Logger.debug('Инициализирована система локальных данных')
+    root.rootLogger.debug('Инициализирована система локальных данных')
 
     AqUIFunctions.createLabelsAtMainMenu(root)
-    root.rootLogger.Logger.info('Всплывающие подсказки меню успешно сгенерированы')
-
     # Добавляем привязки клавиш к анимациям
     root.ui.btn_Toggle.clicked.connect(lambda: AqUIFunctions.toggleSimpleWidgetInteraction(root, 190, 1))
     root.ui.btn_DefnToggleCamList.toggled.connect(lambda: AqUIFunctions.toggleSimpleWidgetInteraction(root, 320, 2))
@@ -123,24 +123,23 @@ if __name__ == "__main__":
     root.ui.btn_page5.clicked.connect( lambda: AqUIFunctions.selectSkin(5, root) )
     
 
-    usersCore.loadUsers(usersCore, root)
+    usersCore.loadUsers(root, server, usersCore)
 
-
-    root.ui.btn_UserInit.clicked.connect( lambda: usersCore.userInit(root, usersCore) )
+    root.ui.btn_UserInit.clicked.connect( lambda: usersCore.userInit(root, server, usersCore) )
     root.ui.btn_UserInitAsGuest.clicked.connect( lambda: usersCore.guestUserInit(usersCore, root) )
-    root.ui.btn_LogOut.clicked.connect( lambda: usersCore.logOut(usersCore, root) )
+    root.ui.btn_LogOut.clicked.connect( lambda: usersCore.logOut(root, server, usersCore) )
     root.ui.btn_ChangeCurrentUserSrtt.clicked.connect ( lambda: usersCore.callCurrentUserSetupDlg(root, usersCore, usersCore.getInstance(root, True)) )
-    root.ui.btn_UserDatabaseAddUser.clicked.connect ( lambda: usersCore.callUserCreationDlg(root, usersCore) )
+    root.ui.btn_UserDatabaseAddUser.clicked.connect ( lambda: usersCore.callUserCreationDlg(root, server, usersCore) )
     root.ui.btn_UserDatabaseConfigureUser.clicked.connect( lambda: usersCore.callUserSetupDlg(root, usersCore, usersCore.getInstance(root, False)) )
     root.ui.btn_UserDatabaseDeleteUser.clicked.connect( lambda: usersCore.callUserDeletionDlg(root, usersCore.getInstance(root, False)) )
     root.ui.liw_UsersDbList.itemSelectionChanged.connect( lambda: usersCore.updateListWidget(root, usersCore) )
     root.ui.sld_WindowsOpacitySct.valueChanged.connect( lambda: AqUIFunctions.setPopupsOpacity(root) )
     root.ui.btn_InterfaceMode.clicked.connect( lambda: AqUIFunctions.changeInterfaceMode(AqUIFunctions, root, usersCore) )
-    root.ui.btn_Apply.clicked.connect( lambda: localFunc.apply(root, usersCore) )
+    root.ui.btn_Apply.clicked.connect( lambda: localFunc.apply(root, server, usersCore) )
     root.ui.btn_OpenLogFolder.clicked.connect( lambda: root.rootLogger.openLogFolder() )
     
 
-    root.rootLogger.Logger.info('Привязка кнопок в интерфейсе приложения завершена успешно')
+    root.rootLogger.info('Привязка кнопок в интерфейсе приложения завершена успешно')
 
     usersCore.lockApp(root, usersCore)
     root.mainloop(app)
