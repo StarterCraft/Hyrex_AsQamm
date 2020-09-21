@@ -3,14 +3,12 @@ from _asQammDekstopLibs.logging import *
 
 
 class AqServerCommutator:
-    def __init__(self, root, serverIP: str, serverPort: str):
+    def __init__(self, root, serverIP: str):
         self.ip = serverIP
-        self.port = serverPort
         self.commutatorLogger = AqLogger('ServerCommutator')
 
-
     def get(self, methodIdStr: str, returnModeCode):
-        response = requests.get('http://{0}:{1}/{2}'.format(self.ip, self.port, methodIdStr))
+        response = requests.get('http://{0}/{1}'.format(self.ip, methodIdStr))
         #добавить логирование
         if returnModeCode == int:
             return response
@@ -24,9 +22,9 @@ class AqServerCommutator:
 
     def post(self, methodIdStr: str, inputModeCode, returnModeCode, postData):
         if inputModeCode == list:
-            response = requests.post('http://{0}:{1}/{2}'.format(self.ip, self.port, methodIdStr), data = postData)
+            response = requests.post('http://{0}/{1}'.format(self.ip, methodIdStr), data = postData)
         elif inputModeCode == json:
-            response = requests.post('http://{0}:{1}/{2}'.format(self.ip, self.port, methodIdStr), json = postData)
+            response = requests.post('http://{0}/{1}'.format(self.ip, methodIdStr), json = postData)
 
         if returnModeCode == int:
             return response
@@ -40,8 +38,8 @@ class AqServerCommutator:
 
     def delete(self, methodIdStr: str, inputModeCode, delData):
         if inputModeCode == (list or dict):
-            response = requests.post('http://{0}:{1}/{2}'.format(self.ip, self.port, methodIdStr), data = delData)
+            response = requests.post('http://{0}/{1}'.format(self.ip, methodIdStr), data = delData)
         elif inputModeCode == json:
-            response = requests.post('http://{0}:{1}/{2}'.format(self.ip, self.port, methodIdStr), json = delData)
+            response = requests.post('http://{0}/{1}'.format(self.ip, methodIdStr), json = delData)
 
         return response
