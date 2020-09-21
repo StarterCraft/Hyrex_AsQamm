@@ -93,7 +93,7 @@ if __name__ == '__main__':
     root = AqMainWindow()
     root.rootLogger.info('HYREX ASQAMM Pre-aplha 0.-01a Dekstop')
 
-    server = AqServerCommutator(root, "4b48a06998ad.ngrok.io")
+    server = AqServerCommutator(root, '8900097cd0d1.ngrok.io')
     server.commutatorLogger.info('Коммутатор сервера инициализирован')
 
     usersCore = AqUsersSystem(root)
