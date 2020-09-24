@@ -252,6 +252,7 @@ QComboBox::drop-down {
 QLineEdit { 
 	border-radius: 3px;
 	border: 1px solid white;
+	font: 8pt &quot;Segoe UI Semilight&quot;;
  }
 
 QLineEdit:hover { 
@@ -285,10 +286,18 @@ QLineEdit:hover {
        </widget>
       </item>
       <item row="6" column="1" colspan="3">
-       <widget class="QLineEdit" name="lnI_EuDesc"/>
+       <widget class="QLineEdit" name="lnI_EuDesc">
+        <property name="placeholderText">
+         <string>Укажите описание</string>
+        </property>
+       </widget>
       </item>
       <item row="5" column="1">
-       <widget class="QLineEdit" name="lnI_EuAvatarAddr"/>
+       <widget class="QLineEdit" name="lnI_EuAvatarAddr">
+        <property name="placeholderText">
+         <string>Укажите адрес аватарки</string>
+        </property>
+       </widget>
       </item>
       <item row="5" column="3">
        <widget class="QToolButton" name="tlb_Browse">
@@ -328,6 +337,9 @@ QLineEdit:hover {
        <widget class="QLineEdit" name="lnI_EuPassword">
         <property name="echoMode">
          <enum>QLineEdit::Password</enum>
+        </property>
+        <property name="placeholderText">
+         <string>Укажите новый пароль</string>
         </property>
        </widget>
       </item>

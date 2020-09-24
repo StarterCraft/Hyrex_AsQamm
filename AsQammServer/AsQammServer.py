@@ -97,10 +97,11 @@ if __name__ == '__main__':
     @server.api.post('/updateUserRg', description = 'Обновить внешний регистр')
     def updateUserRg(object: list, request: Request):
         global server
+        mode = object[0]
 
         server.serverLogger.debug(str(object))
         server.serverLogger.debug(f'Вызван метод /updateUserRg со стороны клиента {request.client.host}:{request.client.port}')
-        userCore.updateUserRegistry(object)
+        userCore.updateUserRegistry(object[1], mode)
 
 
     @server.api.delete('/delUserAcc', description = 'Удалить аккаунт пользователя (пользователей)')

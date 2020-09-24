@@ -119,7 +119,7 @@ class AqUsersSystem(AqMainWindow):
             root.ui.btn_Apply.setEnabled(True)
             root.ui.btn_Save.setEnabled(True)
             root.ui.btn_Load.setEnabled(True)
-            AqConfigSystem.applyConfig(AqConfigSystem, root, usersCore)
+            AqConfigSystem.applyConfig(root, usersCore)
 
             root.ui.stack.setCurrentWidget(root.ui.page_1)
 
@@ -211,8 +211,7 @@ class AqUsersSystem(AqMainWindow):
                 playsound(root.sounds['error'], False)
             
         randomShuffle(r)
-        server.post('updateUserRg', json, int, r)
-
+        server.post('updateUserRg', json, int, [1, r])
         del r
 
         if [bool for bool in self.matches if (bool == True)] == []:
@@ -239,7 +238,7 @@ class AqUsersSystem(AqMainWindow):
         self.userSystemLogger.info('Вход в систему произведён в режиме гостя')
 
 
-    def callUserSetupDlg(self, root, usersCore, userToEdit):
+    def callUserSetupDlg(self, root, server, usersCore, userToEdit):
         try:
             if (userToEdit.getPermits('pxConfigAsAdmin') and (userToEdit.current)):
                 self.callCurrentUserSetupDlg(root, usersCore, userToEdit)
@@ -249,7 +248,6 @@ class AqUsersSystem(AqMainWindow):
                 root.userEditDlgUi.gfv_EuAvatarPrev.setPixmap(userToEdit.avatar)
                 root.userEditDlgUi.lbl_EuID.setText(str(userToEdit.id))
                 root.userEditDlgUi.lnI_EuLogin.setText(str(userToEdit.login))
-                root.userEditDlgUi.lnI_EuPassword.setText(str(userToEdit.password))
                 root.userEditDlgUi.lnI_EuDesc.setText(str(userToEdit.description))
                 root.userEditDlgUi.lnI_EuAvatarAddr.setText(str(userToEdit.avatarAddress))
 
@@ -275,8 +273,8 @@ class AqUsersSystem(AqMainWindow):
                 root.userEditDlgUi.ckb_UserPermit_CfgAsAdmin.setChecked(userToEdit.getPermits('pxConfigAsAdmin'))
                                        
 
-                root.userEditDlg.accepted.connect ( lambda: userToEdit.setup(usersCore, root, (root.userEditDlgUi.lnI_EuPassword.text()), (root.userEditDlgUi.lnI_EuDesc.text()),
-                                                                        (root.userEditDlgUi.lnI_EuAvatarAddr.text()),
+                root.userEditDlg.accepted.connect ( lambda: userToEdit.setup(usersCore, root, (self.crypto.getCut(root.userSelfEditDlgUi.lnI_EuPassword.text(), bytes.fromhex(randomChoice(server.get('getUserRg', json))))),
+                                                                        (root.userEditDlgUi.lnI_EuDesc.text()), (root.userEditDlgUi.lnI_EuAvatarAddr.text()),
                                                                         { 'homeRooms': (root.userEditDlgUi.ckb_UserPermit_HomeRooms.isChecked()),
                                                                           'homeAsAdmin': (root.userEditDlgUi.ckb_UserPermit_HomeAsAdmin.isChecked()),
                                                                           'defenseBasic': (root.userEditDlgUi.ckb_UserPermit_DefnScr.isChecked()),
@@ -296,14 +294,13 @@ class AqUsersSystem(AqMainWindow):
             pass
 
 
-    def callCurrentUserSetupDlg(self, root, usersCore, userToEdit):
+    def callCurrentUserSetupDlg(self, root, server, usersCore, userToEdit):
         try:
             self.userSystemLogger.debug('Инициирован вызов диалога самостоятельного редактирования пользователя {0}'.format(str(userToEdit.login)))
 
             root.userSelfEditDlgUi.gfv_EuAvatarPrev.setPixmap(userToEdit.avatar)
             root.userSelfEditDlgUi.lbl_EuID.setText(str(userToEdit.id))
             root.userSelfEditDlgUi.lnI_EuLogin.setText(str(userToEdit.login))
-            root.userSelfEditDlgUi.lnI_EuPassword.setText(str(userToEdit.password))
             root.userSelfEditDlgUi.lnI_EuDesc.setText(str(userToEdit.description))
             root.userSelfEditDlgUi.lnI_EuAvatarAddr.setText(str(userToEdit.avatarAddress))
             
@@ -316,8 +313,8 @@ class AqUsersSystem(AqMainWindow):
             root.userSelfEditDlgUi.lnI_EuAvatarAddr.textChanged.connect( lambda: root.userSelfEditDlgUi.gfv_EuAvatarPrev.setPixmap(QPixmap(QImage(str(
                                                                 root.userSelfEditDlgUi.lnI_EuAvatarAddr.text())))) )
             
-            root.userSelfEditDlg.accepted.connect( lambda: userToEdit.setup(usersCore, root, (root.userSelfEditDlgUi.lnI_EuPassword.text()), (root.userSelfEditDlgUi.lnI_EuDesc.text()), 
-                                                                       (root.userSelfEditDlgUi.lnI_EuAvatarAddr.text()), (userToEdit.permits)))
+            root.userSelfEditDlg.accepted.connect( lambda: userToEdit.setup(usersCore, root, self.crypto.getCut(root.userSelfEditDlgUi.lnI_EuPassword.text(), bytes.fromhex(randomChoice(server.get('getUserRg', json))),
+                                                                           (root.userSelfEditDlgUi.lnI_EuDesc.text()), (root.userSelfEditDlgUi.lnI_EuAvatarAddr.text()), (userToEdit.permits))))
 
             root.userSelfEditDlg.show()
 
@@ -348,14 +345,16 @@ class AqUsersSystem(AqMainWindow):
     def generateIdForNewUser(self):
         self.aivalableUserIds = list()
         for i in range(0, 99):
-            if (i > 0) and (i < 10):
+            if (i >= 0) and (i < 10):
                 continue
             else:
                 self.aivalableUserIds.append(i)
 
         for User in self.users:
-            print(User.id)
-            self.aivalableUserIds.remove(int(User.id))
+            try:
+                self.aivalableUserIds.remove(int(User.id))
+            except ValueError:
+                continue
 
         return int(randomChoice(self.aivalableUserIds))
 
@@ -390,11 +389,13 @@ class AqUsersSystem(AqMainWindow):
                                             hardwareAsAdmin = root.userCreationDlgUi.ckb_UserPermit_HardwareAsAdmin.isChecked(),
                                             configure = root.userCreationDlgUi.ckb_UserPermit_CfgScr.isChecked(),
                                             configureAsAdmin = root.userCreationDlgUi.ckb_UserPermit_CfgAsAdmin.isChecked() )
+            hmta = self.crypto.getHmta()
+            server.post('updateUserRg', json, int, [0, hmta.hex()])
 
             root.userCreationDlg.accepted.connect ( lambda: AqUser(usersCore, root, (root.userCreationDlgUi.lbl_CnuID.text()), 
                                                                   (root.userCreationDlgUi.lnI_CnuDesc.text()), 1, (server.get('getNewUserFilename', str)), 
                                                                   (root.userCreationDlgUi.lnI_CnuAvatarAddr.text()), (root.userCreationDlgUi.lnI_CnuLogin.text()),
-                                                                  (self.crypto.getCut(root.userCreationDlgUi.lnI_CnuPassword.text(), self.crypto.getHmta())),
+                                                                  (self.crypto.getCut(root.userCreationDlgUi.lnI_CnuPassword.text(), hmta)),
                                                                   (root.userCreationDlg.permits), (AqConfigSystem.loadDefaultConfigDict(AqConfigSystem))) )
 
             root.userCreationDlg.show()
@@ -470,9 +471,9 @@ class AqUser(AqUsersSystem):
        else:
            self.config = AqConfig(ConfigDict)
 
-       self.current = bool()
+       self.current = bool(False)
        self.edited = bool(True)
-       self.toDelete = bool()
+       self.toDelete = bool(False)
 
        usersCore.addToUserList(root, self, 0)
 
@@ -536,5 +537,5 @@ class AqUser(AqUsersSystem):
                 'password': self.password,
                 'avatarAddress': self.avatarAddress,
                 'permits': self.permits,
-                'config': self.configDict}
+                'config': self.configDict }
     

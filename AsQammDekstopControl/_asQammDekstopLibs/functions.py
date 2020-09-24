@@ -6,7 +6,6 @@ from playsound import *
 class AqUIFunctions():
 
     def createLabelsAtMainMenu(root):
-
         root.ui.hintsSizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         root.ui.styleSheet = str('''QLabel { font: 12pt "Segoe UI Semibold"; color: white; }
         QLabel:hover { color: rgb(47, 105, 23); }''')
@@ -76,7 +75,6 @@ class AqUIFunctions():
     # работать.
 
     def toggleSimpleWidgetInteraction(root, maxLength, widgetId):
-
         maxExtend = int()
 
         if widgetId == 0:
@@ -145,7 +143,6 @@ class AqUIFunctions():
 
 
     def selectSkin(id, root):
-
         if id == 1:
             root.ui.stack.setCurrentWidget(root.ui.page_1)
             root.ui.lbl_SkinName.setText('Наш дом')
@@ -180,7 +177,6 @@ class AqCrypto:
         self.cryptoLogger = AqLogger('Crypto')
 
     def getFileNamesList(self, exportList):
-
         for i in range(10, 99):
             self.initialFilename = str(r'customuser_' + str(r'{0}').format(i))
             self.initialFilename = self.initialFilename.encode('utf-8')
@@ -243,12 +239,18 @@ class AqLocalFunctions(AqMainWindow):
 
 
     def apply(self, root, server, usersCore):
-        if QApplication.keyboardModifiers() == Qt.AltModifier:
-            AqConfigSystem.saveDefaultConfig(AqConfigSystem, root, usersCore)
+        if QApplication.keyboardModifiers() == Qt.AltModifier and QApplication.keyboardModifiers() == Qt.ControlModifier:
+            AqConfigSystem.saveDefaultConfig(root, usersCore)
         else:
-            AqConfigSystem.saveConfig(AqConfigSystem, root, usersCore)
+            AqConfigSystem.saveConfig(root, usersCore)
 
         self.saveUnsavedUsers(root, server, usersCore)
+        for AqUser in [AqUser for AqUser in usersCore.users if (AqUser.current == False)]:
+            usersCore.users.remove(AqUser)
+
+        root.ui.liw_UsersDbList.clear()
+        usersCore.users.clear()
+        usersCore.loadUsers(root, server, usersCore)
 
 
     def saveUnsavedUsers(self, root, server, usersСore):
@@ -270,6 +272,7 @@ class AqLocalFunctions(AqMainWindow):
                               'permits': (AqUser.permits), 'config': (AqUser.config.getDict()) })
 
             self.dumpList.append(self.dumpData)    
+            AqUser.edited = False
             self.checker += 1
 
         for AqUser in self.toDeleteList:
@@ -292,9 +295,10 @@ class AqLocalFunctions(AqMainWindow):
             else:
                 server.commutatorLogger.debug('Передача информации серверу завершена')
 
+
         if len(self.dumpList2) != 0:
             server.commutatorLogger.debug('Передача информации серверу...')
-            r = server.delete('delUserAcc', list, self.dumpList2)
+            r = server.delete('delUserAcc', json, self.dumpList2)
             server.commutatorLogger.debug('Передача информации серверу завершена')
 
 

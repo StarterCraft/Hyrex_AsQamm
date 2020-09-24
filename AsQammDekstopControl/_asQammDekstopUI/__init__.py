@@ -534,6 +534,7 @@ class Ui_MainWindow(object):
 "QLineEdit { \n"
 "    border-radius: 3px;\n"
 "    border: 1px solid white;\n"
+"    font: 8pt \"Segoe UI Semilight\";\n"
 " }\n"
 "\n"
 "QLineEdit:hover { \n"
@@ -2725,8 +2726,8 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stack.setCurrentIndex(4)
-        self.taw_PtsConfig.setCurrentIndex(1)
+        self.stack.setCurrentIndex(5)
+        self.taw_PtsConfig.setCurrentIndex(0)
         self.taw_PtsWateringAutoModeCfg.setCurrentIndex(0)
         self.lnI_Password.returnPressed.connect(self.btn_UserInit.click)
         self.ckb_ToggleLogs.toggled['bool'].connect(self.ckb_ToggleLogsArch.setEnabled)

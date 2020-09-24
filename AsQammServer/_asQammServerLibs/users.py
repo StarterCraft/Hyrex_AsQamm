@@ -9,15 +9,17 @@ class AqUserSystem():
         self.userSystemLogger = AqLogger('Server>UserSystem')
         self.possibleFileNames = []
         self.availableFileNames = []
-        self.loadUserData()
+        self.loadUserData() #Сразу после инициализации системы пользователей загружаем их
 
 
     def loadUserData(self):
-        self.users.clear()
-        self.crypto.getFileNamesList(self.possibleFileNames)
+        #Позволяет загрузить пользователей из ASQD-файлов (в виде dict-объекта)
+
+        self.users.clear() #Очистим список пользователей перед подгрузкой
+        self.crypto.getFileNamesList(self.possibleFileNames) #Выполним маппинг файлов в папке с файлами пользователей
         self.crypto.seekForFiles(self.possibleFileNames, self.availableFileNames, True)
 
-        for item in self.availableFileNames:
+        for item in self.availableFileNames: #Для каждого из фалов выполним открытие и выгрузим данные
             with open(r'%s' % item, 'r') as dataFile:
 
                 fileString = dataFile.readline()
@@ -31,10 +33,12 @@ class AqUserSystem():
 
 
     def getUserData(self):
+        #Позволяет получить список пользователей в виде dict-объектов, загруженный раннее
         return self.users
 
 
     def getUserRegistry(self):
+        #Позволяет получить регистр пользователей в виде list(str, ...)-объектa
         with open('data/system/ffreg32.sz', 'r') as dataFile:
             fileString = dataFile.readline()
             jsonString = self.crypto.decryptContent(fileString)
@@ -44,34 +48,53 @@ class AqUserSystem():
 
 
     def updateUserData(self, data: list):
+        #Позволяет обновить аккаунты пользователей
         logins = []
-        self.userSystemLogger.debug(data)
         for dict in data:
-            with open(dict['filepath'], 'w+') as dataFile:
-                fileString = json.dumps(dict)
-                fileString = self.crypto.encryptContent(fileString)
-                dataFile.write(fileString)
-                logins.append(dict['login'])
+            try:
+                with open((dict['filepath']), 'w+') as dataFile:
+                    fileString = json.dumps(dict)
+                    fileString = self.crypto.encryptContent(fileString)
+                    dataFile.write(fileString)
+                    logins.append(dict['login'])
+            except OSError:
+                with open((dict['filepath'])[1:-1], 'w+') as dataFile:
+                    fileString = json.dumps(dict)
+                    fileString = self.crypto.encryptContent(fileString)
+                    dataFile.write(fileString)
+                    logins.append(dict['login'])
 
         self.userSystemLogger.debug('Внесены изменения в аккаунты пользователей {0}'.format(logins))
 
 
-    def updateUserRegistry(self, data: list):
-        with open('data/system/ffreg32.sz', 'w+') as dataFile:
-            fileString = json.dumps(data)
-            fileString = self.crypto.encryptContent(fileString)
-            dataFile.write(fileString)
+    def updateUserRegistry(self, data: list or str, mode: int):
+        #Позволяет обновить регистр пользователей двумя способами: дополнением или перезаписью
+        if mode == 0 and data == str: #Режим дополнения регистра
+            with open('data/system/ffreg32.sz', 'a+') as dataFile:
+                fileString = json.dumps(data)
+                fileString = self.crypto.encryptContent(fileString)
+                dataFile.write(fileString)
+
+        elif mode == 1 and data == list: #Режим перезаписи регистра
+            with open('data/system/ffreg32.sz', 'w+') as dataFile:
+                fileString = json.dumps(data)
+                fileString = self.crypto.encryptContent(fileString)
+                dataFile.write(fileString)
 
 
     def deleteUserAccount(self, data: list):
+        #Позволяет удалить аккаунт пользователя
         logins = []
         for str in data:
             for dict in self.users:
                 if str == dict['login']:
+                    logins.append(str)
+                    os.remove(dict['filepath'])
+                    self.users.remove(dict)
                     break
-                    os.remove((dict['filepath']))
                 else:
                     continue
+            continue
 
         self.userSystemLogger.debug('Удалены аккаунты пользователей {0}'.format(logins))
 

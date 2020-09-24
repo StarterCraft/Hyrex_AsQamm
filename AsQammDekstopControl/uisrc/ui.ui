@@ -818,6 +818,7 @@ QComboBox::drop-down {
 QLineEdit { 
 	border-radius: 3px;
 	border: 1px solid white;
+	font: 8pt &quot;Segoe UI Semilight&quot;;
  }
 
 QLineEdit:hover { 
@@ -828,7 +829,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
 </string>
             </property>
             <property name="currentIndex">
-             <number>4</number>
+             <number>5</number>
             </property>
             <widget class="QWidget" name="page_1">
              <property name="styleSheet">
@@ -3346,7 +3347,7 @@ QPushButton:hover {
                   <string notr="true"/>
                  </property>
                  <property name="currentIndex">
-                  <number>1</number>
+                  <number>0</number>
                  </property>
                  <widget class="QWidget" name="tab1">
                   <attribute name="title">

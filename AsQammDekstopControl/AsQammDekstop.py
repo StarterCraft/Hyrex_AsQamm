@@ -93,7 +93,7 @@ if __name__ == '__main__':
     root = AqMainWindow()
     root.rootLogger.info('HYREX ASQAMM Pre-aplha 0.-01a Dekstop')
 
-    server = AqServerCommutator(root, '8900097cd0d1.ngrok.io')
+    server = AqServerCommutator(root, AqCrypto)
     server.commutatorLogger.info('Коммутатор сервера инициализирован')
 
     usersCore = AqUsersSystem(root)
@@ -128,9 +128,9 @@ if __name__ == '__main__':
     root.ui.btn_UserInit.clicked.connect( lambda: usersCore.userInit(root, server, usersCore) )
     root.ui.btn_UserInitAsGuest.clicked.connect( lambda: usersCore.guestUserInit(usersCore, root) )
     root.ui.btn_LogOut.clicked.connect( lambda: usersCore.logOut(root, server, usersCore) )
-    root.ui.btn_ChangeCurrentUserSrtt.clicked.connect ( lambda: usersCore.callCurrentUserSetupDlg(root, usersCore, usersCore.getInstance(root, True)) )
+    root.ui.btn_ChangeCurrentUserSrtt.clicked.connect ( lambda: usersCore.callCurrentUserSetupDlg(root, server, usersCore, usersCore.getInstance(root, True)) )
     root.ui.btn_UserDatabaseAddUser.clicked.connect ( lambda: usersCore.callUserCreationDlg(root, server, usersCore) )
-    root.ui.btn_UserDatabaseConfigureUser.clicked.connect( lambda: usersCore.callUserSetupDlg(root, usersCore, usersCore.getInstance(root, False)) )
+    root.ui.btn_UserDatabaseConfigureUser.clicked.connect( lambda: usersCore.callUserSetupDlg(root, server, usersCore, usersCore.getInstance(root, False)) )
     root.ui.btn_UserDatabaseDeleteUser.clicked.connect( lambda: usersCore.callUserDeletionDlg(root, usersCore.getInstance(root, False)) )
     root.ui.liw_UsersDbList.itemSelectionChanged.connect( lambda: usersCore.updateListWidget(root, usersCore) )
     root.ui.sld_WindowsOpacitySct.valueChanged.connect( lambda: AqUIFunctions.setPopupsOpacity(root) )

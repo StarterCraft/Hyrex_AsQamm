@@ -252,6 +252,7 @@ QComboBox::drop-down {
 QLineEdit { 
 	border-radius: 3px;
 	border: 1px solid white;
+	font: 8pt &quot;Segoe UI Semilight&quot;;
  }
 
 QLineEdit:hover { 
@@ -282,10 +283,18 @@ QLineEdit:hover {
        </widget>
       </item>
       <item row="6" column="1" colspan="3">
-       <widget class="QLineEdit" name="lnI_CnuDesc"/>
+       <widget class="QLineEdit" name="lnI_CnuDesc">
+        <property name="placeholderText">
+         <string>Укажите описние нового пользователя</string>
+        </property>
+       </widget>
       </item>
       <item row="5" column="1" colspan="2">
-       <widget class="QLineEdit" name="lnI_CnuAvatarAddr"/>
+       <widget class="QLineEdit" name="lnI_CnuAvatarAddr">
+        <property name="placeholderText">
+         <string>Укажите аватарку нового пользователя</string>
+        </property>
+       </widget>
       </item>
       <item row="2" column="1">
        <widget class="QLabel" name="lbl_CnuID">
@@ -298,6 +307,9 @@ QLineEdit:hover {
        <widget class="QLineEdit" name="lnI_CnuPassword">
         <property name="echoMode">
          <enum>QLineEdit::Password</enum>
+        </property>
+        <property name="placeholderText">
+         <string>Укажите пароль нового пользователя</string>
         </property>
        </widget>
       </item>
@@ -384,7 +396,11 @@ QLineEdit:hover {
        </widget>
       </item>
       <item row="3" column="1" colspan="3">
-       <widget class="QLineEdit" name="lnI_CnuLogin"/>
+       <widget class="QLineEdit" name="lnI_CnuLogin">
+        <property name="placeholderText">
+         <string>Укажите логин вашего пользователя</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -433,7 +449,7 @@ QLineEdit:hover {
         <widget class="QWidget" name="scrollAreaWidgetContents">
          <property name="geometry">
           <rect>
-           <x>-86</x>
+           <x>0</x>
            <y>0</y>
            <width>663</width>
            <height>127</height>
