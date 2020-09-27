@@ -839,7 +839,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
 </string>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>3</number>
             </property>
             <widget class="QWidget" name="page_1">
              <property name="styleSheet">
@@ -4121,6 +4121,63 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                  <property name="title">
                   <string>Оборудование</string>
                  </property>
+                 <widget class="QColumnView" name="clv_HardwareList">
+                  <property name="geometry">
+                   <rect>
+                    <x>6</x>
+                    <y>22</y>
+                    <width>520</width>
+                    <height>200</height>
+                   </rect>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="verticalScrollBarPolicy">
+                   <enum>Qt::ScrollBarAlwaysOn</enum>
+                  </property>
+                  <property name="horizontalScrollBarPolicy">
+                   <enum>Qt::ScrollBarAlwaysOff</enum>
+                  </property>
+                 </widget>
+                 <widget class="QFrame" name="frame_HardwareActionsPool">
+                  <property name="geometry">
+                   <rect>
+                    <x>540</x>
+                    <y>22</y>
+                    <width>141</width>
+                    <height>201</height>
+                   </rect>
+                  </property>
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                 </widget>
+                 <widget class="QFrame" name="frame_HardwareUItilPool">
+                  <property name="geometry">
+                   <rect>
+                    <x>10</x>
+                    <y>230</y>
+                    <width>671</width>
+                    <height>161</height>
+                   </rect>
+                  </property>
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                 </widget>
                 </widget>
                </item>
                <item row="0" column="0">
@@ -4134,79 +4191,6 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                  <property name="title">
                   <string>Сервер</string>
                  </property>
-                 <widget class="QLabel" name="lbl_ReadOnly45">
-                  <property name="geometry">
-                   <rect>
-                    <x>6</x>
-                    <y>142</y>
-                    <width>51</width>
-                    <height>20</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">font: 10pt &quot;Segoe UI Semibold&quot;</string>
-                  </property>
-                  <property name="text">
-                   <string>IP:Порт</string>
-                  </property>
-                 </widget>
-                 <widget class="QLineEdit" name="lnI_AqServerIP">
-                  <property name="geometry">
-                   <rect>
-                    <x>60</x>
-                    <y>144</y>
-                    <width>85</width>
-                    <height>20</height>
-                   </rect>
-                  </property>
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>85</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>localhost</string>
-                  </property>
-                 </widget>
-                 <widget class="QLabel" name="lbl_ReadOnly46">
-                  <property name="geometry">
-                   <rect>
-                    <x>149</x>
-                    <y>144</y>
-                    <width>8</width>
-                    <height>16</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">font: 10pt &quot;Segoe UI Semibold&quot;</string>
-                  </property>
-                  <property name="text">
-                   <string>:</string>
-                  </property>
-                 </widget>
-                 <widget class="QLineEdit" name="lbI_AqServerPort">
-                  <property name="geometry">
-                   <rect>
-                    <x>156</x>
-                    <y>144</y>
-                    <width>38</width>
-                    <height>20</height>
-                   </rect>
-                  </property>
-                  <property name="inputMask">
-                   <string>99990</string>
-                  </property>
-                  <property name="text">
-                   <string>8000</string>
-                  </property>
-                 </widget>
                  <widget class="QLabel" name="lbl_ReadOnly42">
                   <property name="geometry">
                    <rect>
@@ -4321,25 +4305,12 @@ QTabBar::tab { padding: 2 14 2 14; min-width: 8ex; }</string>
                    <rect>
                     <x>10</x>
                     <y>114</y>
-                    <width>80</width>
+                    <width>181</width>
                     <height>23</height>
                    </rect>
                   </property>
                   <property name="text">
-                   <string>Обновить</string>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="pushButton_3">
-                  <property name="geometry">
-                   <rect>
-                    <x>110</x>
-                    <y>114</y>
-                    <width>80</width>
-                    <height>23</height>
-                   </rect>
-                  </property>
-                  <property name="text">
-                   <string>Авторежим</string>
+                   <string>Перезагрузить соединение</string>
                   </property>
                  </widget>
                 </widget>
