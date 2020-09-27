@@ -48,3 +48,5 @@ class AqLogger:
         print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.YELLOW}CRITICAL{Style.RESET_ALL}]: {message}')
 
 
+    def openLogFolder():
+        os.system('explorer log')

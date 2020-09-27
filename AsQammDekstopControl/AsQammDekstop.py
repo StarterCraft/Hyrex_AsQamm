@@ -3,7 +3,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from playsound import playsound, PlaysoundException
+from playsound import *
 
 from _asQammDekstopUI.userCreationDlg import Ui_Dlg_CreateNewUserInUserDb
 from _asQammDekstopUI.userEditDlg import Ui_Dlg_EditUserInUserDb
@@ -91,7 +91,10 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
 
     root = AqMainWindow()
-    root.rootLogger.info('HYREX ASQAMM Pre-aplha 0.-01a Dekstop')
+    root.rootLogger.info('Запуск ядра')
+    AqUIFunctions.loadSpecifiedTheme(root, (AqUIFunctions.getDefaultThemeId()))
+    root.rootLogger.debug('Наложение стандартной темы')
+    AqUIFunctions.mapThemes(root)
 
     server = AqServerCommutator(root, AqCrypto)
     server.commutatorLogger.info('Коммутатор сервера инициализирован')
@@ -124,6 +127,7 @@ if __name__ == '__main__':
     
 
     usersCore.loadUsers(root, server, usersCore)
+    AqUIFunctions.mapThemes(root)
 
     root.ui.btn_UserInit.clicked.connect( lambda: usersCore.userInit(root, server, usersCore) )
     root.ui.btn_UserInitAsGuest.clicked.connect( lambda: usersCore.guestUserInit(usersCore, root) )
@@ -137,6 +141,7 @@ if __name__ == '__main__':
     root.ui.btn_InterfaceMode.clicked.connect( lambda: AqUIFunctions.changeInterfaceMode(AqUIFunctions, root, usersCore) )
     root.ui.btn_Apply.clicked.connect( lambda: localFunc.apply(root, server, usersCore) )
     root.ui.btn_OpenLogFolder.clicked.connect( lambda: root.rootLogger.openLogFolder() )
+    root.ui.cbb_Theme.currentTextChanged.connect( lambda: AqUIFunctions.loadSpecifiedTheme(root, (AqUIFunctions.getSelectedThemeId(root.ui.cbb_Theme))) )
     
 
     root.rootLogger.info('Привязка кнопок в интерфейсе приложения завершена успешно')

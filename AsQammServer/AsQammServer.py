@@ -2,6 +2,9 @@ import uvicorn, py3rijndael
 from typing import Optional
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
+from pyfirmata import (Arduino     as ArduinoUno,
+                       ArduinoMega as ArduinoMega,
+                       util        as ArduinoUtil)
 from random import uniform
 
 from _asQammServerLibs.functions import *
