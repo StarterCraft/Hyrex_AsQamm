@@ -1,4 +1,10 @@
-from AsQammDekstop import *
+from AsQammDekstop import AqMainWindow
+from _asQammDekstopLibs.config import AqConfigSystem
+from _asQammDekstopLibs.logging import AqLogger
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 import json, base64, os, glob, ffmpeg, hashlib
 from playsound import *
 
@@ -6,15 +12,11 @@ from playsound import *
 class AqUIFunctions():
 
     def createLabelsAtMainMenu(root):
-
         root.ui.hintsSizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        root.ui.styleSheet = str('''QLabel { font: 12pt "Segoe UI Semibold"; color: white; }
-        QLabel:hover { color: rgb(47, 105, 23); }''')
 
 
         root.ui.lbl_MenuHint1 = QtWidgets.QLabel(parent = root.ui.frame_top_menus)
         root.ui.lbl_MenuHint1.setText('Наш дом')
-        root.ui.lbl_MenuHint1.setStyleSheet(root.ui.styleSheet)
         root.ui.lbl_MenuHint1.setSizePolicy(root.ui.hintsSizePolicy)
 
         root.ui.cel_TopMenuBtn1.addWidget(root.ui.lbl_MenuHint1)
@@ -23,7 +25,6 @@ class AqUIFunctions():
 
         root.ui.lbl_MenuHint2 = QtWidgets.QLabel(parent = root.ui.frame_top_menus)
         root.ui.lbl_MenuHint2.setText('Защита')
-        root.ui.lbl_MenuHint2.setStyleSheet(root.ui.styleSheet)
         root.ui.lbl_MenuHint2.setSizePolicy(root.ui.hintsSizePolicy)
 
         root.ui.cel_TopMenuBtn2.addWidget(root.ui.lbl_MenuHint2)
@@ -32,7 +33,6 @@ class AqUIFunctions():
 
         root.ui.lbl_MenuHint3 = QtWidgets.QLabel(parent = root.ui.frame_top_menus)
         root.ui.lbl_MenuHint3.setText('Растения')
-        root.ui.lbl_MenuHint3.setStyleSheet(root.ui.styleSheet)
         root.ui.lbl_MenuHint3.setSizePolicy(root.ui.hintsSizePolicy)
 
         root.ui.cel_TopMenuBtn3.addWidget(root.ui.lbl_MenuHint3)
@@ -41,7 +41,6 @@ class AqUIFunctions():
 
         root.ui.lbl_MenuHint4 = QtWidgets.QLabel(parent = root.ui.frame_top_menus)
         root.ui.lbl_MenuHint4.setText('Оборудование')
-        root.ui.lbl_MenuHint4.setStyleSheet(root.ui.styleSheet)
         root.ui.lbl_MenuHint4.setSizePolicy(root.ui.hintsSizePolicy)
 
         root.ui.cel_TopMenuBtn4.addWidget(root.ui.lbl_MenuHint4)
@@ -50,7 +49,6 @@ class AqUIFunctions():
         
         root.ui.lbl_MenuHint5 = QtWidgets.QLabel(parent = root.ui.frame_top_menus)
         root.ui.lbl_MenuHint5.setText('Конфигурация')
-        root.ui.lbl_MenuHint5.setStyleSheet(root.ui.styleSheet)
         root.ui.lbl_MenuHint5.setSizePolicy(root.ui.hintsSizePolicy)
 
         root.ui.cel_TopMenuBtn5.addWidget(root.ui.lbl_MenuHint5)
@@ -76,7 +74,6 @@ class AqUIFunctions():
     # работать.
 
     def toggleSimpleWidgetInteraction(root, maxLength, widgetId):
-
         maxExtend = int()
 
         if widgetId == 0:
@@ -145,7 +142,6 @@ class AqUIFunctions():
 
 
     def selectSkin(id, root):
-
         if id == 1:
             root.ui.stack.setCurrentWidget(root.ui.page_1)
             root.ui.lbl_SkinName.setText('Наш дом')
@@ -175,12 +171,137 @@ class AqUIFunctions():
             item.setWindowOpacity(root.popupOpacity)
 
 
+    def getDefaultThemeId():
+        with open('data/config/~!default!~.asqd', 'r') as configFile:
+            jsonString = json.loads(str(configFile.read()))
+            return jsonString['theme']
+
+
+    def mapThemes(root):
+        root.ui.cbb_Theme.clear()
+        themes = []
+        la = glob.glob('ui/themesheets/*.asqd')
+        for file in la:
+            with open(file, 'r', encoding = 'utf-8') as themeSheet:
+                fileString = themeSheet.read()
+                jsonString = json.loads(fileString)
+                themes.append(jsonString['themeDesc'])
+                continue
+        root.ui.cbb_Theme.addItems(themes)
+
+
+    def getSelectedThemeId(input):
+        text = str()
+        for file in glob.glob('ui/themesheets/*.asqd'):
+            with open(file, 'r', encoding = 'utf-8') as themeSheet:
+                fileString = themeSheet.read()
+                jsonString = json.loads(fileString)
+                if jsonString['themeDesc'] == input.currentText():
+                    text = file[15:-5]
+                    break
+                else:
+                    continue
+        if text != None or text != '':
+            return text
+        else:
+            return None
+
+
+    def loadSpecifiedTheme(root, themeId: str):
+            with open(f'ui/themesheets/{themeId}.asqd', 'r', encoding = 'utf-8') as themeSheet:
+                fileString = themeSheet.read()
+                jsonString = json.loads(fileString)
+
+                styleSheets = {}
+                for key, value in (jsonString['styleSheets']).items():
+                    styleSheets.update( {key: str((bytes.fromhex(value)).decode('utf-8'))} )
+
+                iconAddresses = jsonString['icons']
+
+                root.setStyleSheet(styleSheets['mainWindow'])
+                root.ui.stack.setStyleSheet(styleSheets['stack'])
+                root.ui.frame_left_menu.setStyleSheet(styleSheets['mainMenuFrame'])
+
+                root.ui.btn_page1.setStyleSheet(styleSheets['homeScreenMainMenuButton'])
+                root.ui.btn_page2.setStyleSheet(styleSheets['defenseScreenMainMenuButton'])
+                root.ui.btn_page3.setStyleSheet(styleSheets['plantsScreenMainMenuButton'])
+                root.ui.btn_page4.setStyleSheet(styleSheets['hardwareScreenMainMenuButton'])
+                root.ui.btn_page5.setStyleSheet(styleSheets['configScreenMainMenuButton'])
+
+                root.ui.frame_top.setStyleSheet(styleSheets['topBarFrame'])
+                root.ui.lbl_SkinName.setStyleSheet(styleSheets['topBarTexts'])
+                root.ui.lbl_ReadOnly1.setStyleSheet(styleSheets['topBarTexts'])
+                root.ui.lbl_ReadOnly2.setStyleSheet(styleSheets['topBarTexts'])
+                root.ui.lbl_HardwareAll.setStyleSheet(styleSheets['topBarTexts'])
+                root.ui.lbl_HardwareOnLine.setStyleSheet(styleSheets['topBarTexts'])
+                
+                root.ui.btn_InterfaceMode.setStyleSheet(styleSheets['topButtons'])
+                root.ui.btn_Apply.setStyleSheet(styleSheets['topButtons'])
+                root.ui.btn_Save.setStyleSheet(styleSheets['topButtons'])
+                root.ui.btn_InterfaceMode.setStyleSheet(styleSheets['topButtons'])
+
+                root.ui.btn_UserInit.setStyleSheet(styleSheets['loginButtons'])
+                root.ui.btn_UserInitAsGuest.setStyleSheet(styleSheets['loginButtons'])
+
+                for popup in root.popups:
+                    popup.setStyleSheet(styleSheets['popups'])
+
+                icon1 = QtGui.QIcon()
+                icon1.addPixmap(QtGui.QPixmap(iconAddresses['menu_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                icon1.addPixmap(QtGui.QPixmap(":/inactive/inactive/menu_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+                root.ui.btn_Toggle.setIcon(icon1)
+
+                icon2 = QtGui.QIcon()
+                icon2.addPixmap(QtGui.QPixmap(iconAddresses['house_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                icon2.addPixmap(QtGui.QPixmap(":/inactive/inactive/house_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+                root.ui.btn_page1.setIcon(icon2)
+
+                icon3 = QtGui.QIcon()
+                icon3.addPixmap(QtGui.QPixmap(iconAddresses['defense_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                icon3.addPixmap(QtGui.QPixmap(":/inactive/inactive/defense_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+                root.ui.btn_page2.setIcon(icon3)
+
+                icon4 = QtGui.QIcon()
+                icon4.addPixmap(QtGui.QPixmap(iconAddresses['plants_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                icon4.addPixmap(QtGui.QPixmap(":/inactive/inactive/plants_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+                root.ui.btn_page3.setIcon(icon4)
+
+                icon5 = QtGui.QIcon()
+                icon5.addPixmap(QtGui.QPixmap(iconAddresses['hardware_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                icon5.addPixmap(QtGui.QPixmap(":/inactive/inactive/hardware_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+                root.ui.btn_page4.setIcon(icon5)
+
+                icon6 = QtGui.QIcon()
+                icon6.addPixmap(QtGui.QPixmap(iconAddresses['config_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                icon6.addPixmap(QtGui.QPixmap(":/inactive/inactive/config_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+                root.ui.btn_page5.setIcon(icon6)
+
+                icon7 = QtGui.QIcon()
+                icon7.addPixmap(QtGui.QPixmap(iconAddresses['interfacemode_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                icon7.addPixmap(QtGui.QPixmap(":/inactive/inactive/interfacemode_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+                root.ui.btn_InterfaceMode.setIcon(icon7)
+
+                icon8 = QtGui.QIcon()
+                icon8.addPixmap(QtGui.QPixmap(iconAddresses['apply_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                icon8.addPixmap(QtGui.QPixmap(":/inactive/inactive/apply_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+                root.ui.btn_Apply.setIcon(icon8)
+
+                icon9 = QtGui.QIcon()
+                icon9.addPixmap(QtGui.QPixmap(iconAddresses['save_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                icon9.addPixmap(QtGui.QPixmap(":/inactive/inactive/save_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+                root.ui.btn_Save.setIcon(icon9)
+
+                icon10 = QtGui.QIcon()
+                icon10.addPixmap(QtGui.QPixmap(iconAddresses['open_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                icon10.addPixmap(QtGui.QPixmap(":/inactive/inactive/open_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+                root.ui.btn_Load.setIcon(icon10)
+
+
 class AqCrypto:
     def __init__(self):
         self.cryptoLogger = AqLogger('Crypto')
 
     def getFileNamesList(self, exportList):
-
         for i in range(10, 99):
             self.initialFilename = str(r'customuser_' + str(r'{0}').format(i))
             self.initialFilename = self.initialFilename.encode('utf-8')
@@ -243,12 +364,18 @@ class AqLocalFunctions(AqMainWindow):
 
 
     def apply(self, root, server, usersCore):
-        if QApplication.keyboardModifiers() == Qt.AltModifier:
-            AqConfigSystem.saveDefaultConfig(AqConfigSystem, root, usersCore)
+        if QApplication.keyboardModifiers() == Qt.AltModifier and QApplication.keyboardModifiers() == Qt.ControlModifier:
+            AqConfigSystem.saveDefaultConfig(root, usersCore)
         else:
-            AqConfigSystem.saveConfig(AqConfigSystem, root, usersCore)
+            AqConfigSystem.saveConfig(root, usersCore)
 
         self.saveUnsavedUsers(root, server, usersCore)
+        for AqUser in [AqUser for AqUser in usersCore.users if (AqUser.current == False)]:
+            usersCore.users.remove(AqUser)
+
+        root.ui.liw_UsersDbList.clear()
+        usersCore.users.clear()
+        usersCore.loadUsers(root, server, usersCore)
 
 
     def saveUnsavedUsers(self, root, server, usersСore):
@@ -270,6 +397,7 @@ class AqLocalFunctions(AqMainWindow):
                               'permits': (AqUser.permits), 'config': (AqUser.config.getDict()) })
 
             self.dumpList.append(self.dumpData)    
+            AqUser.edited = False
             self.checker += 1
 
         for AqUser in self.toDeleteList:
@@ -278,7 +406,6 @@ class AqLocalFunctions(AqMainWindow):
 
         if len(self.dumpList) != 0:
             server.commutatorLogger.debug('Передача информации серверу...')
-            print(self.dumpList)
             merger = []
             integer = int()
             for i in self.dumpList:
@@ -292,9 +419,10 @@ class AqLocalFunctions(AqMainWindow):
             else:
                 server.commutatorLogger.debug('Передача информации серверу завершена')
 
+
         if len(self.dumpList2) != 0:
             server.commutatorLogger.debug('Передача информации серверу...')
-            r = server.delete('delUserAcc', list, self.dumpList2)
+            r = server.delete('delUserAcc', json, self.dumpList2)
             server.commutatorLogger.debug('Передача информации серверу завершена')
 
 

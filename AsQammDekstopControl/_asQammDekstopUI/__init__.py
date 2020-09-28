@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'uisrc\ui.ui'
+# Form implementation generated from reading ui file 'ui\src\ui.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.1
 #
@@ -23,7 +23,7 @@ class Ui_MainWindow(object):
         MainWindow.setMinimumSize(QtCore.QSize(1000, 480))
         MainWindow.setMaximumSize(QtCore.QSize(1000, 480))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/main/AsQamm/icon.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/<resource root>/icon.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet("background-color: rgb(45, 45, 45);")
         MainWindow.setLocale(QtCore.QLocale(QtCore.QLocale.Russian, QtCore.QLocale.Russia))
@@ -56,9 +56,7 @@ class Ui_MainWindow(object):
         self.frame_left_menu.setMinimumSize(QtCore.QSize(60, 434))
         self.frame_left_menu.setMaximumSize(QtCore.QSize(60, 434))
         self.frame_left_menu.setBaseSize(QtCore.QSize(60, 0))
-        self.frame_left_menu.setStyleSheet("background-color: rgb(35, 35, 35);\n"
-"font: 63 12pt \"Segoe UI Semibold\";\n"
-"border: 0px flat;")
+        self.frame_left_menu.setStyleSheet("QFrame {background-color: rgb(35, 35, 35); border: 0px flat;} QLabel {font: 12pt \"Segoe UI Semibold\"; color: white; } QLabel:hover {color: rgb(70, 175, 38)}")
         self.frame_left_menu.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_left_menu.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_left_menu.setObjectName("frame_left_menu")
@@ -106,8 +104,8 @@ class Ui_MainWindow(object):
 "QPushButton:pressed { background-color: rgb(70, 175, 38); }")
         self.btn_page1.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/house_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon1.addPixmap(QtGui.QPixmap(":/images/house_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/white/white/house_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/inactive/inactive/house_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
         self.btn_page1.setIcon(icon1)
         self.btn_page1.setIconSize(QtCore.QSize(64, 64))
         self.btn_page1.setObjectName("btn_page1")
@@ -136,8 +134,8 @@ class Ui_MainWindow(object):
 "QPushButton:pressed { background-color: rgb(70, 175, 38); }")
         self.btn_page2.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/images/defense_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon2.addPixmap(QtGui.QPixmap(":/images/defense_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/white/white/defense_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/inactive/inactive/defense_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
         self.btn_page2.setIcon(icon2)
         self.btn_page2.setIconSize(QtCore.QSize(60, 60))
         self.btn_page2.setObjectName("btn_page2")
@@ -166,8 +164,8 @@ class Ui_MainWindow(object):
 "QPushButton:pressed { background-color: rgb(70, 175, 38); }")
         self.btn_page3.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/images/plants_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon3.addPixmap(QtGui.QPixmap(":/images/plants_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/white/white/plants_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/inactive/inactive/plants_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
         self.btn_page3.setIcon(icon3)
         self.btn_page3.setIconSize(QtCore.QSize(64, 50))
         self.btn_page3.setObjectName("btn_page3")
@@ -198,8 +196,8 @@ class Ui_MainWindow(object):
 "QPushButton:pressed { background-color: rgb(70, 175, 38); }")
         self.btn_page4.setText("")
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/images/control_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon4.addPixmap(QtGui.QPixmap(":/images/control_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/white/white/control_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/inactive/inactive/control_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
         self.btn_page4.setIcon(icon4)
         self.btn_page4.setIconSize(QtCore.QSize(72, 72))
         self.btn_page4.setObjectName("btn_page4")
@@ -228,8 +226,8 @@ class Ui_MainWindow(object):
 "QPushButton:pressed { background-color: rgb(70, 175, 38); }")
         self.btn_page5.setText("")
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/images/config_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon5.addPixmap(QtGui.QPixmap(":/images/config_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(":/white/white/config_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(":/inactive/inactive/config_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
         self.btn_page5.setIcon(icon5)
         self.btn_page5.setIconSize(QtCore.QSize(60, 60))
         self.btn_page5.setObjectName("btn_page5")
@@ -276,10 +274,12 @@ class Ui_MainWindow(object):
 "    background-color: rgb(221, 221, 221);\n"
 "}\n"
 "\n"
+"\n"
 "QTabWidget::pane {\n"
 "    border-top: 1px solid white;\n"
 "    padding: 2px;\n"
 "}\n"
+"\n"
 "\n"
 "QTabBar::tab {\n"
 "    background: rgb(59, 59, 59);\n"
@@ -293,17 +293,21 @@ class Ui_MainWindow(object):
 "    font: 63 9pt \"Segoe UI Semibold\";\n"
 "}\n"
 "\n"
+"\n"
 "QTabBar::tab:disabled { background-color: gray; }\n"
 "QTabBar::tab:active:disabled { background-color: grey; }\n"
+"\n"
 "\n"
 "QTabBar::tab:hover {\n"
 "    background-color: rgb(47, 105, 23);\n"
 "    color: rgb(248, 248, 248);\n"
 "}\n"
 "\n"
+"\n"
 "QTabBar::tab:!selected {\n"
 "    margin-top: 2px; /* make non-selected tabs look smaller */\n"
 "}\n"
+"\n"
 "\n"
 "/* make use of negative margins for overlapping tabs */\n"
 "QTabBar::tab:selected {\n"
@@ -313,9 +317,11 @@ class Ui_MainWindow(object):
 "    background-color: rgb(70, 175, 38);\n"
 "}\n"
 "\n"
+"\n"
 "QTabBar::tab:first:selected {\n"
 "    margin-left: 0; /* the first selected tab has nothing to overlap with on the left */\n"
 "}\n"
+"\n"
 "\n"
 "QTabBar::tab:last:selected {\n"
 "    margin-right: 0; /* the last selected tab has nothing to overlap with on the right */\n"
@@ -326,8 +332,10 @@ class Ui_MainWindow(object):
 "    show-decoration-selected: 1; /* make the selection span the entire width of the view */\n"
 "}\n"
 "\n"
+"\n"
 "QListView::item:hover { background-color: rgb(47, 105, 23); }\n"
 "QListView::item:selected { background-color: rgb(70, 175, 38) }\n"
+"\n"
 "\n"
 "QSlider::handle:horizontal {\n"
 "    background:  rgb(70, 175, 38);\n"
@@ -336,8 +344,10 @@ class Ui_MainWindow(object):
 "    border-radius: 3px;\n"
 "}\n"
 "\n"
+"\n"
 "QSlider::handle:horizontal:hover { background-color: rgb(45, 102, 23); }\n"
 "QSlider::handle:horizontal:disabled { background-color: grey; }\n"
+"\n"
 "\n"
 " QScrollBar:vertical\n"
 " {\n"
@@ -382,7 +392,7 @@ class Ui_MainWindow(object):
 " QScrollBar::sub-line:vertical:hover,QScrollBar::sub-line:vertical:on\n"
 " {\n"
 "\n"
-"     border-image: url(:/qss_icons/rc/up_arrow.png);\n"
+"     border-image: url(:/black/images/black/arrowUp_ico.png);\n"
 "     height: 10px;\n"
 "     width: 10px;\n"
 "     subcontrol-position: top;\n"
@@ -392,7 +402,7 @@ class Ui_MainWindow(object):
 "\n"
 " QScrollBar::add-line:vertical:hover, QScrollBar::add-line:vertical:on\n"
 " {\n"
-"     border-image: url(:/qss_icons/rc/down_arrow.png);\n"
+"     border-image: url(:/black/images/black/arrowDown_ico.png);\n"
 "     height: 10px;\n"
 "     width: 10px;\n"
 "     subcontrol-position: bottom;\n"
@@ -485,11 +495,11 @@ class Ui_MainWindow(object):
 "\n"
 "\n"
 "QComboBox::down-arrow {\n"
-"    image: url(:/images/arrowDown_ico.png);\n"
+"    image: url(:/black/black/arrowDown_ico.png);\n"
 "}\n"
 "\n"
 "\n"
-"QComboBox::up-arrow { image: url(:/images/arrowUp_ico.png); }\n"
+"QComboBox::up-arrow { image: url(:/black/black/arrowUp_ico.png); }\n"
 "\n"
 "\n"
 "QComboBox:editable {\n"
@@ -534,6 +544,7 @@ class Ui_MainWindow(object):
 "QLineEdit { \n"
 "    border-radius: 3px;\n"
 "    border: 1px solid white;\n"
+"    font: 8pt \"Segoe UI Semilight\";\n"
 " }\n"
 "\n"
 "QLineEdit:hover { \n"
@@ -674,12 +685,13 @@ class Ui_MainWindow(object):
         self.line_11.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_11.setObjectName("line_11")
         self.gridLayout_6.addWidget(self.line_11, 0, 1, 1, 1)
-        self.graphicsView_3 = QtWidgets.QGraphicsView(self.box_HotWaterCon)
-        self.graphicsView_3.setMinimumSize(QtCore.QSize(196, 97))
-        self.graphicsView_3.setMaximumSize(QtCore.QSize(196, 16777215))
-        self.graphicsView_3.setStyleSheet("border: none")
-        self.graphicsView_3.setObjectName("graphicsView_3")
-        self.gridLayout_6.addWidget(self.graphicsView_3, 0, 2, 1, 1)
+        self.plw_HWaterConsumption = PlotWidget(self.box_HotWaterCon)
+        self.plw_HWaterConsumption.setMinimumSize(QtCore.QSize(196, 97))
+        self.plw_HWaterConsumption.setMaximumSize(QtCore.QSize(196, 16777215))
+        self.plw_HWaterConsumption.setStyleSheet("border: none")
+        self.plw_HWaterConsumption.setInteractive(False)
+        self.plw_HWaterConsumption.setObjectName("plw_HWaterConsumption")
+        self.gridLayout_6.addWidget(self.plw_HWaterConsumption, 0, 2, 1, 1)
         self.grd_HomeRootWidget.addWidget(self.box_HotWaterCon, 2, 0, 1, 1)
         self.box_EnergyOvw = QtWidgets.QGroupBox(self.page_1)
         self.box_EnergyOvw.setMinimumSize(QtCore.QSize(300, 129))
@@ -882,12 +894,13 @@ class Ui_MainWindow(object):
         self.line_9.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_9.setObjectName("line_9")
         self.horizontalLayout_7.addWidget(self.line_9)
-        self.graphicsView_2 = QtWidgets.QGraphicsView(self.box_ColdWaterCon)
-        self.graphicsView_2.setMinimumSize(QtCore.QSize(196, 97))
-        self.graphicsView_2.setMaximumSize(QtCore.QSize(196, 16777215))
-        self.graphicsView_2.setStyleSheet("border: none")
-        self.graphicsView_2.setObjectName("graphicsView_2")
-        self.horizontalLayout_7.addWidget(self.graphicsView_2)
+        self.plw_CWaterConsumption = PlotWidget(self.box_ColdWaterCon)
+        self.plw_CWaterConsumption.setMinimumSize(QtCore.QSize(196, 97))
+        self.plw_CWaterConsumption.setMaximumSize(QtCore.QSize(196, 16777215))
+        self.plw_CWaterConsumption.setStyleSheet("border: none")
+        self.plw_CWaterConsumption.setInteractive(False)
+        self.plw_CWaterConsumption.setObjectName("plw_CWaterConsumption")
+        self.horizontalLayout_7.addWidget(self.plw_CWaterConsumption)
         self.grd_HomeRootWidget.addWidget(self.box_ColdWaterCon, 1, 0, 1, 1)
         self.box_NetworkOvw = QtWidgets.QGroupBox(self.page_1)
         self.box_NetworkOvw.setMinimumSize(QtCore.QSize(300, 129))
@@ -1009,12 +1022,13 @@ class Ui_MainWindow(object):
         self.line_12.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_12.setObjectName("line_12")
         self.gridLayout_7.addWidget(self.line_12, 0, 1, 1, 1)
-        self.graphicsView_4 = QtWidgets.QGraphicsView(self.box_NetworkOvw)
-        self.graphicsView_4.setMinimumSize(QtCore.QSize(196, 97))
-        self.graphicsView_4.setMaximumSize(QtCore.QSize(196, 16777215))
-        self.graphicsView_4.setStyleSheet("border: none")
-        self.graphicsView_4.setObjectName("graphicsView_4")
-        self.gridLayout_7.addWidget(self.graphicsView_4, 0, 2, 1, 1)
+        self.plw_Network = PlotWidget(self.box_NetworkOvw)
+        self.plw_Network.setMinimumSize(QtCore.QSize(196, 97))
+        self.plw_Network.setMaximumSize(QtCore.QSize(196, 16777215))
+        self.plw_Network.setStyleSheet("border: none")
+        self.plw_Network.setInteractive(False)
+        self.plw_Network.setObjectName("plw_Network")
+        self.gridLayout_7.addWidget(self.plw_Network, 0, 2, 1, 1)
         self.grd_HomeRootWidget.addWidget(self.box_NetworkOvw, 2, 1, 1, 1)
         self.box_GraphsViewer = QtWidgets.QGroupBox(self.page_1)
         self.box_GraphsViewer.setObjectName("box_GraphsViewer")
@@ -1264,12 +1278,13 @@ class Ui_MainWindow(object):
         self.line_10.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_10.setObjectName("line_10")
         self.horizontalLayout_6.addWidget(self.line_10)
-        self.graphicsView = QtWidgets.QGraphicsView(self.box_EnergyCon)
-        self.graphicsView.setMinimumSize(QtCore.QSize(196, 97))
-        self.graphicsView.setMaximumSize(QtCore.QSize(196, 16777215))
-        self.graphicsView.setStyleSheet("border: none")
-        self.graphicsView.setObjectName("graphicsView")
-        self.horizontalLayout_6.addWidget(self.graphicsView)
+        self.plw_EnergyConsumption = PlotWidget(self.box_EnergyCon)
+        self.plw_EnergyConsumption.setMinimumSize(QtCore.QSize(196, 97))
+        self.plw_EnergyConsumption.setMaximumSize(QtCore.QSize(196, 16777215))
+        self.plw_EnergyConsumption.setStyleSheet("border: none")
+        self.plw_EnergyConsumption.setInteractive(False)
+        self.plw_EnergyConsumption.setObjectName("plw_EnergyConsumption")
+        self.horizontalLayout_6.addWidget(self.plw_EnergyConsumption)
         self.grd_HomeRootWidget.addWidget(self.box_EnergyCon, 0, 0, 1, 1)
         self.verticalLayout_7.addLayout(self.grd_HomeRootWidget)
         self.stack.addWidget(self.page_1)
@@ -1331,7 +1346,7 @@ class Ui_MainWindow(object):
         self.btn_DefnDatabaseAddUser.setSizePolicy(sizePolicy)
         self.btn_DefnDatabaseAddUser.setMaximumSize(QtCore.QSize(16777215, 20))
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/images/plus_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(":/black/black/plus_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_DefnDatabaseAddUser.setIcon(icon6)
         self.btn_DefnDatabaseAddUser.setIconSize(QtCore.QSize(13, 13))
         self.btn_DefnDatabaseAddUser.setObjectName("btn_DefnDatabaseAddUser")
@@ -1344,7 +1359,7 @@ class Ui_MainWindow(object):
         self.btn_DefnDatabaseConfigureUser.setSizePolicy(sizePolicy)
         self.btn_DefnDatabaseConfigureUser.setMaximumSize(QtCore.QSize(16777215, 20))
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(":/images/more_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon7.addPixmap(QtGui.QPixmap(":/black/black/more_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_DefnDatabaseConfigureUser.setIcon(icon7)
         self.btn_DefnDatabaseConfigureUser.setIconSize(QtCore.QSize(13, 13))
         self.btn_DefnDatabaseConfigureUser.setObjectName("btn_DefnDatabaseConfigureUser")
@@ -1357,7 +1372,7 @@ class Ui_MainWindow(object):
         self.btn_DefnDatabaseDeleteUser.setSizePolicy(sizePolicy)
         self.btn_DefnDatabaseDeleteUser.setMaximumSize(QtCore.QSize(16777215, 20))
         icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(":/images/minus_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon8.addPixmap(QtGui.QPixmap(":/black/black/minus_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_DefnDatabaseDeleteUser.setIcon(icon8)
         self.btn_DefnDatabaseDeleteUser.setIconSize(QtCore.QSize(13, 13))
         self.btn_DefnDatabaseDeleteUser.setObjectName("btn_DefnDatabaseDeleteUser")
@@ -1370,7 +1385,7 @@ class Ui_MainWindow(object):
         self.btn_DefnDatabaseLocalFunc.setSizePolicy(sizePolicy)
         self.btn_DefnDatabaseLocalFunc.setMaximumSize(QtCore.QSize(16777215, 20))
         icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap(":/images/save_ico_-d_.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon9.addPixmap(QtGui.QPixmap(":/black/black/save_ico_-d_.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_DefnDatabaseLocalFunc.setIcon(icon9)
         self.btn_DefnDatabaseLocalFunc.setIconSize(QtCore.QSize(25, 25))
         self.btn_DefnDatabaseLocalFunc.setObjectName("btn_DefnDatabaseLocalFunc")
@@ -1878,10 +1893,10 @@ class Ui_MainWindow(object):
         self.lbl_AqServerConnectionSpeed.setGeometry(QtCore.QRect(140, 47, 51, 19))
         self.lbl_AqServerConnectionSpeed.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lbl_AqServerConnectionSpeed.setObjectName("lbl_AqServerConnectionSpeed")
-        self.lbl_AqServerConnectionSpeed_2 = QtWidgets.QLabel(self.box_AqServer)
-        self.lbl_AqServerConnectionSpeed_2.setGeometry(QtCore.QRect(140, 70, 51, 19))
-        self.lbl_AqServerConnectionSpeed_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.lbl_AqServerConnectionSpeed_2.setObjectName("lbl_AqServerConnectionSpeed_2")
+        self.lbl_AqServerConnectionMode = QtWidgets.QLabel(self.box_AqServer)
+        self.lbl_AqServerConnectionMode.setGeometry(QtCore.QRect(140, 70, 51, 19))
+        self.lbl_AqServerConnectionMode.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.lbl_AqServerConnectionMode.setObjectName("lbl_AqServerConnectionMode")
         self.lbl_ReadOnly44 = QtWidgets.QLabel(self.box_AqServer)
         self.lbl_ReadOnly44.setGeometry(QtCore.QRect(6, 68, 101, 20))
         self.lbl_ReadOnly44.setStyleSheet("font: 10pt \"Segoe UI Semibold\"")
@@ -1902,15 +1917,59 @@ class Ui_MainWindow(object):
         self.page_5 = QtWidgets.QWidget()
         self.page_5.setObjectName("page_5")
         self.box_CfgInterface = QtWidgets.QGroupBox(self.page_5)
-        self.box_CfgInterface.setGeometry(QtCore.QRect(10, 140, 260, 151))
+        self.box_CfgInterface.setGeometry(QtCore.QRect(10, 140, 331, 161))
         self.box_CfgInterface.setObjectName("box_CfgInterface")
         self.formLayout_3 = QtWidgets.QFormLayout(self.box_CfgInterface)
-        self.formLayout_3.setContentsMargins(6, -1, -1, -1)
+        self.formLayout_3.setContentsMargins(6, -1, 6, -1)
         self.formLayout_3.setObjectName("formLayout_3")
         self.lbl_ReadOnly3 = QtWidgets.QLabel(self.box_CfgInterface)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lbl_ReadOnly3.sizePolicy().hasHeightForWidth())
+        self.lbl_ReadOnly3.setSizePolicy(sizePolicy)
+        self.lbl_ReadOnly3.setMaximumSize(QtCore.QSize(160, 16777215))
         self.lbl_ReadOnly3.setObjectName("lbl_ReadOnly3")
         self.formLayout_3.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly3)
+        self.lbl_ReadOnly4 = QtWidgets.QLabel(self.box_CfgInterface)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lbl_ReadOnly4.sizePolicy().hasHeightForWidth())
+        self.lbl_ReadOnly4.setSizePolicy(sizePolicy)
+        self.lbl_ReadOnly4.setMaximumSize(QtCore.QSize(160, 16777215))
+        self.lbl_ReadOnly4.setObjectName("lbl_ReadOnly4")
+        self.formLayout_3.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly4)
+        self.cbb_Theme = QtWidgets.QComboBox(self.box_CfgInterface)
+        self.cbb_Theme.setMaximumSize(QtCore.QSize(132, 16777215))
+        self.cbb_Theme.setObjectName("cbb_Theme")
+        self.formLayout_3.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.cbb_Theme)
+        self.lbl_ReadOnly16 = QtWidgets.QLabel(self.box_CfgInterface)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lbl_ReadOnly16.sizePolicy().hasHeightForWidth())
+        self.lbl_ReadOnly16.setSizePolicy(sizePolicy)
+        self.lbl_ReadOnly16.setMinimumSize(QtCore.QSize(177, 0))
+        self.lbl_ReadOnly16.setMaximumSize(QtCore.QSize(180, 16777215))
+        self.lbl_ReadOnly16.setObjectName("lbl_ReadOnly16")
+        self.formLayout_3.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly16)
+        self.sld_WindowsOpacitySct = QtWidgets.QSlider(self.box_CfgInterface)
+        self.sld_WindowsOpacitySct.setMaximumSize(QtCore.QSize(132, 16777215))
+        self.sld_WindowsOpacitySct.setStyleSheet("")
+        self.sld_WindowsOpacitySct.setMinimum(90)
+        self.sld_WindowsOpacitySct.setMaximum(100)
+        self.sld_WindowsOpacitySct.setPageStep(2)
+        self.sld_WindowsOpacitySct.setSliderPosition(95)
+        self.sld_WindowsOpacitySct.setOrientation(QtCore.Qt.Horizontal)
+        self.sld_WindowsOpacitySct.setInvertedAppearance(False)
+        self.sld_WindowsOpacitySct.setInvertedControls(True)
+        self.sld_WindowsOpacitySct.setTickPosition(QtWidgets.QSlider.TicksBelow)
+        self.sld_WindowsOpacitySct.setTickInterval(1)
+        self.sld_WindowsOpacitySct.setObjectName("sld_WindowsOpacitySct")
+        self.formLayout_3.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.sld_WindowsOpacitySct)
         self.cbb_Language = QtWidgets.QComboBox(self.box_CfgInterface)
+        self.cbb_Language.setMaximumSize(QtCore.QSize(132, 16777215))
         self.cbb_Language.setObjectName("cbb_Language")
         self.cbb_Language.addItem("")
         self.cbb_Language.setItemText(0, "Русский")
@@ -1925,35 +1984,11 @@ class Ui_MainWindow(object):
         self.cbb_Language.addItem("")
         self.cbb_Language.setItemText(5, "English")
         self.formLayout_3.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.cbb_Language)
-        self.lbl_ReadOnly4 = QtWidgets.QLabel(self.box_CfgInterface)
-        self.lbl_ReadOnly4.setObjectName("lbl_ReadOnly4")
-        self.formLayout_3.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly4)
-        self.cbb_Theme = QtWidgets.QComboBox(self.box_CfgInterface)
-        self.cbb_Theme.setObjectName("cbb_Theme")
-        self.cbb_Theme.addItem("")
-        self.cbb_Theme.addItem("")
-        self.formLayout_3.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.cbb_Theme)
-        self.lbl_ReadOnly16 = QtWidgets.QLabel(self.box_CfgInterface)
-        self.lbl_ReadOnly16.setObjectName("lbl_ReadOnly16")
-        self.formLayout_3.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly16)
-        self.sld_WindowsOpacitySct = QtWidgets.QSlider(self.box_CfgInterface)
-        self.sld_WindowsOpacitySct.setStyleSheet("")
-        self.sld_WindowsOpacitySct.setMinimum(90)
-        self.sld_WindowsOpacitySct.setMaximum(100)
-        self.sld_WindowsOpacitySct.setPageStep(2)
-        self.sld_WindowsOpacitySct.setSliderPosition(95)
-        self.sld_WindowsOpacitySct.setOrientation(QtCore.Qt.Horizontal)
-        self.sld_WindowsOpacitySct.setInvertedAppearance(False)
-        self.sld_WindowsOpacitySct.setInvertedControls(True)
-        self.sld_WindowsOpacitySct.setTickPosition(QtWidgets.QSlider.TicksBelow)
-        self.sld_WindowsOpacitySct.setTickInterval(1)
-        self.sld_WindowsOpacitySct.setObjectName("sld_WindowsOpacitySct")
-        self.formLayout_3.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.sld_WindowsOpacitySct)
         self.box_CfgSystem = QtWidgets.QGroupBox(self.page_5)
-        self.box_CfgSystem.setGeometry(QtCore.QRect(10, 305, 260, 102))
+        self.box_CfgSystem.setGeometry(QtCore.QRect(10, 305, 330, 102))
         self.box_CfgSystem.setObjectName("box_CfgSystem")
         self.ckb_ToggleLogs = QtWidgets.QCheckBox(self.box_CfgSystem)
-        self.ckb_ToggleLogs.setGeometry(QtCore.QRect(6, 20, 101, 17))
+        self.ckb_ToggleLogs.setGeometry(QtCore.QRect(6, 20, 161, 17))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -2128,7 +2163,7 @@ class Ui_MainWindow(object):
         self.ckb_ToggleLogsArch.setObjectName("ckb_ToggleLogsArch")
         self.cbb_LogsArchMode = QtWidgets.QComboBox(self.box_CfgSystem)
         self.cbb_LogsArchMode.setEnabled(True)
-        self.cbb_LogsArchMode.setGeometry(QtCore.QRect(154, 39, 101, 22))
+        self.cbb_LogsArchMode.setGeometry(QtCore.QRect(220, 40, 101, 22))
         self.cbb_LogsArchMode.setObjectName("cbb_LogsArchMode")
         self.cbb_LogsArchMode.addItem("")
         self.cbb_LogsArchMode.addItem("")
@@ -2138,7 +2173,7 @@ class Ui_MainWindow(object):
         self.cbb_LogsArchMode.addItem("")
         self.btn_OpenLogFolder = QtWidgets.QPushButton(self.box_CfgSystem)
         self.btn_OpenLogFolder.setEnabled(True)
-        self.btn_OpenLogFolder.setGeometry(QtCore.QRect(7, 71, 248, 23))
+        self.btn_OpenLogFolder.setGeometry(QtCore.QRect(7, 71, 317, 23))
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
         font.setPointSize(8)
@@ -2161,8 +2196,15 @@ class Ui_MainWindow(object):
 "    background-color: rgb(226, 226, 226);\n"
 "}")
         self.btn_OpenLogFolder.setObjectName("btn_OpenLogFolder")
+        self.cbb_LogsLevelMode = QtWidgets.QComboBox(self.box_CfgSystem)
+        self.cbb_LogsLevelMode.setEnabled(True)
+        self.cbb_LogsLevelMode.setGeometry(QtCore.QRect(220, 17, 101, 22))
+        self.cbb_LogsLevelMode.setObjectName("cbb_LogsLevelMode")
+        self.cbb_LogsLevelMode.addItem("")
+        self.cbb_LogsLevelMode.addItem("")
+        self.cbb_LogsLevelMode.addItem("")
         self.box_LoggedAs = QtWidgets.QGroupBox(self.page_5)
-        self.box_LoggedAs.setGeometry(QtCore.QRect(10, 10, 261, 111))
+        self.box_LoggedAs.setGeometry(QtCore.QRect(10, 10, 330, 111))
         self.box_LoggedAs.setObjectName("box_LoggedAs")
         self.lbl_ReadOnly15 = QtWidgets.QLabel(self.box_LoggedAs)
         self.lbl_ReadOnly15.setGeometry(QtCore.QRect(90, 22, 81, 16))
@@ -2177,10 +2219,10 @@ class Ui_MainWindow(object):
         self.lbl_CurrentUserUsername.setStyleSheet("font: 63 11pt \"Segoe UI Semibold\";")
         self.lbl_CurrentUserUsername.setObjectName("lbl_CurrentUserUsername")
         self.btn_LogOut = QtWidgets.QPushButton(self.box_LoggedAs)
-        self.btn_LogOut.setGeometry(QtCore.QRect(90, 80, 80, 23))
+        self.btn_LogOut.setGeometry(QtCore.QRect(243, 81, 80, 23))
         self.btn_LogOut.setObjectName("btn_LogOut")
         self.btn_ChangeCurrentUserSrtt = QtWidgets.QPushButton(self.box_LoggedAs)
-        self.btn_ChangeCurrentUserSrtt.setGeometry(QtCore.QRect(175, 80, 80, 23))
+        self.btn_ChangeCurrentUserSrtt.setGeometry(QtCore.QRect(159, 81, 80, 23))
         self.btn_ChangeCurrentUserSrtt.setObjectName("btn_ChangeCurrentUserSrtt")
         self.lbl_CurrentUserDescription = QtWidgets.QLabel(self.box_LoggedAs)
         self.lbl_CurrentUserDescription.setGeometry(QtCore.QRect(90, 60, 161, 16))
@@ -2192,7 +2234,7 @@ class Ui_MainWindow(object):
         self.gfv_CurrentUserAvatar.setScaledContents(True)
         self.gfv_CurrentUserAvatar.setObjectName("gfv_CurrentUserAvatar")
         self.box_CfgKeyboardSeqEdit = QtWidgets.QGroupBox(self.page_5)
-        self.box_CfgKeyboardSeqEdit.setGeometry(QtCore.QRect(290, 10, 261, 396))
+        self.box_CfgKeyboardSeqEdit.setGeometry(QtCore.QRect(360, 10, 261, 396))
         self.box_CfgKeyboardSeqEdit.setObjectName("box_CfgKeyboardSeqEdit")
         self.formLayout_2 = QtWidgets.QFormLayout(self.box_CfgKeyboardSeqEdit)
         self.formLayout_2.setObjectName("formLayout_2")
@@ -2313,7 +2355,7 @@ class Ui_MainWindow(object):
         self.line.setObjectName("line")
         self.formLayout_2.setWidget(10, QtWidgets.QFormLayout.SpanningRole, self.line)
         self.box_UsersDbEdit = QtWidgets.QGroupBox(self.page_5)
-        self.box_UsersDbEdit.setGeometry(QtCore.QRect(570, 10, 261, 396))
+        self.box_UsersDbEdit.setGeometry(QtCore.QRect(640, 10, 261, 396))
         self.box_UsersDbEdit.setObjectName("box_UsersDbEdit")
         self.lbl_SelectedUserDescription = QtWidgets.QLabel(self.box_UsersDbEdit)
         self.lbl_SelectedUserDescription.setGeometry(QtCore.QRect(94, 250, 151, 16))
@@ -2515,6 +2557,16 @@ class Ui_MainWindow(object):
         self.label_2.raise_()
         self.box_Login.raise_()
         self.stack.addWidget(self.page_login)
+        self.page_loading = QtWidgets.QWidget()
+        self.page_loading.setObjectName("page_loading")
+        self.lbl_LoadingAnimation = QtWidgets.QLabel(self.page_loading)
+        self.lbl_LoadingAnimation.setGeometry(QtCore.QRect(360, 150, 100, 100))
+        self.lbl_LoadingAnimation.setText("")
+        self.lbl_LoadingAnimation.setObjectName("lbl_LoadingAnimation")
+        self.lbl_LoadingText = QtWidgets.QLabel(self.page_loading)
+        self.lbl_LoadingText.setGeometry(QtCore.QRect(360, 260, 100, 16))
+        self.lbl_LoadingText.setObjectName("lbl_LoadingText")
+        self.stack.addWidget(self.page_loading)
         self.verticalLayout_5.addWidget(self.stack)
         self.horizontalLayout_2.addWidget(self.frame_pages)
         self.gridLayout_2.addWidget(self.Content, 1, 0, 1, 1)
@@ -2560,8 +2612,8 @@ class Ui_MainWindow(object):
 "QPushButton:pressed { background-color: rgb(70, 175, 38); }")
         self.btn_Toggle.setText("")
         icon11 = QtGui.QIcon()
-        icon11.addPixmap(QtGui.QPixmap(":/images/menu_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon11.addPixmap(QtGui.QPixmap(":/images/menu_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        icon11.addPixmap(QtGui.QPixmap(":/white/white/menu_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon11.addPixmap(QtGui.QPixmap(":/inactive/inactive/menu_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
         self.btn_Toggle.setIcon(icon11)
         self.btn_Toggle.setIconSize(QtCore.QSize(60, 60))
         self.btn_Toggle.setObjectName("btn_Toggle")
@@ -2589,6 +2641,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame_HardwareState.sizePolicy().hasHeightForWidth())
         self.frame_HardwareState.setSizePolicy(sizePolicy)
+        self.frame_HardwareState.setStyleSheet("font: 8pt \"Segoe UI\"")
         self.frame_HardwareState.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_HardwareState.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_HardwareState.setObjectName("frame_HardwareState")
@@ -2639,8 +2692,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed { background-color: rgb(70, 175, 38); }")
         self.btn_InterfaceMode.setText("")
         icon12 = QtGui.QIcon()
-        icon12.addPixmap(QtGui.QPixmap(":/images/interfacemode_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon12.addPixmap(QtGui.QPixmap(":/images/interfacemode_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        icon12.addPixmap(QtGui.QPixmap(":/white/white/interfacemode_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_InterfaceMode.setIcon(icon12)
         self.btn_InterfaceMode.setIconSize(QtCore.QSize(48, 48))
         self.btn_InterfaceMode.setObjectName("btn_InterfaceMode")
@@ -2664,10 +2716,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed { background-color: rgb(70, 175, 38); }")
         self.btn_Apply.setText("")
         icon13 = QtGui.QIcon()
-        icon13.addPixmap(QtGui.QPixmap(":/images/apply_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon13.addPixmap(QtGui.QPixmap(":/images/apply_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        icon13.addPixmap(QtGui.QPixmap(":/white/white/apply_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_Apply.setIcon(icon13)
-        self.btn_Apply.setIconSize(QtCore.QSize(45, 45))
+        self.btn_Apply.setIconSize(QtCore.QSize(48, 48))
         self.btn_Apply.setObjectName("btn_Apply")
         self.horizontalLayout_4.addWidget(self.btn_Apply)
         self.btn_Save = QtWidgets.QPushButton(self.frame_top)
@@ -2689,8 +2740,8 @@ class Ui_MainWindow(object):
 "QPushButton:pressed { background-color: rgb(70, 175, 38); }")
         self.btn_Save.setText("")
         icon14 = QtGui.QIcon()
-        icon14.addPixmap(QtGui.QPixmap(":/images/save_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon14.addPixmap(QtGui.QPixmap(":/images/save_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        icon14.addPixmap(QtGui.QPixmap(":/white/white/save_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon14.addPixmap(QtGui.QPixmap(":/inactive/inactive/save_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
         self.btn_Save.setIcon(icon14)
         self.btn_Save.setIconSize(QtCore.QSize(48, 48))
         self.btn_Save.setObjectName("btn_Save")
@@ -2714,8 +2765,8 @@ class Ui_MainWindow(object):
 "QPushButton:pressed { background-color: rgb(70, 175, 38); }")
         self.btn_Load.setText("")
         icon15 = QtGui.QIcon()
-        icon15.addPixmap(QtGui.QPixmap(":/images/open_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon15.addPixmap(QtGui.QPixmap(":/images/open_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        icon15.addPixmap(QtGui.QPixmap(":/white/white/open_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon15.addPixmap(QtGui.QPixmap(":/inactive/inactive/open_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
         self.btn_Load.setIcon(icon15)
         self.btn_Load.setIconSize(QtCore.QSize(48, 48))
         self.btn_Load.setObjectName("btn_Load")
@@ -2725,9 +2776,10 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stack.setCurrentIndex(4)
-        self.taw_PtsConfig.setCurrentIndex(1)
+        self.stack.setCurrentIndex(0)
+        self.taw_PtsConfig.setCurrentIndex(0)
         self.taw_PtsWateringAutoModeCfg.setCurrentIndex(0)
+        self.cbb_LogsArchMode.setCurrentIndex(5)
         self.lnI_Password.returnPressed.connect(self.btn_UserInit.click)
         self.ckb_ToggleLogs.toggled['bool'].connect(self.ckb_ToggleLogsArch.setEnabled)
         self.ckb_ToggleLogsArch.toggled['bool'].connect(self.cbb_LogsArchMode.setEnabled)
@@ -2745,6 +2797,8 @@ class Ui_MainWindow(object):
         self.rdb_PtsWateringScheduleMode.toggled['bool'].connect(self.frame_PtsWateringSysScheduleBtb.setEnabled)
         self.rb_PtsWateringSysSchedAbsolute.toggled['bool'].connect(self.btn_PtsWateringSysAddArg.setEnabled)
         self.rb_PtsWateringSysSchedAbsolute.toggled['bool'].connect(self.btn_PtsWateringSysDelArg.setEnabled)
+        self.ckb_ToggleLogs.toggled['bool'].connect(self.cbb_LogsLevelMode.setEnabled)
+        self.ckb_ToggleLogs.toggled['bool'].connect(self.cbb_LogsArchMode.setEnabled)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         MainWindow.setTabOrder(self.lnI_Login, self.lnI_Password)
         MainWindow.setTabOrder(self.lnI_Password, self.btn_UserInit)
@@ -2961,19 +3015,17 @@ class Ui_MainWindow(object):
         self.lbl_AqServerConnectionStat.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">не установлено</span></p></body></html>"))
         self.lbl_ReadOnly43.setText(_translate("MainWindow", "Скорость соед.:"))
         self.lbl_AqServerConnectionSpeed.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">0 КБит/с</span></p></body></html>"))
-        self.lbl_AqServerConnectionSpeed_2.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">нет</span></p></body></html>"))
+        self.lbl_AqServerConnectionMode.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">нет</span></p></body></html>"))
         self.lbl_ReadOnly44.setText(_translate("MainWindow", "Режим соед.:"))
         self.pushButton_2.setText(_translate("MainWindow", "Обновить"))
         self.pushButton_3.setText(_translate("MainWindow", "Авторежим"))
         self.box_CfgInterface.setTitle(_translate("MainWindow", "Интерфейс и дружественность"))
         self.lbl_ReadOnly3.setText(_translate("MainWindow", "Язык интерфейса:"))
         self.lbl_ReadOnly4.setText(_translate("MainWindow", "Тема интерфейса:"))
-        self.cbb_Theme.setItemText(0, _translate("MainWindow", "Тёмная"))
-        self.cbb_Theme.setItemText(1, _translate("MainWindow", "Зелёная"))
         self.lbl_ReadOnly16.setText(_translate("MainWindow", "Прозрачность вспл. окон:"))
         self.box_CfgSystem.setTitle(_translate("MainWindow", "Система"))
         self.ckb_ToggleLogs.setToolTip(_translate("MainWindow", "Не рекомендуем отключать эту опцию"))
-        self.ckb_ToggleLogs.setText(_translate("MainWindow", "Сохранять лог"))
+        self.ckb_ToggleLogs.setText(_translate("MainWindow", "Сохранять лог с уровня:"))
         self.ckb_ToggleLogsArch.setText(_translate("MainWindow", "Сохранять старые логи:"))
         self.cbb_LogsArchMode.setItemText(0, _translate("MainWindow", "за 1 неделю"))
         self.cbb_LogsArchMode.setItemText(1, _translate("MainWindow", "за 2 недели"))
@@ -2982,6 +3034,9 @@ class Ui_MainWindow(object):
         self.cbb_LogsArchMode.setItemText(4, _translate("MainWindow", "за 6 месяцев"))
         self.cbb_LogsArchMode.setItemText(5, _translate("MainWindow", "за год"))
         self.btn_OpenLogFolder.setText(_translate("MainWindow", "Открыть папку с логами"))
+        self.cbb_LogsLevelMode.setItemText(0, _translate("MainWindow", "DEBUG"))
+        self.cbb_LogsLevelMode.setItemText(1, _translate("MainWindow", "INFO"))
+        self.cbb_LogsLevelMode.setItemText(2, _translate("MainWindow", "ERROR"))
         self.box_LoggedAs.setTitle(_translate("MainWindow", "Кто я?"))
         self.lbl_ReadOnly15.setText(_translate("MainWindow", "Вы вошли как:"))
         self.lbl_CurrentUserUsername.setText(_translate("MainWindow", "(null)"))
@@ -3019,8 +3074,10 @@ class Ui_MainWindow(object):
         self.lbl_ReadOnly14.setText(_translate("MainWindow", "Пароль"))
         self.btn_UserInitAsGuest.setText(_translate("MainWindow", "Войти как гость"))
         self.lbl_LoginStatus.setText(_translate("MainWindow", "TextLabel"))
+        self.lbl_LoadingText.setText(_translate("MainWindow", "TextLabel"))
         self.lbl_SkinName.setText(_translate("MainWindow", "Наш дом"))
         self.lbl_ReadOnly1.setText(_translate("MainWindow", "Модулей (всего):"))
         self.lbl_HardwareAll.setText(_translate("MainWindow", "(n/a)"))
         self.lbl_ReadOnly2.setText(_translate("MainWindow", "Модулей (готово):"))
         self.lbl_HardwareOnLine.setText(_translate("MainWindow", "(n/a)"))
+from pyqtgraph import PlotWidget

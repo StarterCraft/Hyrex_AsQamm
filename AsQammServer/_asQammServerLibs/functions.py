@@ -52,7 +52,6 @@ class AqCrypto:
 
 
     def getCut(self, _str, bytes):
-        print(hashlib.pbkdf2_hmac('sha256', _str.encode('utf-8'), bytes, 256256).hex())
         return (hashlib.pbkdf2_hmac('sha256', _str.encode('utf-8'), bytes, 256256).hex())
 
 

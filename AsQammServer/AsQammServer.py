@@ -2,6 +2,9 @@ import uvicorn, py3rijndael
 from typing import Optional
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
+from pyfirmata import (Arduino     as ArduinoUno,
+                       ArduinoMega as ArduinoMega,
+                       util        as ArduinoUtil)
 from random import uniform
 
 from _asQammServerLibs.functions import *
@@ -97,10 +100,11 @@ if __name__ == '__main__':
     @server.api.post('/updateUserRg', description = 'Обновить внешний регистр')
     def updateUserRg(object: list, request: Request):
         global server
+        mode = object[0]
 
         server.serverLogger.debug(str(object))
         server.serverLogger.debug(f'Вызван метод /updateUserRg со стороны клиента {request.client.host}:{request.client.port}')
-        userCore.updateUserRegistry(object)
+        userCore.updateUserRegistry(object[1], mode)
 
 
     @server.api.delete('/delUserAcc', description = 'Удалить аккаунт пользователя (пользователей)')
