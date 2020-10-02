@@ -1,4 +1,3 @@
-from AsQammDekstop import AqMainWindow
 from _asQammDekstopLibs.config import AqConfigSystem
 from _asQammDekstopLibs.logging import AqLogger
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -7,6 +6,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import json, base64, os, glob, ffmpeg, hashlib
 from playsound import *
+from threading import Thread
 
 
 class AqUIFunctions():
@@ -171,6 +171,21 @@ class AqUIFunctions():
             item.setWindowOpacity(root.popupOpacity)
 
 
+    def generateLoadingAnimation(root):
+        root.animation3 = QMovie(':/<resource root>/loading.gif', parent = root)
+        root.ui.lbl_LoadingAnimation.setMovie(root.animation3)
+
+
+    def showLoadingAnimation(root):
+        root.ui.stack.setCurrentWidget(root.ui.page_loading)
+        root.animation3.start()
+
+
+    def hideLoadingAnimation(root, switchTo):
+        root.ui.stack.setCurrentWidget(switchTo)
+        root.animation3.stop()
+
+
     def getDefaultThemeId():
         with open('data/config/~!default!~.asqd', 'r') as configFile:
             jsonString = json.loads(str(configFile.read()))
@@ -296,6 +311,7 @@ class AqUIFunctions():
                 icon10.addPixmap(QtGui.QPixmap(":/inactive/inactive/open_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
                 root.ui.btn_Load.setIcon(icon10)
 
+                
 
 class AqCrypto:
     def __init__(self):
@@ -353,7 +369,7 @@ class AqCrypto:
         return (hashlib.pbkdf2_hmac('sha256', _str.encode('utf-8'), bytes, 256256).hex())
 
 
-class AqLocalFunctions(AqMainWindow):
+class AqLocalFunctions:
     def __init__(self):
         self.unsaved = []
 

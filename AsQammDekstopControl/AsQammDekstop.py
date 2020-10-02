@@ -18,7 +18,6 @@ from _asQammDekstopLibs.server import *
 
 
 class AqMainWindow(QMainWindow):
-
     def __init__(self):
 
         QMainWindow.__init__(self)
@@ -96,7 +95,7 @@ if __name__ == '__main__':
     root.rootLogger.debug('Наложение стандартной темы')
     AqUIFunctions.mapThemes(root)
 
-    server = AqServerCommutator(root, AqCrypto)
+    server = AqServerCommutator(root)
     server.commutatorLogger.info('Коммутатор сервера инициализирован')
 
     usersCore = AqUsersSystem(root)
@@ -125,9 +124,9 @@ if __name__ == '__main__':
     # Скин Конфигурации
     root.ui.btn_page5.clicked.connect( lambda: AqUIFunctions.selectSkin(5, root) )
     
-
     usersCore.loadUsers(root, server, usersCore)
     AqUIFunctions.mapThemes(root)
+    AqUIFunctions.generateLoadingAnimation(root)
 
     root.ui.btn_UserInit.clicked.connect( lambda: usersCore.userInit(root, server, usersCore) )
     root.ui.btn_UserInitAsGuest.clicked.connect( lambda: usersCore.guestUserInit(usersCore, root) )

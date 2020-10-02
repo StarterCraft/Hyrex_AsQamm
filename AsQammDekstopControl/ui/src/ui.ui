@@ -839,7 +839,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
 </string>
             </property>
             <property name="currentIndex">
-             <number>3</number>
+             <number>7</number>
             </property>
             <widget class="QWidget" name="page_1">
              <property name="styleSheet">
@@ -5918,13 +5918,16 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
               <property name="geometry">
                <rect>
                 <x>360</x>
-                <y>150</y>
-                <width>100</width>
-                <height>100</height>
+                <y>50</y>
+                <width>200</width>
+                <height>200</height>
                </rect>
               </property>
               <property name="text">
                <string/>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
               </property>
              </widget>
              <widget class="QLabel" name="lbl_LoadingText">

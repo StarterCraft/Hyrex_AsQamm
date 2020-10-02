@@ -142,6 +142,7 @@ class AqUsersSystem(AqMainWindow):
         self.userSystemLogger.info('Загрузка аккаунтов пользователей...')
         
         r = server.get('getUserdata', json)
+        print(r)
         server.commutatorLogger.info('Подключение к серверу установлено')
 
         if (len(list(r))) == 0:
@@ -184,7 +185,6 @@ class AqUsersSystem(AqMainWindow):
                 if self.selector[0].password == self.crypto.getCut(root.ui.lnI_Password.text(), bytes.fromhex(i)):
                     self.selector[0].setAsCurrent(True)
                     self.selector[0].edited = False
-
                     self.loggedIn = True
 
                     if self.selector[0].getPermits('pxConfigAsAdmin'):

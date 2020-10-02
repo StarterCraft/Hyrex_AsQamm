@@ -16,6 +16,7 @@ class AqServer:
         self.api = FastAPI()
         self.serverLogger = AqLogger('Server')
         self.crypto = AqCrypto()
+        self.tok = AqTokChecker()
         
         self.authorizedInstances = []
         self.mkdirs()
@@ -66,53 +67,69 @@ if __name__ == '__main__':
 
     server.serverLogger.info('Привязка глобальных методов сервера')
     @server.api.get('/getUserdata', description = 'Получить словарь данных пользователей')
-    def getUserdata(request: Request):
+    def getUserdata(data: dict, request: Request):
         global server
 
-        server.serverLogger.debug(f'Вызван метод /getUserdata со стороны клиента {request.client.host}:{request.client.port}')
-        return userCore.getUserData()
+        if server.tok.isOk(data['tok']):
+            server.serverLogger.debug(f'Вызван метод /getUserdata со стороны клиента {request.client.host}:{request.client.port}')
+            return userCore.getUserData()
+        else:
+            return {'401': 'UNAUTHORIZED'}
 
 
     @server.api.get('/getUserRg', description = 'Получить внешний регистр')
-    def getUserRg(request: Request):
+    def getUserRg(data: dict, request: Request):
         global server
 
-        server.serverLogger.debug(f'Вызван метод /getUserRg со стороны клиента {request.client.host}:{request.client.port}')
-        return userCore.getUserRegistry()
+        if server.tok.isOk(data['tok']):
+            server.serverLogger.debug(f'Вызван метод /getUserRg со стороны клиента {request.client.host}:{request.client.port}')
+            return userCore.getUserRegistry()
+        else:
+            return {'401': 'UNAUTHORIZED'}
 
 
     @server.api.get('/getNewUserFilename', description = 'Получить новое случайное имя файла для нового аккаунта пользователя')
-    def getNewUserFilename(request: Request):
+    def getNewUserFilename(data: dict, request: Request):
         global server
 
-        server.serverLogger.debug(f'Вызван метод /getNewUserFilename со стороны клиента {request.client.host}:{request.client.port}')
-        return userCore.getFilenameForNewUser()
+        if server.tok.isOk(data['tok']):
+            server.serverLogger.debug(f'Вызван метод /getNewUserFilename со стороны клиента {request.client.host}:{request.client.port}')
+            return userCore.getFilenameForNewUser()
+        else:
+            return {'401': 'UNAUTHORIZED'}
 
 
     @server.api.post('/updateUserdata', description = 'Обновить словарь данных пользователей')
-    def updateUserdata(object: list, request: Request):
+    def updateUserdata(object: dict, request: Request):
         global server
 
-        server.serverLogger.debug(f'Вызван метод /updateUserdata со стороны клиента {request.client.host}:{request.client.port}')
-        userCore.updateUserData(object)
+        if server.tok.isOk(object['tok']):
+            server.serverLogger.debug(f'Вызван метод /updateUserdata со стороны клиента {request.client.host}:{request.client.port}')
+            userCore.updateUserData(object['data'])
+        else:
+            return {'401': 'UNAUTHORIZED'}
 
 
     @server.api.post('/updateUserRg', description = 'Обновить внешний регистр')
-    def updateUserRg(object: list, request: Request):
+    def updateUserRg(object: dict, request: Request):
         global server
-        mode = object[0]
 
-        server.serverLogger.debug(str(object))
-        server.serverLogger.debug(f'Вызван метод /updateUserRg со стороны клиента {request.client.host}:{request.client.port}')
-        userCore.updateUserRegistry(object[1], mode)
+        if server.tok.isOk(data['tok']):
+            server.serverLogger.debug(f'Вызван метод /updateUserRg со стороны клиента {request.client.host}:{request.client.port}')
+            userCore.updateUserRegistry((object['data'])[1], (object['data'])[0])
+        else:
+            return {'401': 'UNAUTHORIZED'}
 
 
     @server.api.delete('/delUserAcc', description = 'Удалить аккаунт пользователя (пользователей)')
-    def delUserAcc(object: list, request: Request):
+    def delUserAcc(object: dict, request: Request):
         global server
 
-        server.serverLogger.debug(f'Вызван метод /delUserAcc со стороны клиента {request.client.host}:{request.client.port}')
-        userCore.deleteUserAccount(object)
+        if server.tok.isOk(data['tok']):
+            server.serverLogger.debug(f'Вызван метод /delUserAcc со стороны клиента {request.client.host}:{request.client.port}')
+            userCore.deleteUserAccount(object['data'])
+        else:
+            return {'401': 'UNAUTHORIZED'}
 
 
     server.serverLogger.info('Запуск главного цикла сервера')
