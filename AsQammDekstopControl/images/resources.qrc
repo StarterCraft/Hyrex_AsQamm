@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="white">
+    <file>white/minus_ico.png</file>
+    <file>white/plus_ico.png</file>
     <file>white/account-group.png</file>
     <file>white/apply_ico.png</file>
     <file>white/config_ico.png</file>
@@ -35,6 +37,8 @@
     <file>inactive/save_ico_-i_.png</file>
   </qresource>
   <qresource prefix="green">
+    <file>green/minus_ico.png</file>
+    <file>green/plus_ico.png</file>
     <file>green/apply_ico.png</file>
     <file>green/config_ico.png</file>
     <file>green/control_ico.png</file>

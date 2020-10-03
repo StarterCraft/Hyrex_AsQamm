@@ -70,10 +70,13 @@ if __name__ == '__main__':
     def getUserdata(data: dict, request: Request):
         global server
 
-        if server.tok.isOk(data['tok']):
-            server.serverLogger.debug(f'Вызван метод /getUserdata со стороны клиента {request.client.host}:{request.client.port}')
-            return userCore.getUserData()
-        else:
+        try:
+            if server.tok.isOk(data['tok']):
+                server.serverLogger.debug(f'Вызван метод /getUserdata со стороны клиента {request.client.host}:{request.client.port}')
+                return userCore.getUserData()
+            elif not server.tok.isOk(data['tok']):
+                return {'401': 'UNAUTHORIZED'}
+        except KeyError:
             return {'401': 'UNAUTHORIZED'}
 
 
@@ -81,10 +84,13 @@ if __name__ == '__main__':
     def getUserRg(data: dict, request: Request):
         global server
 
-        if server.tok.isOk(data['tok']):
-            server.serverLogger.debug(f'Вызван метод /getUserRg со стороны клиента {request.client.host}:{request.client.port}')
-            return userCore.getUserRegistry()
-        else:
+        try:
+            if server.tok.isOk(data['tok']):
+                server.serverLogger.debug(f'Вызван метод /getUserRg со стороны клиента {request.client.host}:{request.client.port}')
+                return userCore.getUserRegistry()
+            elif not server.tok.isOk(data['tok']):
+                return {'401': 'UNAUTHORIZED'}
+        except KeyError:
             return {'401': 'UNAUTHORIZED'}
 
 
@@ -92,10 +98,13 @@ if __name__ == '__main__':
     def getNewUserFilename(data: dict, request: Request):
         global server
 
-        if server.tok.isOk(data['tok']):
-            server.serverLogger.debug(f'Вызван метод /getNewUserFilename со стороны клиента {request.client.host}:{request.client.port}')
-            return userCore.getFilenameForNewUser()
-        else:
+        try:
+            if server.tok.isOk(data['tok']):
+                server.serverLogger.debug(f'Вызван метод /getNewUserFilename со стороны клиента {request.client.host}:{request.client.port}')
+                return userCore.getFilenameForNewUser()
+            elif not server.tok.isOk(data['tok']):
+                return {'401': 'UNAUTHORIZED'}
+        except KeyError:
             return {'401': 'UNAUTHORIZED'}
 
 
@@ -103,10 +112,13 @@ if __name__ == '__main__':
     def updateUserdata(object: dict, request: Request):
         global server
 
-        if server.tok.isOk(object['tok']):
-            server.serverLogger.debug(f'Вызван метод /updateUserdata со стороны клиента {request.client.host}:{request.client.port}')
-            userCore.updateUserData(object['data'])
-        else:
+        try:
+            if server.tok.isOk(object['tok']):
+                server.serverLogger.debug(f'Вызван метод /updateUserdata со стороны клиента {request.client.host}:{request.client.port}')
+                userCore.updateUserData(object['data'])
+            else:
+                return {'401': 'UNAUTHORIZED'}
+        except KeyError:
             return {'401': 'UNAUTHORIZED'}
 
 
@@ -114,10 +126,13 @@ if __name__ == '__main__':
     def updateUserRg(object: dict, request: Request):
         global server
 
-        if server.tok.isOk(data['tok']):
-            server.serverLogger.debug(f'Вызван метод /updateUserRg со стороны клиента {request.client.host}:{request.client.port}')
-            userCore.updateUserRegistry((object['data'])[1], (object['data'])[0])
-        else:
+        try:
+            if server.tok.isOk(data['tok']):
+                server.serverLogger.debug(f'Вызван метод /updateUserRg со стороны клиента {request.client.host}:{request.client.port}')
+                userCore.updateUserRegistry((object['data'])[1], (object['data'])[0])
+            else:
+                return {'401': 'UNAUTHORIZED'}
+        except KeyError:
             return {'401': 'UNAUTHORIZED'}
 
 
@@ -125,10 +140,13 @@ if __name__ == '__main__':
     def delUserAcc(object: dict, request: Request):
         global server
 
-        if server.tok.isOk(data['tok']):
-            server.serverLogger.debug(f'Вызван метод /delUserAcc со стороны клиента {request.client.host}:{request.client.port}')
-            userCore.deleteUserAccount(object['data'])
-        else:
+        try:
+            if server.tok.isOk(data['tok']):
+                server.serverLogger.debug(f'Вызван метод /delUserAcc со стороны клиента {request.client.host}:{request.client.port}')
+                userCore.deleteUserAccount(object['data'])
+            else:
+                return {'401': 'UNAUTHORIZED'}
+        except KeyError:
             return {'401': 'UNAUTHORIZED'}
 
 
