@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="white">
+    <file>white/more_ico.png</file>
     <file>white/minus_ico.png</file>
     <file>white/plus_ico.png</file>
     <file>white/account-group.png</file>

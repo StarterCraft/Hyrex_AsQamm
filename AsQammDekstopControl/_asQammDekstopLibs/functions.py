@@ -6,7 +6,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import json, base64, os, glob, ffmpeg, hashlib
 from playsound import *
-from threading import Thread
 
 
 class AqUIFunctions():
@@ -311,7 +310,49 @@ class AqUIFunctions():
                 icon10.addPixmap(QtGui.QPixmap(":/inactive/inactive/open_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
                 root.ui.btn_Load.setIcon(icon10)
 
-                
+
+class AqThread(QThread):
+    started = pyqtSignal()
+    finished = pyqtSignal()
+
+    class AqPasswordChecker:
+        pass
+
+    def __init__(self, threadType, **kwargs):
+        QThread.__init__(self)
+        if threadType == self.AqPasswordChecker:
+            self.type = self.AqPasswordChecker
+            self.text = kwargs['passwordText']
+            self.password = kwargs['userPassword']
+            self.r = kwargs['bytesObjectsIter']
+            self.textLabel = kwargs['loadingScreenText']
+            self.exitVar = bool()
+
+
+    def run(self):
+        if self.type == self.AqPasswordChecker:
+            self.started.emit()
+            self.textLabel.setText('Ожидание ответа сервера...')
+            matches = []
+            for i in self.r:
+                self.textLabel.setText('Вход...')
+                if self.password == AqCrypto.getCut(AqCrypto, self.text, bytes.fromhex(i)):
+                    matches.append(True)
+                    self.exitVar = True
+                    self.finished.emit()
+                    self.textLabel.setText('Подготовка интерфейса...')
+                    break
+                else:
+                    matches.append(False)
+                    self.textLabel.setText('Подготовка интерфейса...')
+                    continue
+
+            if [bool for bool in matches if (bool == True)] == []:
+                self.exitVar = False
+                self.finished.emit()
+            else:
+                pass
+
 
 class AqCrypto:
     def __init__(self):

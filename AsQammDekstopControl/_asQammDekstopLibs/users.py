@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from AsQammDekstop import AqMainWindow
 
-from _asQammDekstopLibs.functions import AqCrypto
+import _asQammDekstopLibs.functions
 from _asQammDekstopLibs.config import AqConfigSystem
 from _asQammDekstopLibs.logging import AqLogger
 
@@ -18,7 +18,7 @@ class AqUsersSystem(AqMainWindow):
 
     def __init__(self, root):
 
-        self.crypto = AqCrypto()
+        self.crypto = _asQammDekstopLibs.functions.AqCrypto()
         self.config = AqConfigSystem()
         self.loggedIn = bool(False)
         self.users = []
@@ -142,7 +142,6 @@ class AqUsersSystem(AqMainWindow):
         self.userSystemLogger.info('Загрузка аккаунтов пользователей...')
         
         r = server.get('getUserdata', json)
-        print(r)
         server.commutatorLogger.info('Подключение к серверу установлено')
 
         if (len(list(r))) == 0:
@@ -168,7 +167,6 @@ class AqUsersSystem(AqMainWindow):
 
     def cleanUserList(self):
         self.checker = [AqUser for AqUser in self.users if (AqUser.current == False)]
-
         for AqUser in self.checker:
             self.users.remove(AqUser)
            
@@ -177,53 +175,62 @@ class AqUsersSystem(AqMainWindow):
 
         self.selector = [AqUser for AqUser in self.users if (AqUser.login == root.ui.lnI_Login.text())]
         self.matches = []
+        exiter = bool()
         self.userSystemLogger.debug('Инициирован вход в систему как {0}'.format(root.ui.lnI_Login.text()))
 
         r = server.get('getUserRg', json)
-        for i in r:
-            try:
-                if self.selector[0].password == self.crypto.getCut(root.ui.lnI_Password.text(), bytes.fromhex(i)):
-                    self.selector[0].setAsCurrent(True)
-                    self.selector[0].edited = False
-                    self.loggedIn = True
+        try:
+            self.myThread = _asQammDekstopLibs.functions.AqThread(_asQammDekstopLibs.functions.AqThread.AqPasswordChecker,
+                                                                    passwordText      = root.ui.lnI_Password.text(),
+                                                                    userPassword      = self.selector[0].password,
+                                                                    bytesObjectsIter  = r,
+                                                                    loadingScreenText = root.ui.lbl_LoadingText)
+            self.myThread.started.connect( lambda: _asQammDekstopLibs.functions.AqUIFunctions.showLoadingAnimation(root) )
+            self.myThread.finished.connect( lambda: self.userCheck(root, usersCore, self.myThread.exitVar) )
+            self.myThread.start()
+            print('Запуск потока')
 
-                    if self.selector[0].getPermits('pxConfigAsAdmin'):
-                        self.lockApp(root, usersCore)
-                    else:
-                        self.cleanUserList()
-                        self.lockApp(root, usersCore)
-                    
-                    playsound(root.sounds['login'], False)
-                    self.userSystemLogger.info('Вход в систему произведён пользователем {0}'.format(self.selector[0].login))
-                    self.matches.append(True)
-                    break
-                else:
-                    self.matches.append(False)
-                    continue
-
-            except IndexError:
-                break
-                root.ui.box_Login.setGeometry(QtCore.QRect(360, 130, 280, 150))
-                root.ui.lbl_LoginStatus.show()
-                root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
-                root.ui.lbl_LoginStatus.setText('Неверный логин или пароль!')
-                self.userSystemLogger.info('Вход в систему не произведён по причине: 0 — неверный логин или пароль')
-                playsound(root.sounds['error'], False)
-            
-        randomShuffle(r)
-        server.post('updateUserRg', json, int, [1, r])
-        del r
-
-        if [bool for bool in self.matches if (bool == True)] == []:
+        except IndexError:
+            _asQammDekstopLibs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
             root.ui.box_Login.setGeometry(QtCore.QRect(360, 130, 280, 150))
             root.ui.lbl_LoginStatus.show()
             root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
             root.ui.lbl_LoginStatus.setText('Неверный логин или пароль!')
             self.userSystemLogger.info('Вход в систему не произведён по причине: 0 — неверный логин или пароль')
             playsound(root.sounds['error'], False)
-        else:
-            pass
+            print('логин не прошёл')
+            
+        randomShuffle(r)
+        server.post('updateUserRg', json, int, [1, r])
+        del r
 
+
+    def userCheck(self, root, usersCore, boolean):
+        print(f'Развилка, {boolean}')
+        if boolean:
+            _asQammDekstopLibs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_1)
+            self.selector[0].setAsCurrent(True)
+            self.selector[0].edited = False
+            self.loggedIn = True
+
+            if self.selector[0].getPermits('pxConfigAsAdmin'):
+                self.lockApp(root, usersCore)
+            else:
+                self.cleanUserList()
+                self.lockApp(root, usersCore)
+                    
+            playsound(root.sounds['login'], False)
+            self.userSystemLogger.info('Вход в систему произведён пользователем {0}'.format(self.selector[0].login))
+        else:
+            print('Пароль не прошёл')
+            _asQammDekstopLibs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
+            root.ui.box_Login.setGeometry(QtCore.QRect(360, 130, 280, 150))
+            root.ui.lbl_LoginStatus.show()
+            root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
+            root.ui.lbl_LoginStatus.setText('Неверный логин или пароль!')
+            self.userSystemLogger.info('Вход в систему не произведён по причине: 0 — неверный логин или пароль')
+            playsound(root.sounds['error'], False)
+                
 
     def guestUserInit(self, usersCore, root):
 
