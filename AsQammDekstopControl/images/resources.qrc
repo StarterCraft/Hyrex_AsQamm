@@ -55,6 +55,7 @@
   </qresource>
   <qresource prefix="&lt;resource root>">
     <file>loading.gif</file>
+	<file>loading.webp</file>
     <file>error.ico</file>
     <file>guest.jpg</file>
     <file>icon.ico</file>

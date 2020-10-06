@@ -78,6 +78,10 @@ if __name__ == '__main__':
                 return {'401': 'UNAUTHORIZED'}
         except KeyError:
             return {'401': 'UNAUTHORIZED'}
+        except AttributeError:
+            return {'401': 'UNAUTHORIZED'}
+        except ValueError:
+            return {'401': 'UNAUTHORIZED'}
 
 
     @server.api.get('/getUserRg', description = 'Получить внешний регистр')
@@ -91,6 +95,10 @@ if __name__ == '__main__':
             elif not server.tok.isOk(data['tok']):
                 return {'401': 'UNAUTHORIZED'}
         except KeyError:
+            return {'401': 'UNAUTHORIZED'}
+        except AttributeError:
+            return {'401': 'UNAUTHORIZED'}
+        except ValueError:
             return {'401': 'UNAUTHORIZED'}
 
 
@@ -106,6 +114,10 @@ if __name__ == '__main__':
                 return {'401': 'UNAUTHORIZED'}
         except KeyError:
             return {'401': 'UNAUTHORIZED'}
+        except AttributeError:
+            return {'401': 'UNAUTHORIZED'}
+        except ValueError:
+            return {'401': 'UNAUTHORIZED'}
 
 
     @server.api.post('/updateUserdata', description = 'Обновить словарь данных пользователей')
@@ -120,6 +132,10 @@ if __name__ == '__main__':
                 return {'401': 'UNAUTHORIZED'}
         except KeyError:
             return {'401': 'UNAUTHORIZED'}
+        except AttributeError:
+            return {'401': 'UNAUTHORIZED'}
+        except ValueError:
+            return {'401': 'UNAUTHORIZED'}
 
 
     @server.api.post('/updateUserRg', description = 'Обновить внешний регистр')
@@ -127,12 +143,16 @@ if __name__ == '__main__':
         global server
 
         try:
-            if server.tok.isOk(data['tok']):
+            if server.tok.isOk(object['tok']):
                 server.serverLogger.debug(f'Вызван метод /updateUserRg со стороны клиента {request.client.host}:{request.client.port}')
                 userCore.updateUserRegistry((object['data'])[1], (object['data'])[0])
             else:
                 return {'401': 'UNAUTHORIZED'}
         except KeyError:
+            return {'401': 'UNAUTHORIZED'}
+        except AttributeError:
+            return {'401': 'UNAUTHORIZED'}
+        except ValueError:
             return {'401': 'UNAUTHORIZED'}
 
 
@@ -147,6 +167,10 @@ if __name__ == '__main__':
             else:
                 return {'401': 'UNAUTHORIZED'}
         except KeyError:
+            return {'401': 'UNAUTHORIZED'}
+        except AttributeError:
+            return {'401': 'UNAUTHORIZED'}
+        except ValueError:
             return {'401': 'UNAUTHORIZED'}
 
 

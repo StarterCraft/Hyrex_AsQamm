@@ -171,6 +171,7 @@ class AqUIFunctions():
 
 
     def generateLoadingAnimation(root):
+        print(QMovie.supportedFormats())
         root.animation3 = QMovie(':/<resource root>/loading.gif', parent = root)
         root.ui.lbl_LoadingAnimation.setMovie(root.animation3)
 
