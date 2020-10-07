@@ -2,14 +2,11 @@ import uvicorn, py3rijndael
 from typing import Optional
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
-from pyfirmata import (Arduino     as ArduinoUno,
-                       ArduinoMega as ArduinoMega,
-                       util        as ArduinoUtil)
 from random import uniform
 
 from _asQammServerLibs.functions import *
 from _asQammServerLibs.users import *
-
+from _asQammServerLibs.hardware import *
 
 class AqServer:
     def __init__(self):
@@ -161,7 +158,7 @@ if __name__ == '__main__':
         global server
 
         try:
-            if server.tok.isOk(data['tok']):
+            if server.tok.isOk(object['tok']):
                 server.serverLogger.debug(f'Вызван метод /delUserAcc со стороны клиента {request.client.host}:{request.client.port}')
                 userCore.deleteUserAccount(object['data'])
             else:

@@ -29,8 +29,12 @@ class AqUsersSystem(AqMainWindow):
 
 
     def getCurrentUser(self):
-        self.selector = [AqUser for AqUser in self.users if (AqUser.current == True)]
-        return self.selector[0]
+        if self.currentUser != None:
+            return self.currentUser
+
+
+    def setCurrentUser(self, AqUser):
+        self.currentUser = AqUser
         
 
     def lockApp(self, root, usersCore):
@@ -63,12 +67,12 @@ class AqUsersSystem(AqMainWindow):
 
 
         elif self.loggedIn:
-            self.currentUser = self.getCurrentUser()
+            currentUser = self.getCurrentUser()
 
             root.ui.lbl_SkinName.setText('Наш дом')
-            root.ui.lbl_CurrentUserUsername.setText(self.currentUser.login)
-            root.ui.lbl_CurrentUserDescription.setText(self.currentUser.description)
-            root.ui.gfv_CurrentUserAvatar.setPixmap(self.currentUser.avatar)
+            root.ui.lbl_CurrentUserUsername.setText(currentUser.login)
+            root.ui.lbl_CurrentUserDescription.setText(currentUser.description)
+            root.ui.gfv_CurrentUserAvatar.setPixmap(currentUser.avatar)
 
             root.ui.frame_top.show()
             root.ui.frame_left_menu.show()
@@ -77,27 +81,27 @@ class AqUsersSystem(AqMainWindow):
             root.ui.btn_Toggle.setEnabled(True)
             root.ui.btn_page1.setEnabled(True)
 
-            if self.currentUser.getPermits('pxDefnBasic'):
+            if currentUser.getPermits('pxDefnBasic'):
                 root.ui.btn_page2.setEnabled(True)
             else:
                 root.ui.btn_page2.setEnabled(False)
 
-            if self.currentUser.getPermits('pxPlants'):
+            if currentUser.getPermits('pxPlants'):
                 root.ui.btn_page3.setEnabled(True)
             else:
                 root.ui.btn_page3.setEnabled(False)
 
-            if self.currentUser.getPermits('pxHardware'):
+            if currentUser.getPermits('pxHardware'):
                 root.ui.btn_page4.setEnabled(True)
             else:
                 root.ui.btn_page4.setEnabled(False)
 
-            if self.currentUser.getPermits('pxConfig'):
+            if currentUser.getPermits('pxConfig'):
                 root.ui.btn_page5.setEnabled(True)
             else:
                 root.ui.btn_page5.setEnabled(False)
 
-            if self.currentUser.getPermits('pxConfigAsAdmin'):
+            if currentUser.getPermits('pxConfigAsAdmin'):
                 root.ui.box_UsersDbEdit.setTitle('Управление пользователями')
                 root.ui.liw_UsersDbList.show()
                 root.ui.lbl_SelectedUserUsername.show()
@@ -123,7 +127,7 @@ class AqUsersSystem(AqMainWindow):
 
             root.ui.stack.setCurrentWidget(root.ui.page_1)
 
-            del self.currentUser
+            del currentUser
 
 
     def loadUsers(self, root, server, usersCore):
@@ -149,10 +153,23 @@ class AqUsersSystem(AqMainWindow):
                                       '''Не удалось найти ни одного аккаунта пользователя, за исключением аккаунта гостя. Большая часть функциональности недоступна. Проверьте, что вы создали хотя бы одного пользователя с правами админинстратора.''')
 
         for item in r:
-            usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
-                              (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
-            usersCore.instance.edited = False
-            self.userSystemLogger.info('Загружен пользователь ' + str(usersCore.instance.login))
+            try:
+                if self.currentUser.login == (item['login']):
+                    usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
+                                      (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
+                    usersCore.setCurrentUser(usersCore.instance)
+                    usersCore.instance.edited = False
+                    self.userSystemLogger.info('Загружен пользователь ' + str(usersCore.instance.login))
+                else:
+                    usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
+                                      (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
+                    usersCore.instance.edited = False
+                    self.userSystemLogger.info('Загружен пользователь ' + str(usersCore.instance.login))
+            except (AttributeError, RuntimeError):
+                usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
+                                  (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
+                usersCore.instance.edited = False
+                self.userSystemLogger.info('Загружен пользователь ' + str(usersCore.instance.login))
 
 
     def addToUserList(self, root, object, mode):
@@ -210,6 +227,7 @@ class AqUsersSystem(AqMainWindow):
         if boolean:
             _asQammDekstopLibs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_1)
             self.selector[0].setAsCurrent(True)
+            self.setCurrentUser(self.selector[0])
             self.selector[0].edited = False
             self.loggedIn = True
 
@@ -279,8 +297,9 @@ class AqUsersSystem(AqMainWindow):
                 root.userEditDlgUi.ckb_UserPermit_CfgScr.setChecked(userToEdit.getPermits('pxConfig'))
                 root.userEditDlgUi.ckb_UserPermit_CfgAsAdmin.setChecked(userToEdit.getPermits('pxConfigAsAdmin'))
                                        
-
-                root.userEditDlg.accepted.connect ( lambda: userToEdit.setup(usersCore, root, (self.crypto.getCut(root.userSelfEditDlgUi.lnI_EuPassword.text(), bytes.fromhex(randomChoice(server.get('getUserRg', json))))),
+                hmta = self.crypto.getHmta()
+                server.post('updateUserRg', json, int, [0, hmta.hex()])
+                root.userEditDlg.accepted.connect ( lambda: userToEdit.setup(usersCore, root, (self.crypto.getCut(root.userSelfEditDlgUi.lnI_EuPassword.text(), hmta)),
                                                                         (root.userEditDlgUi.lnI_EuDesc.text()), (root.userEditDlgUi.lnI_EuAvatarAddr.text()),
                                                                         { 'homeRooms': (root.userEditDlgUi.ckb_UserPermit_HomeRooms.isChecked()),
                                                                           'homeAsAdmin': (root.userEditDlgUi.ckb_UserPermit_HomeAsAdmin.isChecked()),
@@ -403,7 +422,7 @@ class AqUsersSystem(AqMainWindow):
                                                                   (root.userCreationDlgUi.lnI_CnuDesc.text()), 1, (server.get('getNewUserFilename', str)), 
                                                                   (root.userCreationDlgUi.lnI_CnuAvatarAddr.text()), (root.userCreationDlgUi.lnI_CnuLogin.text()),
                                                                   (self.crypto.getCut(root.userCreationDlgUi.lnI_CnuPassword.text(), hmta)),
-                                                                  (root.userCreationDlg.permits), (AqConfigSystem.loadDefaultConfigDict(AqConfigSystem))) )
+                                                                  (root.userCreationDlg.permits), (AqConfigSystem.loadDefaultConfigDict())) )
 
             root.userCreationDlg.show()
 
@@ -437,11 +456,10 @@ class AqUsersSystem(AqMainWindow):
         self.loggedIn = False
         self.userSystemLogger.debug('Система пользователей перешла в состояние: (Вход в систему не произведён)')
 
-        self.currentUser = self.getCurrentUser()
         self.currentUser.setAsCurrent(False)
         self.userSystemLogger.info('У активного пользователя ' + str(self.currentUser.login) + ' установлен параметр активности: ' + 
                                          str(self.currentUser.current))
-        del self.currentUser
+        self.currentUser = None
                 
         root.ui.liw_UsersDbList.clear()
         self.userSystemLogger.info('Очистка списка пользователей')

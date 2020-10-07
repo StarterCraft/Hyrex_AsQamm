@@ -65,6 +65,7 @@ class AqUserSystem():
                     logins.append(dict['login'])
 
         self.userSystemLogger.debug('Внесены изменения в аккаунты пользователей {0}'.format(logins))
+        self.loadUserData()
 
 
     def updateUserRegistry(self, data: list or str, mode: int):

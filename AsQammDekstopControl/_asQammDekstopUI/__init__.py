@@ -1736,7 +1736,18 @@ class Ui_MainWindow(object):
         self.line_4.setObjectName("line_4")
         self.gridLayout_5.addWidget(self.line_4, 1, 0, 1, 4)
         self.tbv_HardwareList = QtWidgets.QTableView(self.gridLayoutWidget_2)
-        self.tbv_HardwareList.setStyleSheet("border: none")
+        self.tbv_HardwareList.setStyleSheet("QTableView { \n"
+"    border: none\n"
+"}\n"
+"\n"
+"QHeaderView::section {\n"
+"    background-color: rgb(45, 45, 45);\n"
+"    color: white;\n"
+"    font: 12pt \"Segoe UI Semibold\";\n"
+"    border: none;\n"
+"}")
+        self.tbv_HardwareList.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.tbv_HardwareList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tbv_HardwareList.setShowGrid(False)
         self.tbv_HardwareList.setObjectName("tbv_HardwareList")
         self.tbv_HardwareList.verticalHeader().setVisible(False)
@@ -2607,8 +2618,8 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stack.setCurrentIndex(2)
-        self.taw_PtsConfig.setCurrentIndex(0)
+        self.stack.setCurrentIndex(5)
+        self.taw_PtsConfig.setCurrentIndex(1)
         self.cbb_LogsArchMode.setCurrentIndex(5)
         self.lnI_Password.returnPressed.connect(self.btn_UserInit.click)
         self.ckb_ToggleLogs.toggled['bool'].connect(self.ckb_ToggleLogsArch.setEnabled)

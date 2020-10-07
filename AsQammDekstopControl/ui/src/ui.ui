@@ -839,7 +839,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
 </string>
             </property>
             <property name="currentIndex">
-             <number>8</number>
+             <number>5</number>
             </property>
             <widget class="QWidget" name="page_1">
              <property name="styleSheet">
@@ -3706,12 +3706,39 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
                </item>
                <item row="2" column="0" colspan="4">
                 <widget class="QTableView" name="tbv_HardwareList">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="styleSheet">
-                  <string notr="true">border: none</string>
+                  <string notr="true">QTableView { 
+	border: none
+}
+
+QHeaderView::section {
+	background-color: rgb(45, 45, 45);
+	color: white;
+	font: 11pt &quot;Segoe UI Semibold&quot;;
+	border: none;
+}</string>
+                 </property>
+                 <property name="verticalScrollBarPolicy">
+                  <enum>Qt::ScrollBarAsNeeded</enum>
+                 </property>
+                 <property name="selectionMode">
+                  <enum>QAbstractItemView::SingleSelection</enum>
+                 </property>
+                 <property name="selectionBehavior">
+                  <enum>QAbstractItemView::SelectRows</enum>
                  </property>
                  <property name="showGrid">
                   <bool>false</bool>
                  </property>
+                 <attribute name="horizontalHeaderStretchLastSection">
+                  <bool>true</bool>
+                 </attribute>
                  <attribute name="verticalHeaderVisible">
                   <bool>false</bool>
                  </attribute>

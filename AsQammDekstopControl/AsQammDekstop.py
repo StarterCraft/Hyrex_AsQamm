@@ -142,6 +142,9 @@ if __name__ == '__main__':
     root.ui.btn_OpenLogFolder.clicked.connect( lambda: root.rootLogger.openLogFolder() )
     root.ui.cbb_Theme.currentTextChanged.connect( lambda: AqUIFunctions.loadSpecifiedTheme(root, (AqUIFunctions.getSelectedThemeId(root.ui.cbb_Theme))) )
     
+    model = QStandardItemModel(root)
+    root.ui.tbv_HardwareList.setModel(model)
+    model.setHorizontalHeaderLabels(['hjfghjfjfhgjhhjch gjh j', 'uytytruyxegv6vg'])
 
     root.rootLogger.info('Привязка кнопок в интерфейсе приложения завершена успешно')
 
