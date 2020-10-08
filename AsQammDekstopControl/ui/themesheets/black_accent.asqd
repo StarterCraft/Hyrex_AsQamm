@@ -25,13 +25,18 @@
 	"icons": {
 		"menu_ico": ":/green/green/menu_ico.png",
 		"house_ico": ":/green/green/house_ico.png",
-		"defense_ico": ":/green/green/defense_ico.png",
+		"defense_ico": ":/green/green/defense_ico.png",	
 		"plants_ico": ":/green/green/plants_ico.png",
 		"hardware_ico": ":/green/green/control_ico.png",
 		"config_ico": ":/green/green/config_ico.png",
+		"config_ico_-c": ":/green/green/config_ico_-c.png",
 		"interfacemode_ico": ":/green/green/interfacemode_ico.png",
 		"apply_ico": ":/green/green/apply_ico.png",
+		"deny_ico": ":/green/green/deny_ico.png",
 		"save_ico": ":/green/green/save_ico.png",
-		"open_ico": ":/green/green/open_ico.png"
+		"open_ico": ":/green/green/open_ico.png",
+		"plus_ico": ":/green/green/plus_ico.png",
+		"minus_ico": ":/green/green/minus_ico.png",
+		"more_ico": ":/green/green/more_ico.png"
 	}
 }

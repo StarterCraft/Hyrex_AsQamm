@@ -171,7 +171,6 @@ class AqUIFunctions():
 
 
     def generateLoadingAnimation(root):
-        print(QMovie.supportedFormats())
         root.animation3 = QMovie(':/<resource root>/loading.gif', parent = root)
         root.ui.lbl_LoadingAnimation.setMovie(root.animation3)
 
@@ -291,6 +290,10 @@ class AqUIFunctions():
                 icon6.addPixmap(QtGui.QPixmap(":/inactive/inactive/config_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
                 root.ui.btn_page5.setIcon(icon6)
 
+                icon11 = QtGui.QIcon()
+                icon11.addPixmap(QtGui.QPixmap(iconAddresses['config_ico_-c']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                root.ui.btn_HardwareConfigUnit.setIcon(icon11)
+
                 icon7 = QtGui.QIcon()
                 icon7.addPixmap(QtGui.QPixmap(iconAddresses['interfacemode_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 icon7.addPixmap(QtGui.QPixmap(":/inactive/inactive/interfacemode_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
@@ -301,15 +304,31 @@ class AqUIFunctions():
                 icon8.addPixmap(QtGui.QPixmap(":/inactive/inactive/apply_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
                 root.ui.btn_Apply.setIcon(icon8)
 
+                icon12 = QtGui.QIcon()
+                icon12.addPixmap(QtGui.QPixmap(iconAddresses['deny_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                root.ui.btn_HardwareDeleteUnit.setIcon(icon12)
+
                 icon9 = QtGui.QIcon()
                 icon9.addPixmap(QtGui.QPixmap(iconAddresses['save_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 icon9.addPixmap(QtGui.QPixmap(":/inactive/inactive/save_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
                 root.ui.btn_Save.setIcon(icon9)
 
+                icon14 = QtGui.QIcon()
+                icon14.addPixmap(QtGui.QPixmap(iconAddresses['save_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                root.ui.btn_HardwareToggleUnitStatsRegistry.setIcon(icon14)
+
                 icon10 = QtGui.QIcon()
                 icon10.addPixmap(QtGui.QPixmap(iconAddresses['open_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 icon10.addPixmap(QtGui.QPixmap(":/inactive/inactive/open_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
                 root.ui.btn_Load.setIcon(icon10)
+
+                icon13 = QtGui.QIcon()
+                icon13.addPixmap(QtGui.QPixmap(iconAddresses['plus_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                root.ui.btn_HardwareAddUnit.setIcon(icon13)
+                
+                icon15 = QtGui.QIcon()
+                icon15.addPixmap(QtGui.QPixmap(iconAddresses['more_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                root.ui.btn_HardwareAdditionalSettings.setIcon(icon15)
 
 
 class AqThread(QThread):
@@ -416,11 +435,6 @@ class AqLocalFunctions:
         self.unsaved = []
 
 
-    def merge(self, list1, list2):
-        merged_list = list(zip(list1, list2))  
-        return merged_list 
-
-
     def apply(self, root, server, usersCore):
         if QApplication.keyboardModifiers() == Qt.AltModifier and QApplication.keyboardModifiers() == Qt.ControlModifier:
             AqConfigSystem.saveDefaultConfig(root, usersCore)
@@ -432,7 +446,6 @@ class AqLocalFunctions:
             usersCore.users.remove(AqUser)
 
         root.ui.liw_UsersDbList.clear()
-        usersCore.users.clear()
         usersCore.loadUsers(root, server, usersCore)
 
 

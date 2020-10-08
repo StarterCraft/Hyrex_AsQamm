@@ -125,6 +125,11 @@ class AqUsersSystem(AqMainWindow):
             root.ui.btn_Load.setEnabled(True)
             AqConfigSystem.applyConfig(root, usersCore)
 
+            if currentUser.configPreset != 'default':
+                _asQammDekstopLibs.functions.AqUIFunctions.loadSpecifiedTheme(root, currentUser.config.theme)
+            else:
+                pass
+
             root.ui.stack.setCurrentWidget(root.ui.page_1)
 
             del currentUser
@@ -205,7 +210,6 @@ class AqUsersSystem(AqMainWindow):
             self.myThread.started.connect( lambda: _asQammDekstopLibs.functions.AqUIFunctions.showLoadingAnimation(root) )
             self.myThread.finished.connect( lambda: self.userCheck(root, usersCore, self.myThread.exitVar) )
             self.myThread.start()
-            print('Запуск потока')
 
         except IndexError:
             _asQammDekstopLibs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
@@ -215,7 +219,6 @@ class AqUsersSystem(AqMainWindow):
             root.ui.lbl_LoginStatus.setText('Неверный логин или пароль!')
             self.userSystemLogger.info('Вход в систему не произведён по причине: 0 — неверный логин или пароль')
             playsound(root.sounds['error'], False)
-            print('логин не прошёл')
             
         randomShuffle(r)
         server.post('updateUserRg', json, int, [1, r])
@@ -223,7 +226,6 @@ class AqUsersSystem(AqMainWindow):
 
 
     def userCheck(self, root, usersCore, boolean):
-        print(f'Развилка, {boolean}')
         if boolean:
             _asQammDekstopLibs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_1)
             self.selector[0].setAsCurrent(True)
@@ -240,7 +242,6 @@ class AqUsersSystem(AqMainWindow):
             playsound(root.sounds['login'], False)
             self.userSystemLogger.info('Вход в систему произведён пользователем {0}'.format(self.selector[0].login))
         else:
-            print('Пароль не прошёл')
             _asQammDekstopLibs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
             root.ui.box_Login.setGeometry(QtCore.QRect(360, 130, 280, 150))
             root.ui.lbl_LoginStatus.show()

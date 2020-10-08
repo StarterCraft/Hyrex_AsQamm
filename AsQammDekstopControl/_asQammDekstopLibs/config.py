@@ -1,7 +1,7 @@
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QMessageBox
-import json
+import json, glob
 
 
 class AqConfigSystem:
@@ -29,11 +29,11 @@ class AqConfigSystem:
 
 
     @staticmethod
-    def saveConfig(root, usersCore):
+    def saveConfig(root, usersCore, themeString: str):
         currentUser = usersCore.getCurrentUser()
 
         currentUser.config.setupByParam('language', root.ui.cbb_Language.currentIndex())
-        currentUser.config.setupByParam('theme', root.ui.cbb_Theme.currentIndex())
+        currentUser.config.setupByParam('theme', themeString)
         currentUser.config.setupByParam('popupOpacity', root.ui.sld_WindowsOpacitySct.value())
         currentUser.config.setupByParam('loggingMode', root.ui.ckb_ToggleLogs.isChecked())
         currentUser.config.setupByParam('logSavingMode', root.ui.ckb_ToggleLogsArch.isChecked())
@@ -90,7 +90,16 @@ class AqConfigSystem:
         currentUser = usersCore.getCurrentUser()
 
         root.ui.cbb_Language.setCurrentIndex((currentUser.config.language))
-        root.ui.cbb_Theme.setCurrentIndex((currentUser.config.theme))
+
+        text = str()
+        for i in glob.glob('ui/themesheets/*.asqd'):
+            with open(i, 'r', encoding = 'utf-8') as themeSheet:
+                jsonString = json.loads(themeSheet.read())
+                if i[15:-5] == currentUser.config.theme:
+                    root.ui.cbb_Theme.setCurrentText(jsonString['themeDesc'])
+                else:
+                    continue
+
         root.ui.sld_WindowsOpacitySct.setValue((currentUser.config.popupOpacity))
         root.ui.ckb_ToggleLogs.setChecked((currentUser.config.loggingMode))
         root.ui.ckb_ToggleLogsArch.setChecked((currentUser.config.logSavingMode))
@@ -127,6 +136,7 @@ class AqConfig(AqConfigSystem):
         
         self.language = configDict['language']
         self.theme = configDict['theme']
+        print(self.theme)
         self.popupOpacity = configDict['popupOpacity']
 
         self.loggingMode = configDict['loggingMode']

@@ -28,9 +28,14 @@
 		"plants_ico": ":/white/white/plants_ico.png",
 		"hardware_ico": ":/white/white/control_ico.png",
 		"config_ico": ":/white/white/config_ico.png",
+		"config_ico_-c": ":/white/white/config_ico_-c.png",
 		"interfacemode_ico": ":/white/white/interfacemode_ico.png",
 		"apply_ico": ":/white/white/apply_ico.png",
+		"deny_ico": ":/white/white/deny_ico.png",
 		"save_ico": ":/white/white/save_ico.png",
-		"open_ico": ":/white/white/open_ico.png"
+		"open_ico": ":/white/white/open_ico.png",
+		"plus_ico": ":/white/white/plus_ico.png",
+		"minus_ico": ":/white/white/minus_ico.png",
+		"more_ico": ":/white/white/more_ico.png"
 	}
 }

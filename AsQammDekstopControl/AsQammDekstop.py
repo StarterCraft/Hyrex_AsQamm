@@ -144,7 +144,8 @@ if __name__ == '__main__':
     
     model = QStandardItemModel(root)
     root.ui.tbv_HardwareList.setModel(model)
-    model.setHorizontalHeaderLabels(['hjfghjfjfhgjhhjch gjh j', 'uytytruyxegv6vg'])
+    model.setHorizontalHeaderLabels(['COM', 'Описание', 'Тип устройства', 'МИ', 'Стат'])
+    root.ui.tbv_HardwareList.resizeColumnsToContents()
 
     root.rootLogger.info('Привязка кнопок в интерфейсе приложения завершена успешно')
 

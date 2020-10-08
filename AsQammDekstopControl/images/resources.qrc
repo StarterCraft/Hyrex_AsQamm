@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="white">
+    <file>white/config_ico_-c.png</file>
     <file>white/more_ico.png</file>
     <file>white/minus_ico.png</file>
     <file>white/plus_ico.png</file>
@@ -42,6 +43,7 @@
     <file>green/plus_ico.png</file>
     <file>green/apply_ico.png</file>
     <file>green/config_ico.png</file>
+	<file>green/config_ico_-c.png</file>
     <file>green/control_ico.png</file>
     <file>green/defense_ico.png</file>
     <file>green/deny_ico.png</file>
@@ -52,10 +54,11 @@
     <file>green/open_ico.png</file>
     <file>green/plants_ico.png</file>
     <file>green/save_ico.png</file>
+	<file>green/more_ico.png</file>
   </qresource>
   <qresource prefix="&lt;resource root>">
     <file>loading.gif</file>
-	<file>loading.webp</file>
+    <file>loading.webp</file>
     <file>error.ico</file>
     <file>guest.jpg</file>
     <file>icon.ico</file>
