@@ -198,7 +198,7 @@ class AqUsersSystem(AqMainWindow):
         self.selector = [AqUser for AqUser in self.users if (AqUser.login == root.ui.lnI_Login.text())]
         self.matches = []
         exiter = bool()
-        self.userSystemLogger.debug('Инициирован вход в систему как {0}'.format(root.ui.lnI_Login.text()))
+        self.userSystemLogger.debug(f'Инициирован вход в систему как {root.ui.lnI_Login.text()}')
 
         r = server.get('getUserRg', json)
         try:
@@ -240,7 +240,7 @@ class AqUsersSystem(AqMainWindow):
                 self.lockApp(root, usersCore)
                     
             playsound(root.sounds['login'], False)
-            self.userSystemLogger.info('Вход в систему произведён пользователем {0}'.format(self.selector[0].login))
+            self.userSystemLogger.info(f'Вход в систему произведён пользователем {self.selector[0].login}')
         else:
             _asQammDekstopLibs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
             root.ui.box_Login.setGeometry(QtCore.QRect(360, 130, 280, 150))
@@ -254,8 +254,7 @@ class AqUsersSystem(AqMainWindow):
     def guestUserInit(self, usersCore, root):
 
         usersCore.users[0].setAsCurrent(True)
-        self.userSystemLogger.info('У активного экземпляра класса пользователя ' + str(usersCore.users[0]) + ' установлен параметр активности: ' + 
-                                          str(usersCore.users[0].current) + ', экземпляр назначен активным пользователем')
+        self.userSystemLogger.info(f'У активного пользователя (Гость) установлен параметр активности: {usersCore.users[0].current}, экземпляр назначен активным пользователем')
 
         self.loggedIn = True
         self.cleanUserList()
@@ -269,7 +268,7 @@ class AqUsersSystem(AqMainWindow):
             if (userToEdit.getPermits('pxConfigAsAdmin') and (userToEdit.current)):
                 self.callCurrentUserSetupDlg(root, usersCore, userToEdit)
             else:
-                self.userSystemLogger.debug('Инициирован вызов диалога редактирования пользователя {0}'.format(str(userToEdit.login)))
+                self.userSystemLogger.debug(f'Инициирован вызов диалога редактирования пользователя {userToEdit.login}')
 
                 root.userEditDlgUi.gfv_EuAvatarPrev.setPixmap(userToEdit.avatar)
                 root.userEditDlgUi.lbl_EuID.setText(str(userToEdit.id))
@@ -315,7 +314,7 @@ class AqUsersSystem(AqMainWindow):
                                                                           'configureAsAdmin': (root.userEditDlgUi.ckb_UserPermit_CfgAsAdmin.isChecked()) } ))
 
                 root.userEditDlg.show()
-                self.userSystemLogger.debug('Диалог редактирования пользователя {0} открыт'.format(str(userToEdit.login)))
+                self.userSystemLogger.debug(f'Диалог редактирования пользователя {userToEdit.login} открыт')
 
         except AttributeError:
             pass
@@ -323,7 +322,7 @@ class AqUsersSystem(AqMainWindow):
 
     def callCurrentUserSetupDlg(self, root, server, usersCore, userToEdit):
         try:
-            self.userSystemLogger.debug('Инициирован вызов диалога самостоятельного редактирования пользователя {0}'.format(str(userToEdit.login)))
+            self.userSystemLogger.debug(f'Инициирован вызов диалога самостоятельного редактирования пользователя {userToEdit.login}')
 
             root.userSelfEditDlgUi.gfv_EuAvatarPrev.setPixmap(userToEdit.avatar)
             root.userSelfEditDlgUi.lbl_EuID.setText(str(userToEdit.id))
@@ -351,8 +350,8 @@ class AqUsersSystem(AqMainWindow):
 
     def callUserDeletionDlg(self, root, userToDelete):
         try:
-            self.msg = QMessageBox.question(root, 'Подтверждение действия', 'Вы действительно хотите удалить пользователя %s? Это необратимое действие!' % userToDelete.login)
-            self.userSystemLogger.debug('Инициирован вызов диалога удаления пользователя {0}'.format(userToDelete.login))
+            self.msg = QMessageBox.question(root, 'Подтверждение действия', rf'Вы действительно хотите удалить пользователя {userToDelete.login}? Это необратимое действие!')
+            self.userSystemLogger.debug(f'Инициирован вызов диалога удаления пользователя {userToDelete.login}')
 
             if self.msg == QMessageBox.Yes:
                 if (userToDelete.type == (0 or '0') or userToDelete.description == 'Guest'):
@@ -360,7 +359,7 @@ class AqUsersSystem(AqMainWindow):
 
                 else:
                     userToDelete.toDelete = True
-                    self.msg = QMessageBox.information(root, 'Подтверждение операции', 'Для завершения удаления пользователя %s нажмите "Применить".' % userToDelete.login)
+                    self.msg = QMessageBox.information(root, 'Подтверждение операции', f'Для завершения удаления пользователя {userToDelete.login} нажмите "Применить".')
 
             elif self.msg == QMessageBox.No:
                 pass

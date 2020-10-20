@@ -1,0 +1,11 @@
+[
+	{
+		"complexType": "plants",
+		"complexId": "complex:plants:1",
+		"attr": {"arduinoUnits": ["COM5"]}
+		"cells":[
+					{
+				"cellId": 1,
+				"connectedSensors": ["COM5:a:0:1101"]}]
+	}
+]

@@ -3,10 +3,13 @@ from typing import Optional
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from random import uniform
+from sys import argv as sysArgs
 
 from _asQammServerLibs.functions import *
 from _asQammServerLibs.users import *
 from _asQammServerLibs.hardware import *
+from PyQt5.QtWidgets import QApplication
+
 
 class AqServer:
     def __init__(self):
@@ -58,11 +61,19 @@ class AqServer:
 if __name__ == '__main__':
     IP = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите IP-адрес для запуска: ')
     portstr = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите порт сервера для запуска: ')
+    compart = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Нажмите {Fore.CYAN}ENTER{Style.RESET_ALL}'
+                    f' для запуска сервера в обычном режиме. Введите "{Fore.CYAN}--nohardware{Style.RESET_ALL}" и нажмите {Fore.CYAN}ENTER'
+                    f'{Style.RESET_ALL} для запуска сервера в режиме совместимости без оборудования ')
 
     server = AqServer()
     userCore = AqUserSystem()
 
-    server.serverLogger.info('Привязка глобальных методов сервера')
+    if compart == '--nohardware':
+        pass
+    else:
+        hardware = AqHardwareSystem()
+        assert hardware.isOk
+
     @server.api.get('/getUserdata', description = 'Получить словарь данных пользователей')
     def getUserdata(data: dict, request: Request):
         global server
@@ -171,5 +182,21 @@ if __name__ == '__main__':
             return {'401': 'UNAUTHORIZED'}
 
 
-    server.serverLogger.info('Запуск главного цикла сервера')
+    @server.api.get('/getHardwareData', description = 'pintest')
+    def getHardwareData(data: dict, request: Request):
+        global server
+        global b
+        print(server.tok.isOk(data['tok']))
+
+        if server.tok.isOk(data['tok']):
+            server.serverLogger.debug(f'Вызван метод /getHardwareData со стороны клиента {request.client.host}:{request.client.port}')
+            return hardware.getHardwareDataSheet()
+        else:
+            return {'401': 'UNAUTHORIZED'}
+
+    try:
+        hardware.startMonitoring()
+    except NameError:
+        pass
+
     server.run(IP, int(portstr))

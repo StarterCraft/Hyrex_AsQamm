@@ -172,9 +172,9 @@ class AqLogger:
 
     def error(self, message: str):
         self.Logger.error(message)
-        print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.YELLOW}ERROR{Style.RESET_ALL}]: {message}')
+        print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.RED}ERROR{Style.RESET_ALL}]: {message}')
 
 
     def critical(self, message: str):
         self.Logger.critical(message)
-        print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.YELLOW}CRITICAL{Style.RESET_ALL}]: {message}')
+        print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.RED}CRITICAL{Style.RESET_ALL}]: {message}')

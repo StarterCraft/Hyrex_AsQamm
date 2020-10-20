@@ -20,9 +20,9 @@ class AqServerCommutator:
 
     def get(self, methodIdStr: str, returnModeCode):
         try:
-            response = requests.get('http://{0}:{1}/{2}'.format(self.ip, self.port, methodIdStr), json = {'tok': self.__token__})
+            response = requests.get(f'http://{self.ip}:{self.port}/{methodIdStr}', json = {'tok': self.__token__})
         except AttributeError:
-            response = requests.get('http://{0}/{1}'.format(self.ip, methodIdStr), json = {'tok': self.__token__})
+            response = requests.get(f'http://{self.ip}/{methodIdStr}', json = {'tok': self.__token__})
 
         if returnModeCode == int:
             return response
@@ -37,14 +37,14 @@ class AqServerCommutator:
     def post(self, methodIdStr: str, inputModeCode, returnModeCode, postData):
         try:
             if inputModeCode == list:
-                response = requests.post('http://{0}:{1}/{2}'.format(self.ip, self.port, methodIdStr), data = {'tok': self.__token__, 'data': postData})
+                response = requests.post(f'http://{self.ip}:{self.port}/{methodIdStr}', data = {'tok': self.__token__, 'data': postData})
             elif inputModeCode == json:
-                response = requests.post('http://{0}:{1}/{2}'.format(self.ip, self.port, methodIdStr), json = {'tok': self.__token__, 'data': postData})
+                response = requests.post(f'http://{self.ip}:{self.port}/{methodIdStr}', json = {'tok': self.__token__, 'data': postData})
         except AttributeError:
             if inputModeCode == list:
-                response = requests.post('http://{0}/{1}'.format(self.ip, methodIdStr), data = postData)
+                response = requests.post(f'http://{self.ip}/{methodIdStr}', data = postData)
             elif inputModeCode == json:
-                response = requests.post('http://{0}/{1}'.format(self.ip, methodIdStr), json = postData)
+                response = requests.post(f'http://{self.ip}/{methodIdStr}', json = postData)
 
         if returnModeCode == int:
             return response
@@ -59,13 +59,13 @@ class AqServerCommutator:
     def delete(self, methodIdStr: str, inputModeCode, delData):
         try:
             if inputModeCode == (list or dict):
-                response = requests.delete('http://{0}:{1}/{2}'.format(self.ip, self.port, methodIdStr), data = {'tok': self.__token__, 'data': delData})
+                response = requests.delete('http://{self.ip}:{self.port}/{methodIdStr}', data = {'tok': self.__token__, 'data': delData})
             elif inputModeCode == json:
-                response = requests.delete('http://{0}:{1}/{2}'.format(self.ip, self.port, methodIdStr), json = {'tok': self.__token__, 'data': delData})
+                response = requests.delete('http://{self.ip}:{self.port}/{methodIdStr}', json = {'tok': self.__token__, 'data': delData})
         except AttributeError:
             if inputModeCode == (list or dict):
-                response = requests.delete('http://{0}/{1}'.format(self.ip, methodIdStr), data = {'tok': self.__token__, 'data': delData})
+                response = requests.delete('http://{self.ip}/{methodIdStr}', data = {'tok': self.__token__, 'data': delData})
             elif inputModeCode == json:
-                response = requests.delete('http://{0}/{1}'.format(self.ip, methodIdStr), json = {'tok': self.__token__, 'data': delData})
+                response = requests.delete('http://{self.ip}/{methodIdStr}', json = {'tok': self.__token__, 'data': delData})
 
         return response

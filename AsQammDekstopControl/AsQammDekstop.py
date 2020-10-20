@@ -82,7 +82,8 @@ class AqMainWindow(QMainWindow):
         
 
 from _asQammDekstopLibs.users import *
-from _asQammDekstopLibs.functions import AqUIFunctions, AqLocalFunctions
+from _asQammDekstopLibs.functions import AqUIFunctions, AqLocalFunctions, AqThread
+from _asQammDekstopLibs.hardware import AqHardwareSystem
 
 
 if __name__ == '__main__':
@@ -103,6 +104,9 @@ if __name__ == '__main__':
 
     localFunc = AqLocalFunctions()
     root.rootLogger.debug('Инициализирована система локальных данных')
+
+    hardwareSystem = AqHardwareSystem(root, server)
+    hardwareSystem.logger.debug('Инициализирована система оборудования')
 
     AqUIFunctions.createLabelsAtMainMenu(root)
     # Добавляем привязки клавиш к анимациям
@@ -141,12 +145,8 @@ if __name__ == '__main__':
     root.ui.btn_Apply.clicked.connect( lambda: localFunc.apply(root, server, usersCore) )
     root.ui.btn_OpenLogFolder.clicked.connect( lambda: root.rootLogger.openLogFolder() )
     root.ui.cbb_Theme.currentTextChanged.connect( lambda: AqUIFunctions.loadSpecifiedTheme(root, (AqUIFunctions.getSelectedThemeId(root.ui.cbb_Theme))) )
+    root.ui.tbv_HardwareList.setModel(hardwareSystem.mainTableModel)
     
-    model = QStandardItemModel(root)
-    root.ui.tbv_HardwareList.setModel(model)
-    model.setHorizontalHeaderLabels(['COM', 'Описание', 'Тип устройства', 'МИ', 'Стат'])
-    root.ui.tbv_HardwareList.resizeColumnsToContents()
-
     root.rootLogger.info('Привязка кнопок в интерфейсе приложения завершена успешно')
 
     usersCore.lockApp(root, usersCore)

@@ -4,7 +4,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-import json, base64, os, glob, ffmpeg, hashlib
+import json, base64, os, glob, ffmpeg, hashlib, time, math
 from playsound import *
 
 
@@ -338,6 +338,9 @@ class AqThread(QThread):
     class AqPasswordChecker:
         pass
 
+    class AqPinTester:
+        pass
+
     def __init__(self, threadType, **kwargs):
         QThread.__init__(self)
         if threadType == self.AqPasswordChecker:
@@ -347,6 +350,10 @@ class AqThread(QThread):
             self.r = kwargs['bytesObjectsIter']
             self.textLabel = kwargs['loadingScreenText']
             self.exitVar = bool()
+        elif threadType == self.AqPinTester:
+            self.type = self.AqPinTester
+            self.server = kwargs['server']
+            self.exitVar = float()
 
 
     def run(self):
@@ -372,6 +379,21 @@ class AqThread(QThread):
                 self.finished.emit()
             else:
                 pass
+        elif self.type == self.AqPinTester:
+            self.started.emit()
+            B = 4275
+            R0 = 100000
+            while True:
+                reading = (self.server.get('pin', json))['0']
+                R = 1023.0 / reading - 1.0
+                R = R0*R 
+                temperature = 1.0/(math.log(R/R0)/B+1/298.15)-167
+
+                self.exitVar = temperature
+                print(f't: {temperature} °C')
+                self.finished.emit()
+                time.sleep(5)
+                continue            
 
 
 class AqCrypto:
@@ -407,7 +429,7 @@ class AqCrypto:
                     if self.gotName != []:
                         continue
                     else:
-                        exportList.append(r'data\personal\~!{0}!~.asqd'.format(str(item.decode('utf-8'))))
+                        exportList.append(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8'))))
 
 
     def decryptContent(self, s):
@@ -433,6 +455,13 @@ class AqCrypto:
 class AqLocalFunctions:
     def __init__(self):
         self.unsaved = []
+
+
+    def saveReport(self, data: float, dictio: dict):
+        dictio.update({time.strftime('%d.%m %H:%M'): data})
+
+        with open('data/report.txt', 'w', encoding = 'utf-8') as report:
+            report.write(json.dumps(dictio))
 
 
     def apply(self, root, server, usersCore):
@@ -497,5 +526,5 @@ class AqLocalFunctions:
             server.commutatorLogger.debug('Передача информации серверу завершена')
 
 
-        root.rootLogger.info('Сохранение {0} пользователей с изменениями успешно завершено'.format(self.checker))
-        QMessageBox.information(root, 'Сохранение завершено', 'Сохранено {0} пользователей!'.format(self.checker))
+        root.rootLogger.info(f'Сохранение {self.checker} пользователей с изменениями успешно завершено')
+        QMessageBox.information(root, 'Сохранение завершено', f'Сохранено {self.checker} пользователей!')

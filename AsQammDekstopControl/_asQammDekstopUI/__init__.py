@@ -1742,7 +1742,8 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.tbv_HardwareList.sizePolicy().hasHeightForWidth())
         self.tbv_HardwareList.setSizePolicy(sizePolicy)
         self.tbv_HardwareList.setStyleSheet("QTableView { \n"
-"    border: none\n"
+"    border: none;\n"
+"    color: white\n"
 "}\n"
 "\n"
 "QHeaderView::section {\n"
@@ -1752,12 +1753,16 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "}")
         self.tbv_HardwareList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.tbv_HardwareList.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tbv_HardwareList.setAlternatingRowColors(False)
         self.tbv_HardwareList.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.tbv_HardwareList.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tbv_HardwareList.setShowGrid(False)
         self.tbv_HardwareList.setObjectName("tbv_HardwareList")
-        self.tbv_HardwareList.horizontalHeader().setStretchLastSection(True)
+        self.tbv_HardwareList.horizontalHeader().setMinimumSectionSize(30)
+        self.tbv_HardwareList.horizontalHeader().setStretchLastSection(False)
         self.tbv_HardwareList.verticalHeader().setVisible(False)
+        self.tbv_HardwareList.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         self.gridLayout_5.addWidget(self.tbv_HardwareList, 2, 0, 1, 4)
         self.stack.addWidget(self.page_4)
         self.page_5 = QtWidgets.QWidget()
