@@ -157,24 +157,30 @@ class AqUsersSystem(AqMainWindow):
             QMessageBox.warning(root, 'Ошибка инициализации системы пользователей', 
                                       '''Не удалось найти ни одного аккаунта пользователя, за исключением аккаунта гостя. Большая часть функциональности недоступна. Проверьте, что вы создали хотя бы одного пользователя с правами админинстратора.''')
 
+        print(len(r))
         for item in r:
             try:
-                if self.currentUser.login == (item['login']):
+                if self.currentUser.login == (item['login']): #Если логин текущего пользователя совпадает с загруженным
+                    print('if 163')
                     usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
                                       (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
                     usersCore.setCurrentUser(usersCore.instance)
                     usersCore.instance.edited = False
                     self.userSystemLogger.info('Загружен пользователь ' + str(usersCore.instance.login))
                 else:
+                    print('if 170')
                     usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
                                       (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
                     usersCore.instance.edited = False
                     self.userSystemLogger.info('Загружен пользователь ' + str(usersCore.instance.login))
             except (AttributeError, RuntimeError):
+                print('exc 176')
                 usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
                                   (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
                 usersCore.instance.edited = False
                 self.userSystemLogger.info('Загружен пользователь ' + str(usersCore.instance.login))
+
+        del r
 
 
     def addToUserList(self, root, object, mode):

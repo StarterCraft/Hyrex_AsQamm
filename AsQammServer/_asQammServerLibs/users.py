@@ -16,8 +16,12 @@ class AqUserSystem():
         #Позволяет загрузить пользователей из ASQD-файлов (в виде dict-объекта)
 
         self.users.clear() #Очистим список пользователей перед подгрузкой
+        self.possibleFileNames.clear()
+        self.availableFileNames.clear()
+
         self.crypto.getFileNamesList(self.possibleFileNames) #Выполним маппинг файлов в папке с файлами пользователей
         self.crypto.seekForFiles(self.possibleFileNames, self.availableFileNames, True)
+        print(f'self.availableFileNames: {self.availableFileNames}')
 
         for item in self.availableFileNames: #Для каждого из фалов выполним открытие и выгрузим данные
             with open(r'%s' % item, 'r') as dataFile:
@@ -30,6 +34,9 @@ class AqUserSystem():
                                   'type': (jsonString['type']), 'filepath': (item), 'login': (jsonString['login']),
                                   'password': (jsonString['password']), 'avatarAddress': (jsonString['avatarAddress']),
                                   'permits': (jsonString['permits']), 'config': (jsonString['config'])})
+
+        if len(self.users) > len(self.availableFileNames):
+            print(f'35 caught if, len(self.users): {len(self.users)}, len(self.availableFileNames): {len(self.availableFileNames)}')
 
 
     def getUserData(self):
@@ -64,7 +71,7 @@ class AqUserSystem():
                     dataFile.write(fileString)
                     logins.append(dict['login'])
 
-        self.userSystemLogger.debug('Внесены изменения в аккаунты пользователей {0}'.format(logins))
+        self.userSystemLogger.debug(f'Внесены изменения в аккаунты пользователей {logins}')
         self.loadUserData()
 
 
@@ -97,7 +104,8 @@ class AqUserSystem():
                     continue
             continue
 
-        self.userSystemLogger.debug('Удалены аккаунты пользователей {0}'.format(logins))
+        self.loadUserData()
+        self.userSystemLogger.debug(f'Удалены аккаунты пользователей {logins}')
 
 
     def getFilenameForNewUser(self):

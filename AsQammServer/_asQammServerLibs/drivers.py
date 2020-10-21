@@ -16,12 +16,15 @@ from math import       (log        as log,
 class AqArduinoUnoR3(AqAbstractHardwareUnit.ArduinoUnit, ArduinoUno):
     driverId = 1071
 
-    def __init__(self, comPort: str, pinMap: dict, desc: str):
+    def __init__(self, comPort: str, pinMap: dict, isEnabled: bool, desc: str):
         ArduinoUno.__init__(self, comPort)
-        AqAbstractHardwareUnit.ArduinoUnit.__init__(self, comPort)
+        AqAbstractHardwareUnit.ArduinoUnit.__init__(self, comPort, isEnabled, desc)
         self.iterator.setName(f'Iterator:ArduinoUno:{self.motherPort}')
+        if self.isEnabled:
+            self.iterator.start()
+        else:
+            pass
         self.setPinMap(pinMap)
-        self.description = desc
 
 
     def startIterator(self):
@@ -58,13 +61,15 @@ class AqArduinoUnoR3(AqAbstractHardwareUnit.ArduinoUnit, ArduinoUno):
 class AqSeeeduinoV4WithBaseShield(AqAbstractHardwareUnit.ArduinoUnit, ArduinoUno):
     driverId = 1072
 
-    def __init__(self, comPort: str, pinMap: dict, desc: str):
+    def __init__(self, comPort: str, pinMap: dict, isEnabled: bool, desc: str):
         ArduinoUno.__init__(self, comPort)
-        AqAbstractHardwareUnit.ArduinoUnit.__init__(self, comPort, desc)
+        AqAbstractHardwareUnit.ArduinoUnit.__init__(self, comPort, isEnabled, desc)
         self.iterator.setName(f'Iterator:SeeeduinoV4:{self.motherPort}')
-        self.iterator.start()
+        if self.isEnabled:
+            self.iterator.start()
+        else:
+            pass
         self.setPinMap(pinMap)
-        self.description = desc
 
 
     def setPinMap(self, _map):

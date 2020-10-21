@@ -10,6 +10,7 @@ from playsound import *
 
 class AqUIFunctions():
 
+    @staticmethod
     def createLabelsAtMainMenu(root):
         root.ui.hintsSizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
@@ -53,7 +54,8 @@ class AqUIFunctions():
         root.ui.cel_TopMenuBtn5.addWidget(root.ui.lbl_MenuHint5)
         root.ui.lbl_MenuHint5.hide()
 
-
+        
+    @staticmethod
     def changeInterfaceMode(self, root, userscore):
         if ((root.ui.stack.currentWidget()) == (root.ui.page_3)) or ((root.ui.stack.currentWidget()) == (root.ui.page_6)):
 
@@ -71,7 +73,8 @@ class AqUIFunctions():
     # линейной анимацией. Ей необходимо иметь следующие аргументы: желаемый максимальный размер
     # виджета (ширина/высота в зависимости от типа анимации) и ID виджета, с которым она будет
     # работать.
-
+    
+    @staticmethod
     def toggleSimpleWidgetInteraction(root, maxLength, widgetId):
         maxExtend = int()
 
@@ -140,6 +143,7 @@ class AqUIFunctions():
                 root.ui.gvf_DefnCamView.show()
 
 
+    @staticmethod
     def selectSkin(id, root):
         if id == 1:
             root.ui.stack.setCurrentWidget(root.ui.page_1)
@@ -155,13 +159,14 @@ class AqUIFunctions():
 
         elif id == 4:
             root.ui.stack.setCurrentWidget(root.ui.page_4)
-            root.ui.lbl_SkinName.setText('Управление')
+            root.ui.lbl_SkinName.setText('Оборудование')
 
         elif id == 5:
             root.ui.stack.setCurrentWidget(root.ui.page_5)
             root.ui.lbl_SkinName.setText('Конфигурация')
 
-
+            
+    @staticmethod
     def setPopupsOpacity(root):
         root.popupOpacity = float()
         root.popupOpacity = (root.ui.sld_WindowsOpacitySct.value() * 0.0101)
@@ -169,28 +174,33 @@ class AqUIFunctions():
         for item in root.popups:
             item.setWindowOpacity(root.popupOpacity)
 
-
+            
+    @staticmethod
     def generateLoadingAnimation(root):
         root.animation3 = QMovie(':/<resource root>/loading.gif', parent = root)
         root.ui.lbl_LoadingAnimation.setMovie(root.animation3)
 
-
+        
+    @staticmethod
     def showLoadingAnimation(root):
         root.ui.stack.setCurrentWidget(root.ui.page_loading)
         root.animation3.start()
 
-
+        
+    @staticmethod
     def hideLoadingAnimation(root, switchTo):
         root.ui.stack.setCurrentWidget(switchTo)
         root.animation3.stop()
 
-
+        
+    @staticmethod
     def getDefaultThemeId():
         with open('data/config/~!default!~.asqd', 'r') as configFile:
             jsonString = json.loads(str(configFile.read()))
             return jsonString['theme']
 
 
+    @staticmethod
     def mapThemes(root):
         root.ui.cbb_Theme.clear()
         themes = []
@@ -203,7 +213,8 @@ class AqUIFunctions():
                 continue
         root.ui.cbb_Theme.addItems(themes)
 
-
+        
+    @staticmethod
     def getSelectedThemeId(input):
         text = str()
         for file in glob.glob('ui/themesheets/*.asqd'):
@@ -220,7 +231,8 @@ class AqUIFunctions():
         else:
             return None
 
-
+        
+    @staticmethod
     def loadSpecifiedTheme(root, themeId: str):
             with open(f'ui/themesheets/{themeId}.asqd', 'r', encoding = 'utf-8') as themeSheet:
                 fileString = themeSheet.read()
@@ -466,12 +478,12 @@ class AqLocalFunctions:
 
     def apply(self, root, server, usersCore):
         if QApplication.keyboardModifiers() == Qt.AltModifier and QApplication.keyboardModifiers() == Qt.ControlModifier:
-            AqConfigSystem.saveDefaultConfig(root, usersCore)
+            AqConfigSystem.saveDefaultConfig(root, usersCore, AqUIFunctions.getSelectedThemeId(root.ui.cbb_Theme))
         else:
-            AqConfigSystem.saveConfig(root, usersCore)
+            AqConfigSystem.saveConfig(root, usersCore, AqUIFunctions.getSelectedThemeId(root.ui.cbb_Theme))
 
         self.saveUnsavedUsers(root, server, usersCore)
-        for AqUser in [AqUser for AqUser in usersCore.users if (AqUser.current == False)]:
+        for AqUser in [AqUser for AqUser in usersCore.users if not AqUser.current]:
             usersCore.users.remove(AqUser)
 
         root.ui.liw_UsersDbList.clear()
@@ -479,8 +491,8 @@ class AqLocalFunctions:
 
 
     def saveUnsavedUsers(self, root, server, usersСore):
-        self.unsaved = [AqUser for AqUser in usersСore.users if (AqUser.edited == True)]
-        self.toDeleteList = [AqUser for AqUser in usersСore.users if (AqUser.toDelete == True)]
+        self.unsaved = [AqUser for AqUser in usersСore.users if AqUser.edited]
+        self.toDeleteList = [AqUser for AqUser in usersСore.users if AqUser.toDelete]
         self.checker = int()
         self.dumpList = []
         self.dumpList2 = []

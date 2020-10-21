@@ -3421,7 +3421,7 @@ QPushButton:hover {
                   <string notr="true"/>
                  </property>
                  <property name="currentIndex">
-                  <number>1</number>
+                  <number>0</number>
                  </property>
                  <widget class="QWidget" name="tab1">
                   <attribute name="title">
@@ -3717,7 +3717,6 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
 	border: none;
 	color: white;
 	font: 10pt &quot;Segoe UI&quot;;
-	text-alghment: center;
 }
 
 QHeaderView::section {
@@ -3726,6 +3725,9 @@ QHeaderView::section {
 	font: 11pt &quot;Segoe UI Semibold&quot;;
 	border: none;
 }</string>
+                 </property>
+                 <property name="midLineWidth">
+                  <number>0</number>
                  </property>
                  <property name="verticalScrollBarPolicy">
                   <enum>Qt::ScrollBarAsNeeded</enum>
@@ -5589,8 +5591,11 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
                  <height>18</height>
                 </size>
                </property>
+               <property name="lineWidth">
+                <number>-1</number>
+               </property>
                <property name="text">
-                <string>Модулей (всего):</string>
+                <string>Устройств (всего):</string>
                </property>
               </widget>
              </item>
@@ -5607,7 +5612,7 @@ QPushButton:pressed { background-color: rgb(70, 175, 38); }</string>
              <item row="1" column="0">
               <widget class="QLabel" name="lbl_ReadOnly2">
                <property name="text">
-                <string>Модулей (готово):</string>
+                <string>Устройств (готово):</string>
                </property>
               </widget>
              </item>

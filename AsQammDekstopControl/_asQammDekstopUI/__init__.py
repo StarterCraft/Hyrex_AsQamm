@@ -1743,7 +1743,8 @@ class Ui_MainWindow(object):
         self.tbv_HardwareList.setSizePolicy(sizePolicy)
         self.tbv_HardwareList.setStyleSheet("QTableView { \n"
 "    border: none;\n"
-"    color: white\n"
+"    color: white;\n"
+"    font: 10pt \"Segoe UI\";\n"
 "}\n"
 "\n"
 "QHeaderView::section {\n"
@@ -1752,6 +1753,7 @@ class Ui_MainWindow(object):
 "    font: 11pt \"Segoe UI Semibold\";\n"
 "    border: none;\n"
 "}")
+        self.tbv_HardwareList.setMidLineWidth(0)
         self.tbv_HardwareList.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
         self.tbv_HardwareList.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tbv_HardwareList.setAlternatingRowColors(False)
@@ -1761,8 +1763,8 @@ class Ui_MainWindow(object):
         self.tbv_HardwareList.setObjectName("tbv_HardwareList")
         self.tbv_HardwareList.horizontalHeader().setMinimumSectionSize(30)
         self.tbv_HardwareList.horizontalHeader().setStretchLastSection(False)
+        self.tbv_HardwareList.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Stretch)
         self.tbv_HardwareList.verticalHeader().setVisible(False)
-        self.tbv_HardwareList.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         self.gridLayout_5.addWidget(self.tbv_HardwareList, 2, 0, 1, 4)
         self.stack.addWidget(self.page_4)
         self.page_5 = QtWidgets.QWidget()
@@ -2511,6 +2513,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.lbl_ReadOnly1.sizePolicy().hasHeightForWidth())
         self.lbl_ReadOnly1.setSizePolicy(sizePolicy)
         self.lbl_ReadOnly1.setMaximumSize(QtCore.QSize(16777215, 18))
+        self.lbl_ReadOnly1.setLineWidth(-1)
         self.lbl_ReadOnly1.setObjectName("lbl_ReadOnly1")
         self.formLayout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly1)
         self.lbl_HardwareAll = QtWidgets.QLabel(self.frame_HardwareState)
@@ -2631,7 +2634,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.stack.setCurrentIndex(5)
-        self.taw_PtsConfig.setCurrentIndex(1)
+        self.taw_PtsConfig.setCurrentIndex(0)
         self.cbb_LogsArchMode.setCurrentIndex(5)
         self.lnI_Password.returnPressed.connect(self.btn_UserInit.click)
         self.ckb_ToggleLogs.toggled['bool'].connect(self.ckb_ToggleLogsArch.setEnabled)
@@ -2873,8 +2876,8 @@ class Ui_MainWindow(object):
         self.lbl_LoginStatus.setText(_translate("MainWindow", "TextLabel"))
         self.lbl_LoadingText.setText(_translate("MainWindow", "TextLabel"))
         self.lbl_SkinName.setText(_translate("MainWindow", "Наш дом"))
-        self.lbl_ReadOnly1.setText(_translate("MainWindow", "Модулей (всего):"))
+        self.lbl_ReadOnly1.setText(_translate("MainWindow", "Устройств (всего):"))
         self.lbl_HardwareAll.setText(_translate("MainWindow", "(n/a)"))
-        self.lbl_ReadOnly2.setText(_translate("MainWindow", "Модулей (готово):"))
+        self.lbl_ReadOnly2.setText(_translate("MainWindow", "Устройств (готово):"))
         self.lbl_HardwareOnLine.setText(_translate("MainWindow", "(n/a)"))
 from pyqtgraph import PlotWidget

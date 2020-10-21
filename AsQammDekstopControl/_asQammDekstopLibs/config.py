@@ -54,13 +54,13 @@ class AqConfigSystem:
 
 
     @staticmethod
-    def saveDefaultConfig(root, usersCore):
+    def saveDefaultConfig(root, usersCore, themeString):
         currentUser = usersCore.getCurrentUser()
 
         if (currentUser.getPermits('pxConfigAsAdmin')):
             with open('data/config/~!default!~.asqd', 'w', encoding = 'utf-8') as configFile:
                 jsonString = str(json.dumps(({ 'preset': None, 'language': (root.ui.cbb_Language.currentIndex()),
-                                                               'theme': (root.ui.cbb_Theme.currentIndex()),
+                                                               'theme': themeString,
                                                                'popupOpacity': (root.ui.sld_WindowsOpacitySct.value()),
                                                                'loggingMode': (root.ui.ckb_ToggleLogs.isChecked()),
                                                                'logSavingMode': (root.ui.ckb_ToggleLogsArch.isChecked()),
@@ -136,7 +136,6 @@ class AqConfig(AqConfigSystem):
         
         self.language = configDict['language']
         self.theme = configDict['theme']
-        print(self.theme)
         self.popupOpacity = configDict['popupOpacity']
 
         self.loggingMode = configDict['loggingMode']

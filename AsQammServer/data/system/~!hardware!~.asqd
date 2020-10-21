@@ -1,6 +1,7 @@
 [
 	{
 	"driverId": 1072,
+	"enabled": true,
 	"comPort": "COM5",
 	"description": "testing Seeeduino V4 board",
 	"pinMap": {

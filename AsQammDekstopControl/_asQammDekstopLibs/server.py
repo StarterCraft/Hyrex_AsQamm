@@ -59,13 +59,13 @@ class AqServerCommutator:
     def delete(self, methodIdStr: str, inputModeCode, delData):
         try:
             if inputModeCode == (list or dict):
-                response = requests.delete('http://{self.ip}:{self.port}/{methodIdStr}', data = {'tok': self.__token__, 'data': delData})
+                response = requests.delete(f'http://{self.ip}:{self.port}/{methodIdStr}', data = {'tok': self.__token__, 'data': delData})
             elif inputModeCode == json:
-                response = requests.delete('http://{self.ip}:{self.port}/{methodIdStr}', json = {'tok': self.__token__, 'data': delData})
+                response = requests.delete(f'http://{self.ip}:{self.port}/{methodIdStr}', json = {'tok': self.__token__, 'data': delData})
         except AttributeError:
             if inputModeCode == (list or dict):
-                response = requests.delete('http://{self.ip}/{methodIdStr}', data = {'tok': self.__token__, 'data': delData})
+                response = requests.delete(f'http://{self.ip}/{methodIdStr}', data = {'tok': self.__token__, 'data': delData})
             elif inputModeCode == json:
-                response = requests.delete('http://{self.ip}/{methodIdStr}', json = {'tok': self.__token__, 'data': delData})
+                response = requests.delete(f'http://{self.ip}/{methodIdStr}', json = {'tok': self.__token__, 'data': delData})
 
         return response

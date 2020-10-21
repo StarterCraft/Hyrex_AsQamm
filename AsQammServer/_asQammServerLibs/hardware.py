@@ -16,9 +16,10 @@ from serial.serialutil import SerialException
 
 class AqAbstractHardwareUnit:
     class ArduinoUnit:
-        def __init__(self, comPort, desc: str):
+        def __init__(self, comPort, isEnabled: bool, desc: str):
             self.motherPort = comPort
             self.iterator = ArduinoUtil.Iterator(self)
+            self.isEnabled = isEnabled
             self.description = desc
 
 
@@ -110,13 +111,13 @@ class AqHardwareSystem:
                    try:
                        if   hardwareObject['driverId'] == 1071: #КОСТЫЛЬ: Использование driverId для выявления типа устройства
                             instance = drivers.AqArduinoUnoR3(hardwareObject['comPort'], hardwareObject['pinMap'],
-                                                              hardwareObject['description'])
+                                                              hardwareObject['enabled'], hardwareObject['description'])
                             self.logger.debug(f'Инициализация Arduino Uno R3 на {hardwareObject["comPort"]}...')
                             self.installedArduinoHardware.append(instance)
 
                        elif hardwareObject['driverId'] == 1072:
                             instance = drivers.AqSeeeduinoV4WithBaseShield(hardwareObject['comPort'], hardwareObject['pinMap'],
-                                                                           hardwareObject['description'])
+                                                                           hardwareObject['enabled'], hardwareObject['description'])
                             self.logger.debug(f'Инициализация Seeeduino V4 на {hardwareObject["comPort"]}...')
                             self.installedArduinoHardware.append(instance)
 
@@ -142,8 +143,11 @@ class AqHardwareSystem:
 
     def startMonitoring(self):
         for unit in self.installedArduinoHardware:
-            instance = AqArduinoUnitMonitor(self, unit)
-            self.monitors.append(instance)
+           if unit.isEnabled:
+               instance = AqArduinoUnitMonitor(self, unit)
+               self.monitors.append(instance)
+           else:
+               pass
 
         for monitor in self.monitors:
             self.logger.debug('Запуск мониторинга')
@@ -154,30 +158,23 @@ class AqHardwareSystem:
         mq = 0
         eq = 0
         ds = []
-        print('Созданы все переменные, запуск цикла по оборудованию')
         for unit in self.installedArduinoHardware: #КОСТЫЛЬ: проверки типа устройства нет
-            print(f'Запуск цикла по пинам {unit.motherPort}')
             for pin, module in unit.getPinMap():
-                print(f'Текущий pin: {pin}; текущий module: {module}')
                 if module != None:
-                    print(f'Текущий module - не None.')
                     mq += 1
                     if (module[1])['enabled']:
-                        print(f'Текущий module[1]["enabled"]: {(module[1])["enabled"]}')
                         eq += 1
                     continue
 
-            print('Инициализация ds.append()')
             ds.append({ 'unitType'   : 'AqArduino',
+                        'enabled'    : unit.isEnabled,
                         'driverId'   : unit.driverId,
                         'comPort'    : unit.motherPort,
                         'description': unit.description,
                         'pinMap'     : dict(unit.getPinMap()),
                         'modulesQty' : mq,
                         'enabledQty' : eq})
-            print(f'Новый ds: {ds}')
 
-        print('Выход из цикла')
         return ds
 
 
