@@ -16,6 +16,7 @@
         android:backgroundTint="#232323"
         android:text="Войти"
         android:textColor="@android:color/white"
+        android:textColorHint="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
@@ -61,10 +62,10 @@
         android:textColorHint="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toBottomOf="@+id/login" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/login"
         android:layout_width="255dp"
         android:layout_height="50dp"
         android:layout_marginTop="30dp"

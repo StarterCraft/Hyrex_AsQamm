@@ -1,7 +1,16 @@
 package arsenii.hyrex_asqamm.Login;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Color;
+import android.icu.text.UnicodeSetSpanner;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,68 +20,46 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.io.*;
+import java.net.*;
 
 import arsenii.hyrex_asqamm.R;
 
 public class Login extends AppCompatActivity {
 
+    int l1;
+    int l2;
     String text = "";
+
+    EditText login;
+    EditText password;
+    Button sign;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+        login = findViewById(R.id.login);
+        password = findViewById(R.id.password);
+        sign = findViewById(R.id.sign);
 
-        System.out.println(new AsyncRequest().execute("123", "/ajax", "foo=bar"));
+        ConnectivityManager cm = (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo nInfo = cm.getActiveNetworkInfo();
+        if (nInfo != null && nInfo.isAvailable() && nInfo.isConnected()) {
+            try{
+                URL url=new URL("http://www.javatpoint.com/java-tutorial");
+                URLConnection urlcon=url.openConnection();
+                Toast.makeText(getApplicationContext(), "Я подключился!", Toast.LENGTH_LONG).show();
+                InputStream stream=urlcon.getInputStream();
+                Toast.makeText(getApplicationContext(), "Input stream", Toast.LENGTH_LONG).show();
 
-    }
-    class AsyncRequest extends AsyncTask<String, Integer, String> {
-
-        @Override
-        protected String doInBackground(String... arg) {
-            URL yahoo = null;
-            try {
-                yahoo = new URL("http://www.yahoo.com/");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            URLConnection yc = null;
-            try {
-                yc = yahoo.openConnection();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            BufferedReader in = null;
-            try {
-                in = new BufferedReader(
-                        new InputStreamReader(
-                                yc.getInputStream()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String inputLine = "";
-            String text = "";
-
-            while (true) {
-                try {
-                    if (!((inputLine = in.readLine()) != null)) break;
-                } catch (IOException e) {
-                    e.printStackTrace();
+                int i;
+                while((i=stream.read())!=-1){
+                    text += (char)i;
                 }
-                text += inputLine;
-            }
-            try {
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return text;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            text = s;
+            }catch(Exception e){Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();}
+            Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "Сервер не доступен, проверьте подключение к интернету", Toast.LENGTH_LONG).show();
         }
     }
-
 }
