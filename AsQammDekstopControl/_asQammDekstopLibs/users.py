@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from AsQammDekstop import AqMainWindow
 
-from _asQammDekstopLibs.functions import AqCrypto
+import _asQammDekstopLibs.functions
 from _asQammDekstopLibs.config import AqConfigSystem
 from _asQammDekstopLibs.logging import AqLogger
 
@@ -18,7 +18,7 @@ class AqUsersSystem(AqMainWindow):
 
     def __init__(self, root):
 
-        self.crypto = AqCrypto()
+        self.crypto = _asQammDekstopLibs.functions.AqCrypto()
         self.config = AqConfigSystem()
         self.loggedIn = bool(False)
         self.users = []
@@ -29,8 +29,12 @@ class AqUsersSystem(AqMainWindow):
 
 
     def getCurrentUser(self):
-        self.selector = [AqUser for AqUser in self.users if (AqUser.current == True)]
-        return self.selector[0]
+        if self.currentUser != None:
+            return self.currentUser
+
+
+    def setCurrentUser(self, AqUser):
+        self.currentUser = AqUser
         
 
     def lockApp(self, root, usersCore):
@@ -63,12 +67,12 @@ class AqUsersSystem(AqMainWindow):
 
 
         elif self.loggedIn:
-            self.currentUser = self.getCurrentUser()
+            currentUser = self.getCurrentUser()
 
             root.ui.lbl_SkinName.setText('Наш дом')
-            root.ui.lbl_CurrentUserUsername.setText(self.currentUser.login)
-            root.ui.lbl_CurrentUserDescription.setText(self.currentUser.description)
-            root.ui.gfv_CurrentUserAvatar.setPixmap(self.currentUser.avatar)
+            root.ui.lbl_CurrentUserUsername.setText(currentUser.login)
+            root.ui.lbl_CurrentUserDescription.setText(currentUser.description)
+            root.ui.gfv_CurrentUserAvatar.setPixmap(currentUser.avatar)
 
             root.ui.frame_top.show()
             root.ui.frame_left_menu.show()
@@ -77,27 +81,27 @@ class AqUsersSystem(AqMainWindow):
             root.ui.btn_Toggle.setEnabled(True)
             root.ui.btn_page1.setEnabled(True)
 
-            if self.currentUser.getPermits('pxDefnBasic'):
+            if currentUser.getPermits('pxDefnBasic'):
                 root.ui.btn_page2.setEnabled(True)
             else:
                 root.ui.btn_page2.setEnabled(False)
 
-            if self.currentUser.getPermits('pxPlants'):
+            if currentUser.getPermits('pxPlants'):
                 root.ui.btn_page3.setEnabled(True)
             else:
                 root.ui.btn_page3.setEnabled(False)
 
-            if self.currentUser.getPermits('pxHardware'):
+            if currentUser.getPermits('pxHardware'):
                 root.ui.btn_page4.setEnabled(True)
             else:
                 root.ui.btn_page4.setEnabled(False)
 
-            if self.currentUser.getPermits('pxConfig'):
+            if currentUser.getPermits('pxConfig'):
                 root.ui.btn_page5.setEnabled(True)
             else:
                 root.ui.btn_page5.setEnabled(False)
 
-            if self.currentUser.getPermits('pxConfigAsAdmin'):
+            if currentUser.getPermits('pxConfigAsAdmin'):
                 root.ui.box_UsersDbEdit.setTitle('Управление пользователями')
                 root.ui.liw_UsersDbList.show()
                 root.ui.lbl_SelectedUserUsername.show()
@@ -121,9 +125,14 @@ class AqUsersSystem(AqMainWindow):
             root.ui.btn_Load.setEnabled(True)
             AqConfigSystem.applyConfig(root, usersCore)
 
+            if currentUser.configPreset != 'default':
+                _asQammDekstopLibs.functions.AqUIFunctions.loadSpecifiedTheme(root, currentUser.config.theme)
+            else:
+                pass
+
             root.ui.stack.setCurrentWidget(root.ui.page_1)
 
-            del self.currentUser
+            del currentUser
 
 
     def loadUsers(self, root, server, usersCore):
@@ -148,11 +157,30 @@ class AqUsersSystem(AqMainWindow):
             QMessageBox.warning(root, 'Ошибка инициализации системы пользователей', 
                                       '''Не удалось найти ни одного аккаунта пользователя, за исключением аккаунта гостя. Большая часть функциональности недоступна. Проверьте, что вы создали хотя бы одного пользователя с правами админинстратора.''')
 
+        print(len(r))
         for item in r:
-            usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
-                              (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
-            usersCore.instance.edited = False
-            self.userSystemLogger.info('Загружен пользователь ' + str(usersCore.instance.login))
+            try:
+                if self.currentUser.login == (item['login']): #Если логин текущего пользователя совпадает с загруженным
+                    print('if 163')
+                    usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
+                                      (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
+                    usersCore.setCurrentUser(usersCore.instance)
+                    usersCore.instance.edited = False
+                    self.userSystemLogger.info('Загружен пользователь ' + str(usersCore.instance.login))
+                else:
+                    print('if 170')
+                    usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
+                                      (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
+                    usersCore.instance.edited = False
+                    self.userSystemLogger.info('Загружен пользователь ' + str(usersCore.instance.login))
+            except (AttributeError, RuntimeError):
+                print('exc 176')
+                usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
+                                  (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
+                usersCore.instance.edited = False
+                self.userSystemLogger.info('Загружен пользователь ' + str(usersCore.instance.login))
+
+        del r
 
 
     def addToUserList(self, root, object, mode):
@@ -167,7 +195,6 @@ class AqUsersSystem(AqMainWindow):
 
     def cleanUserList(self):
         self.checker = [AqUser for AqUser in self.users if (AqUser.current == False)]
-
         for AqUser in self.checker:
             self.users.remove(AqUser)
            
@@ -176,60 +203,64 @@ class AqUsersSystem(AqMainWindow):
 
         self.selector = [AqUser for AqUser in self.users if (AqUser.login == root.ui.lnI_Login.text())]
         self.matches = []
-        self.userSystemLogger.debug('Инициирован вход в систему как {0}'.format(root.ui.lnI_Login.text()))
+        exiter = bool()
+        self.userSystemLogger.debug(f'Инициирован вход в систему как {root.ui.lnI_Login.text()}')
 
         r = server.get('getUserRg', json)
-        for i in r:
-            try:
-                if self.selector[0].password == self.crypto.getCut(root.ui.lnI_Password.text(), bytes.fromhex(i)):
-                    self.selector[0].setAsCurrent(True)
-                    self.selector[0].edited = False
+        try:
+            self.myThread = _asQammDekstopLibs.functions.AqThread(_asQammDekstopLibs.functions.AqThread.AqPasswordChecker,
+                                                                    passwordText      = root.ui.lnI_Password.text(),
+                                                                    userPassword      = self.selector[0].password,
+                                                                    bytesObjectsIter  = r,
+                                                                    loadingScreenText = root.ui.lbl_LoadingText)
+            self.myThread.started.connect( lambda: _asQammDekstopLibs.functions.AqUIFunctions.showLoadingAnimation(root) )
+            self.myThread.finished.connect( lambda: self.userCheck(root, usersCore, self.myThread.exitVar) )
+            self.myThread.start()
 
-                    self.loggedIn = True
-
-                    if self.selector[0].getPermits('pxConfigAsAdmin'):
-                        self.lockApp(root, usersCore)
-                    else:
-                        self.cleanUserList()
-                        self.lockApp(root, usersCore)
-                    
-                    playsound(root.sounds['login'], False)
-                    self.userSystemLogger.info('Вход в систему произведён пользователем {0}'.format(self.selector[0].login))
-                    self.matches.append(True)
-                    break
-                else:
-                    self.matches.append(False)
-                    continue
-
-            except IndexError:
-                break
-                root.ui.box_Login.setGeometry(QtCore.QRect(360, 130, 280, 150))
-                root.ui.lbl_LoginStatus.show()
-                root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
-                root.ui.lbl_LoginStatus.setText('Неверный логин или пароль!')
-                self.userSystemLogger.info('Вход в систему не произведён по причине: 0 — неверный логин или пароль')
-                playsound(root.sounds['error'], False)
-            
-        randomShuffle(r)
-        server.post('updateUserRg', json, int, [1, r])
-        del r
-
-        if [bool for bool in self.matches if (bool == True)] == []:
+        except IndexError:
+            _asQammDekstopLibs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
             root.ui.box_Login.setGeometry(QtCore.QRect(360, 130, 280, 150))
             root.ui.lbl_LoginStatus.show()
             root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
             root.ui.lbl_LoginStatus.setText('Неверный логин или пароль!')
             self.userSystemLogger.info('Вход в систему не произведён по причине: 0 — неверный логин или пароль')
             playsound(root.sounds['error'], False)
-        else:
-            pass
+            
+        randomShuffle(r)
+        server.post('updateUserRg', json, int, [1, r])
+        del r
 
+
+    def userCheck(self, root, usersCore, boolean):
+        if boolean:
+            _asQammDekstopLibs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_1)
+            self.selector[0].setAsCurrent(True)
+            self.setCurrentUser(self.selector[0])
+            self.selector[0].edited = False
+            self.loggedIn = True
+
+            if self.selector[0].getPermits('pxConfigAsAdmin'):
+                self.lockApp(root, usersCore)
+            else:
+                self.cleanUserList()
+                self.lockApp(root, usersCore)
+                    
+            playsound(root.sounds['login'], False)
+            self.userSystemLogger.info(f'Вход в систему произведён пользователем {self.selector[0].login}')
+        else:
+            _asQammDekstopLibs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
+            root.ui.box_Login.setGeometry(QtCore.QRect(360, 130, 280, 150))
+            root.ui.lbl_LoginStatus.show()
+            root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
+            root.ui.lbl_LoginStatus.setText('Неверный логин или пароль!')
+            self.userSystemLogger.info('Вход в систему не произведён по причине: 0 — неверный логин или пароль')
+            playsound(root.sounds['error'], False)
+                
 
     def guestUserInit(self, usersCore, root):
 
         usersCore.users[0].setAsCurrent(True)
-        self.userSystemLogger.info('У активного экземпляра класса пользователя ' + str(usersCore.users[0]) + ' установлен параметр активности: ' + 
-                                          str(usersCore.users[0].current) + ', экземпляр назначен активным пользователем')
+        self.userSystemLogger.info(f'У активного пользователя (Гость) установлен параметр активности: {usersCore.users[0].current}, экземпляр назначен активным пользователем')
 
         self.loggedIn = True
         self.cleanUserList()
@@ -243,7 +274,7 @@ class AqUsersSystem(AqMainWindow):
             if (userToEdit.getPermits('pxConfigAsAdmin') and (userToEdit.current)):
                 self.callCurrentUserSetupDlg(root, usersCore, userToEdit)
             else:
-                self.userSystemLogger.debug('Инициирован вызов диалога редактирования пользователя {0}'.format(str(userToEdit.login)))
+                self.userSystemLogger.debug(f'Инициирован вызов диалога редактирования пользователя {userToEdit.login}')
 
                 root.userEditDlgUi.gfv_EuAvatarPrev.setPixmap(userToEdit.avatar)
                 root.userEditDlgUi.lbl_EuID.setText(str(userToEdit.id))
@@ -272,8 +303,9 @@ class AqUsersSystem(AqMainWindow):
                 root.userEditDlgUi.ckb_UserPermit_CfgScr.setChecked(userToEdit.getPermits('pxConfig'))
                 root.userEditDlgUi.ckb_UserPermit_CfgAsAdmin.setChecked(userToEdit.getPermits('pxConfigAsAdmin'))
                                        
-
-                root.userEditDlg.accepted.connect ( lambda: userToEdit.setup(usersCore, root, (self.crypto.getCut(root.userSelfEditDlgUi.lnI_EuPassword.text(), bytes.fromhex(randomChoice(server.get('getUserRg', json))))),
+                hmta = self.crypto.getHmta()
+                server.post('updateUserRg', json, int, [0, hmta.hex()])
+                root.userEditDlg.accepted.connect ( lambda: userToEdit.setup(usersCore, root, (self.crypto.getCut(root.userSelfEditDlgUi.lnI_EuPassword.text(), hmta)),
                                                                         (root.userEditDlgUi.lnI_EuDesc.text()), (root.userEditDlgUi.lnI_EuAvatarAddr.text()),
                                                                         { 'homeRooms': (root.userEditDlgUi.ckb_UserPermit_HomeRooms.isChecked()),
                                                                           'homeAsAdmin': (root.userEditDlgUi.ckb_UserPermit_HomeAsAdmin.isChecked()),
@@ -288,7 +320,7 @@ class AqUsersSystem(AqMainWindow):
                                                                           'configureAsAdmin': (root.userEditDlgUi.ckb_UserPermit_CfgAsAdmin.isChecked()) } ))
 
                 root.userEditDlg.show()
-                self.userSystemLogger.debug('Диалог редактирования пользователя {0} открыт'.format(str(userToEdit.login)))
+                self.userSystemLogger.debug(f'Диалог редактирования пользователя {userToEdit.login} открыт')
 
         except AttributeError:
             pass
@@ -296,7 +328,7 @@ class AqUsersSystem(AqMainWindow):
 
     def callCurrentUserSetupDlg(self, root, server, usersCore, userToEdit):
         try:
-            self.userSystemLogger.debug('Инициирован вызов диалога самостоятельного редактирования пользователя {0}'.format(str(userToEdit.login)))
+            self.userSystemLogger.debug(f'Инициирован вызов диалога самостоятельного редактирования пользователя {userToEdit.login}')
 
             root.userSelfEditDlgUi.gfv_EuAvatarPrev.setPixmap(userToEdit.avatar)
             root.userSelfEditDlgUi.lbl_EuID.setText(str(userToEdit.id))
@@ -324,8 +356,8 @@ class AqUsersSystem(AqMainWindow):
 
     def callUserDeletionDlg(self, root, userToDelete):
         try:
-            self.msg = QMessageBox.question(root, 'Подтверждение действия', 'Вы действительно хотите удалить пользователя %s? Это необратимое действие!' % userToDelete.login)
-            self.userSystemLogger.debug('Инициирован вызов диалога удаления пользователя {0}'.format(userToDelete.login))
+            self.msg = QMessageBox.question(root, 'Подтверждение действия', rf'Вы действительно хотите удалить пользователя {userToDelete.login}? Это необратимое действие!')
+            self.userSystemLogger.debug(f'Инициирован вызов диалога удаления пользователя {userToDelete.login}')
 
             if self.msg == QMessageBox.Yes:
                 if (userToDelete.type == (0 or '0') or userToDelete.description == 'Guest'):
@@ -333,7 +365,7 @@ class AqUsersSystem(AqMainWindow):
 
                 else:
                     userToDelete.toDelete = True
-                    self.msg = QMessageBox.information(root, 'Подтверждение операции', 'Для завершения удаления пользователя %s нажмите "Применить".' % userToDelete.login)
+                    self.msg = QMessageBox.information(root, 'Подтверждение операции', f'Для завершения удаления пользователя {userToDelete.login} нажмите "Применить".')
 
             elif self.msg == QMessageBox.No:
                 pass
@@ -396,7 +428,7 @@ class AqUsersSystem(AqMainWindow):
                                                                   (root.userCreationDlgUi.lnI_CnuDesc.text()), 1, (server.get('getNewUserFilename', str)), 
                                                                   (root.userCreationDlgUi.lnI_CnuAvatarAddr.text()), (root.userCreationDlgUi.lnI_CnuLogin.text()),
                                                                   (self.crypto.getCut(root.userCreationDlgUi.lnI_CnuPassword.text(), hmta)),
-                                                                  (root.userCreationDlg.permits), (AqConfigSystem.loadDefaultConfigDict(AqConfigSystem))) )
+                                                                  (root.userCreationDlg.permits), (AqConfigSystem.loadDefaultConfigDict())) )
 
             root.userCreationDlg.show()
 
@@ -430,11 +462,10 @@ class AqUsersSystem(AqMainWindow):
         self.loggedIn = False
         self.userSystemLogger.debug('Система пользователей перешла в состояние: (Вход в систему не произведён)')
 
-        self.currentUser = self.getCurrentUser()
         self.currentUser.setAsCurrent(False)
         self.userSystemLogger.info('У активного пользователя ' + str(self.currentUser.login) + ' установлен параметр активности: ' + 
                                          str(self.currentUser.current))
-        del self.currentUser
+        self.currentUser = None
                 
         root.ui.liw_UsersDbList.clear()
         self.userSystemLogger.info('Очистка списка пользователей')

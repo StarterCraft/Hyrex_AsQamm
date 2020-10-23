@@ -2,13 +2,13 @@ import uvicorn, py3rijndael
 from typing import Optional
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
-from pyfirmata import (Arduino     as ArduinoUno,
-                       ArduinoMega as ArduinoMega,
-                       util        as ArduinoUtil)
 from random import uniform
+from sys import argv as sysArgs
 
 from _asQammServerLibs.functions import *
 from _asQammServerLibs.users import *
+from _asQammServerLibs.hardware import *
+from PyQt5.QtWidgets import QApplication
 
 
 class AqServer:
@@ -16,6 +16,7 @@ class AqServer:
         self.api = FastAPI()
         self.serverLogger = AqLogger('Server')
         self.crypto = AqCrypto()
+        self.tok = AqTokChecker()
         
         self.authorizedInstances = []
         self.mkdirs()
@@ -60,60 +61,142 @@ class AqServer:
 if __name__ == '__main__':
     IP = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите IP-адрес для запуска: ')
     portstr = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите порт сервера для запуска: ')
+    compart = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Нажмите {Fore.CYAN}ENTER{Style.RESET_ALL}'
+                    f' для запуска сервера в обычном режиме. Введите "{Fore.CYAN}--nohardware{Style.RESET_ALL}" и нажмите {Fore.CYAN}ENTER'
+                    f'{Style.RESET_ALL} для запуска сервера в режиме совместимости без оборудования ')
 
     server = AqServer()
     userCore = AqUserSystem()
 
-    server.serverLogger.info('Привязка глобальных методов сервера')
+    if compart == '--nohardware':
+        pass
+    else:
+        hardware = AqHardwareSystem()
+        assert hardware.isOk
+
     @server.api.get('/getUserdata', description = 'Получить словарь данных пользователей')
-    def getUserdata(request: Request):
+    def getUserdata(data: dict, request: Request):
         global server
 
-        server.serverLogger.debug(f'Вызван метод /getUserdata со стороны клиента {request.client.host}:{request.client.port}')
-        return userCore.getUserData()
+        try:
+            if server.tok.isOk(data['tok']):
+                server.serverLogger.debug(f'Вызван метод /getUserdata со стороны клиента {request.client.host}:{request.client.port}')
+                return userCore.getUserData()
+            elif not server.tok.isOk(data['tok']):
+                return {'401': 'UNAUTHORIZED'}
+        except KeyError:
+            return {'401': 'UNAUTHORIZED'}
+        except AttributeError:
+            return {'401': 'UNAUTHORIZED'}
+        except ValueError:
+            return {'401': 'UNAUTHORIZED'}
 
 
     @server.api.get('/getUserRg', description = 'Получить внешний регистр')
-    def getUserRg(request: Request):
+    def getUserRg(data: dict, request: Request):
         global server
 
-        server.serverLogger.debug(f'Вызван метод /getUserRg со стороны клиента {request.client.host}:{request.client.port}')
-        return userCore.getUserRegistry()
+        try:
+            if server.tok.isOk(data['tok']):
+                server.serverLogger.debug(f'Вызван метод /getUserRg со стороны клиента {request.client.host}:{request.client.port}')
+                return userCore.getUserRegistry()
+            elif not server.tok.isOk(data['tok']):
+                return {'401': 'UNAUTHORIZED'}
+        except KeyError:
+            return {'401': 'UNAUTHORIZED'}
+        except AttributeError:
+            return {'401': 'UNAUTHORIZED'}
+        except ValueError:
+            return {'401': 'UNAUTHORIZED'}
 
 
     @server.api.get('/getNewUserFilename', description = 'Получить новое случайное имя файла для нового аккаунта пользователя')
-    def getNewUserFilename(request: Request):
+    def getNewUserFilename(data: dict, request: Request):
         global server
 
-        server.serverLogger.debug(f'Вызван метод /getNewUserFilename со стороны клиента {request.client.host}:{request.client.port}')
-        return userCore.getFilenameForNewUser()
+        try:
+            if server.tok.isOk(data['tok']):
+                server.serverLogger.debug(f'Вызван метод /getNewUserFilename со стороны клиента {request.client.host}:{request.client.port}')
+                return userCore.getFilenameForNewUser()
+            elif not server.tok.isOk(data['tok']):
+                return {'401': 'UNAUTHORIZED'}
+        except KeyError:
+            return {'401': 'UNAUTHORIZED'}
+        except AttributeError:
+            return {'401': 'UNAUTHORIZED'}
+        except ValueError:
+            return {'401': 'UNAUTHORIZED'}
 
 
     @server.api.post('/updateUserdata', description = 'Обновить словарь данных пользователей')
-    def updateUserdata(object: list, request: Request):
+    def updateUserdata(object: dict, request: Request):
         global server
 
-        server.serverLogger.debug(f'Вызван метод /updateUserdata со стороны клиента {request.client.host}:{request.client.port}')
-        userCore.updateUserData(object)
+        try:
+            if server.tok.isOk(object['tok']):
+                server.serverLogger.debug(f'Вызван метод /updateUserdata со стороны клиента {request.client.host}:{request.client.port}')
+                userCore.updateUserData(object['data'])
+            else:
+                return {'401': 'UNAUTHORIZED'}
+        except KeyError:
+            return {'401': 'UNAUTHORIZED'}
+        except AttributeError:
+            return {'401': 'UNAUTHORIZED'}
+        except ValueError:
+            return {'401': 'UNAUTHORIZED'}
 
 
     @server.api.post('/updateUserRg', description = 'Обновить внешний регистр')
-    def updateUserRg(object: list, request: Request):
+    def updateUserRg(object: dict, request: Request):
         global server
-        mode = object[0]
 
-        server.serverLogger.debug(str(object))
-        server.serverLogger.debug(f'Вызван метод /updateUserRg со стороны клиента {request.client.host}:{request.client.port}')
-        userCore.updateUserRegistry(object[1], mode)
+        try:
+            if server.tok.isOk(object['tok']):
+                server.serverLogger.debug(f'Вызван метод /updateUserRg со стороны клиента {request.client.host}:{request.client.port}')
+                userCore.updateUserRegistry((object['data'])[1], (object['data'])[0])
+            else:
+                return {'401': 'UNAUTHORIZED'}
+        except KeyError:
+            return {'401': 'UNAUTHORIZED'}
+        except AttributeError:
+            return {'401': 'UNAUTHORIZED'}
+        except ValueError:
+            return {'401': 'UNAUTHORIZED'}
 
 
     @server.api.delete('/delUserAcc', description = 'Удалить аккаунт пользователя (пользователей)')
-    def delUserAcc(object: list, request: Request):
+    def delUserAcc(object: dict, request: Request):
         global server
 
-        server.serverLogger.debug(f'Вызван метод /delUserAcc со стороны клиента {request.client.host}:{request.client.port}')
-        userCore.deleteUserAccount(object)
+        try:
+            if server.tok.isOk(object['tok']):
+                server.serverLogger.debug(f'Вызван метод /delUserAcc со стороны клиента {request.client.host}:{request.client.port}')
+                userCore.deleteUserAccount(object['data'])
+            else:
+                return {'401': 'UNAUTHORIZED'}
+        except KeyError:
+            return {'401': 'UNAUTHORIZED'}
+        except AttributeError:
+            return {'401': 'UNAUTHORIZED'}
+        except ValueError:
+            return {'401': 'UNAUTHORIZED'}
 
 
-    server.serverLogger.info('Запуск главного цикла сервера')
+    @server.api.get('/getHardwareData', description = 'pintest')
+    def getHardwareData(data: dict, request: Request):
+        global server
+        global b
+        print(server.tok.isOk(data['tok']))
+
+        if server.tok.isOk(data['tok']):
+            server.serverLogger.debug(f'Вызван метод /getHardwareData со стороны клиента {request.client.host}:{request.client.port}')
+            return hardware.getHardwareDataSheet()
+        else:
+            return {'401': 'UNAUTHORIZED'}
+
+    try:
+        hardware.startMonitoring()
+    except NameError:
+        pass
+
     server.run(IP, int(portstr))

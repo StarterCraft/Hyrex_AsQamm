@@ -1,0 +1,17 @@
+[
+	{
+	"driverId": 1072,
+	"enabled": true,
+	"comPort": "COM5",
+	"description": "testing Seeeduino V4 board",
+	"pinMap": {
+		"a:0": [1101, {
+				"description": "Тестовый датчик температуры",
+				"enabled": true,
+				"calibrationValue": 167,
+				"probeFrequency": 60
+				}
+			]
+		}
+	}
+]

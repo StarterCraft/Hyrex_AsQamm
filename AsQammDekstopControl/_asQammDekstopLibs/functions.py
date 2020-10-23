@@ -1,16 +1,16 @@
-from AsQammDekstop import AqMainWindow
 from _asQammDekstopLibs.config import AqConfigSystem
 from _asQammDekstopLibs.logging import AqLogger
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-import json, base64, os, glob, ffmpeg, hashlib
+import json, base64, os, glob, ffmpeg, hashlib, time, math
 from playsound import *
 
 
 class AqUIFunctions():
 
+    @staticmethod
     def createLabelsAtMainMenu(root):
         root.ui.hintsSizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
@@ -54,7 +54,8 @@ class AqUIFunctions():
         root.ui.cel_TopMenuBtn5.addWidget(root.ui.lbl_MenuHint5)
         root.ui.lbl_MenuHint5.hide()
 
-
+        
+    @staticmethod
     def changeInterfaceMode(self, root, userscore):
         if ((root.ui.stack.currentWidget()) == (root.ui.page_3)) or ((root.ui.stack.currentWidget()) == (root.ui.page_6)):
 
@@ -72,7 +73,8 @@ class AqUIFunctions():
     # линейной анимацией. Ей необходимо иметь следующие аргументы: желаемый максимальный размер
     # виджета (ширина/высота в зависимости от типа анимации) и ID виджета, с которым она будет
     # работать.
-
+    
+    @staticmethod
     def toggleSimpleWidgetInteraction(root, maxLength, widgetId):
         maxExtend = int()
 
@@ -141,6 +143,7 @@ class AqUIFunctions():
                 root.ui.gvf_DefnCamView.show()
 
 
+    @staticmethod
     def selectSkin(id, root):
         if id == 1:
             root.ui.stack.setCurrentWidget(root.ui.page_1)
@@ -156,13 +159,14 @@ class AqUIFunctions():
 
         elif id == 4:
             root.ui.stack.setCurrentWidget(root.ui.page_4)
-            root.ui.lbl_SkinName.setText('Управление')
+            root.ui.lbl_SkinName.setText('Оборудование')
 
         elif id == 5:
             root.ui.stack.setCurrentWidget(root.ui.page_5)
             root.ui.lbl_SkinName.setText('Конфигурация')
 
-
+            
+    @staticmethod
     def setPopupsOpacity(root):
         root.popupOpacity = float()
         root.popupOpacity = (root.ui.sld_WindowsOpacitySct.value() * 0.0101)
@@ -170,13 +174,33 @@ class AqUIFunctions():
         for item in root.popups:
             item.setWindowOpacity(root.popupOpacity)
 
+            
+    @staticmethod
+    def generateLoadingAnimation(root):
+        root.animation3 = QMovie(':/<resource root>/loading.gif', parent = root)
+        root.ui.lbl_LoadingAnimation.setMovie(root.animation3)
 
+        
+    @staticmethod
+    def showLoadingAnimation(root):
+        root.ui.stack.setCurrentWidget(root.ui.page_loading)
+        root.animation3.start()
+
+        
+    @staticmethod
+    def hideLoadingAnimation(root, switchTo):
+        root.ui.stack.setCurrentWidget(switchTo)
+        root.animation3.stop()
+
+        
+    @staticmethod
     def getDefaultThemeId():
         with open('data/config/~!default!~.asqd', 'r') as configFile:
             jsonString = json.loads(str(configFile.read()))
             return jsonString['theme']
 
 
+    @staticmethod
     def mapThemes(root):
         root.ui.cbb_Theme.clear()
         themes = []
@@ -189,7 +213,8 @@ class AqUIFunctions():
                 continue
         root.ui.cbb_Theme.addItems(themes)
 
-
+        
+    @staticmethod
     def getSelectedThemeId(input):
         text = str()
         for file in glob.glob('ui/themesheets/*.asqd'):
@@ -206,7 +231,8 @@ class AqUIFunctions():
         else:
             return None
 
-
+        
+    @staticmethod
     def loadSpecifiedTheme(root, themeId: str):
             with open(f'ui/themesheets/{themeId}.asqd', 'r', encoding = 'utf-8') as themeSheet:
                 fileString = themeSheet.read()
@@ -276,6 +302,10 @@ class AqUIFunctions():
                 icon6.addPixmap(QtGui.QPixmap(":/inactive/inactive/config_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
                 root.ui.btn_page5.setIcon(icon6)
 
+                icon11 = QtGui.QIcon()
+                icon11.addPixmap(QtGui.QPixmap(iconAddresses['config_ico_-c']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                root.ui.btn_HardwareConfigUnit.setIcon(icon11)
+
                 icon7 = QtGui.QIcon()
                 icon7.addPixmap(QtGui.QPixmap(iconAddresses['interfacemode_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 icon7.addPixmap(QtGui.QPixmap(":/inactive/inactive/interfacemode_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
@@ -286,15 +316,96 @@ class AqUIFunctions():
                 icon8.addPixmap(QtGui.QPixmap(":/inactive/inactive/apply_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
                 root.ui.btn_Apply.setIcon(icon8)
 
+                icon12 = QtGui.QIcon()
+                icon12.addPixmap(QtGui.QPixmap(iconAddresses['deny_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                root.ui.btn_HardwareDeleteUnit.setIcon(icon12)
+
                 icon9 = QtGui.QIcon()
                 icon9.addPixmap(QtGui.QPixmap(iconAddresses['save_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 icon9.addPixmap(QtGui.QPixmap(":/inactive/inactive/save_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
                 root.ui.btn_Save.setIcon(icon9)
 
+                icon14 = QtGui.QIcon()
+                icon14.addPixmap(QtGui.QPixmap(iconAddresses['save_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                root.ui.btn_HardwareToggleUnitStatsRegistry.setIcon(icon14)
+
                 icon10 = QtGui.QIcon()
                 icon10.addPixmap(QtGui.QPixmap(iconAddresses['open_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 icon10.addPixmap(QtGui.QPixmap(":/inactive/inactive/open_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
                 root.ui.btn_Load.setIcon(icon10)
+
+                icon13 = QtGui.QIcon()
+                icon13.addPixmap(QtGui.QPixmap(iconAddresses['plus_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                root.ui.btn_HardwareAddUnit.setIcon(icon13)
+                
+                icon15 = QtGui.QIcon()
+                icon15.addPixmap(QtGui.QPixmap(iconAddresses['more_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                root.ui.btn_HardwareAdditionalSettings.setIcon(icon15)
+
+
+class AqThread(QThread):
+    started = pyqtSignal()
+    finished = pyqtSignal()
+
+    class AqPasswordChecker:
+        pass
+
+    class AqPinTester:
+        pass
+
+    def __init__(self, threadType, **kwargs):
+        QThread.__init__(self)
+        if threadType == self.AqPasswordChecker:
+            self.type = self.AqPasswordChecker
+            self.text = kwargs['passwordText']
+            self.password = kwargs['userPassword']
+            self.r = kwargs['bytesObjectsIter']
+            self.textLabel = kwargs['loadingScreenText']
+            self.exitVar = bool()
+        elif threadType == self.AqPinTester:
+            self.type = self.AqPinTester
+            self.server = kwargs['server']
+            self.exitVar = float()
+
+
+    def run(self):
+        if self.type == self.AqPasswordChecker:
+            self.started.emit()
+            self.textLabel.setText('Ожидание ответа сервера...')
+            matches = []
+            for i in self.r:
+                self.textLabel.setText('Вход...')
+                if self.password == AqCrypto.getCut(AqCrypto, self.text, bytes.fromhex(i)):
+                    matches.append(True)
+                    self.exitVar = True
+                    self.finished.emit()
+                    self.textLabel.setText('Подготовка интерфейса...')
+                    break
+                else:
+                    matches.append(False)
+                    self.textLabel.setText('Подготовка интерфейса...')
+                    continue
+
+            if [bool for bool in matches if (bool == True)] == []:
+                self.exitVar = False
+                self.finished.emit()
+            else:
+                pass
+        elif self.type == self.AqPinTester:
+            self.started.emit()
+            B = 4275
+            R0 = 100000
+            while True:
+                reading = (self.server.get('pin', json))['0']
+                R = 1023.0 / reading - 1.0
+                R = R0*R 
+                temperature = 1.0/(math.log(R/R0)/B+1/298.15)-167
+
+                self.exitVar = temperature
+                print(f't: {temperature} °C')
+                self.finished.emit()
+                time.sleep(5)
+                continue            
 
 
 class AqCrypto:
@@ -330,7 +441,7 @@ class AqCrypto:
                     if self.gotName != []:
                         continue
                     else:
-                        exportList.append(r'data\personal\~!{0}!~.asqd'.format(str(item.decode('utf-8'))))
+                        exportList.append(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8'))))
 
 
     def decryptContent(self, s):
@@ -353,34 +464,35 @@ class AqCrypto:
         return (hashlib.pbkdf2_hmac('sha256', _str.encode('utf-8'), bytes, 256256).hex())
 
 
-class AqLocalFunctions(AqMainWindow):
+class AqLocalFunctions:
     def __init__(self):
         self.unsaved = []
 
 
-    def merge(self, list1, list2):
-        merged_list = list(zip(list1, list2))  
-        return merged_list 
+    def saveReport(self, data: float, dictio: dict):
+        dictio.update({time.strftime('%d.%m %H:%M'): data})
+
+        with open('data/report.txt', 'w', encoding = 'utf-8') as report:
+            report.write(json.dumps(dictio))
 
 
     def apply(self, root, server, usersCore):
         if QApplication.keyboardModifiers() == Qt.AltModifier and QApplication.keyboardModifiers() == Qt.ControlModifier:
-            AqConfigSystem.saveDefaultConfig(root, usersCore)
+            AqConfigSystem.saveDefaultConfig(root, usersCore, AqUIFunctions.getSelectedThemeId(root.ui.cbb_Theme))
         else:
-            AqConfigSystem.saveConfig(root, usersCore)
+            AqConfigSystem.saveConfig(root, usersCore, AqUIFunctions.getSelectedThemeId(root.ui.cbb_Theme))
 
         self.saveUnsavedUsers(root, server, usersCore)
-        for AqUser in [AqUser for AqUser in usersCore.users if (AqUser.current == False)]:
+        for AqUser in [AqUser for AqUser in usersCore.users if not AqUser.current]:
             usersCore.users.remove(AqUser)
 
         root.ui.liw_UsersDbList.clear()
-        usersCore.users.clear()
         usersCore.loadUsers(root, server, usersCore)
 
 
     def saveUnsavedUsers(self, root, server, usersСore):
-        self.unsaved = [AqUser for AqUser in usersСore.users if (AqUser.edited == True)]
-        self.toDeleteList = [AqUser for AqUser in usersСore.users if (AqUser.toDelete == True)]
+        self.unsaved = [AqUser for AqUser in usersСore.users if AqUser.edited]
+        self.toDeleteList = [AqUser for AqUser in usersСore.users if AqUser.toDelete]
         self.checker = int()
         self.dumpList = []
         self.dumpList2 = []
@@ -426,5 +538,5 @@ class AqLocalFunctions(AqMainWindow):
             server.commutatorLogger.debug('Передача информации серверу завершена')
 
 
-        root.rootLogger.info('Сохранение {0} пользователей с изменениями успешно завершено'.format(self.checker))
-        QMessageBox.information(root, 'Сохранение завершено', 'Сохранено {0} пользователей!'.format(self.checker))
+        root.rootLogger.info(f'Сохранение {self.checker} пользователей с изменениями успешно завершено')
+        QMessageBox.information(root, 'Сохранение завершено', f'Сохранено {self.checker} пользователей!')

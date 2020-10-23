@@ -353,5 +353,6 @@ healthchecksdb
 /AsQammServer/data/personal
 /AsQammServer/data/ffd32.bin.bak
 /AsQammServer/data/system/desktop.ini
+/AsQammServer/statistic
 /AsQammDekstopControl/pyduino_sketch
 /AsQammDekstopControl/images/images.zip

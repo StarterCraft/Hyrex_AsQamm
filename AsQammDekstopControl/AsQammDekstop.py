@@ -18,7 +18,6 @@ from _asQammDekstopLibs.server import *
 
 
 class AqMainWindow(QMainWindow):
-
     def __init__(self):
 
         QMainWindow.__init__(self)
@@ -83,7 +82,8 @@ class AqMainWindow(QMainWindow):
         
 
 from _asQammDekstopLibs.users import *
-from _asQammDekstopLibs.functions import AqUIFunctions, AqLocalFunctions
+from _asQammDekstopLibs.functions import AqUIFunctions, AqLocalFunctions, AqThread
+from _asQammDekstopLibs.hardware import AqHardwareSystem
 
 
 if __name__ == '__main__':
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     root.rootLogger.debug('Наложение стандартной темы')
     AqUIFunctions.mapThemes(root)
 
-    server = AqServerCommutator(root, AqCrypto)
+    server = AqServerCommutator(root)
     server.commutatorLogger.info('Коммутатор сервера инициализирован')
 
     usersCore = AqUsersSystem(root)
@@ -104,6 +104,9 @@ if __name__ == '__main__':
 
     localFunc = AqLocalFunctions()
     root.rootLogger.debug('Инициализирована система локальных данных')
+
+    hardwareSystem = AqHardwareSystem(root, server)
+    hardwareSystem.logger.debug('Инициализирована система оборудования')
 
     AqUIFunctions.createLabelsAtMainMenu(root)
     # Добавляем привязки клавиш к анимациям
@@ -125,9 +128,9 @@ if __name__ == '__main__':
     # Скин Конфигурации
     root.ui.btn_page5.clicked.connect( lambda: AqUIFunctions.selectSkin(5, root) )
     
-
     usersCore.loadUsers(root, server, usersCore)
     AqUIFunctions.mapThemes(root)
+    AqUIFunctions.generateLoadingAnimation(root)
 
     root.ui.btn_UserInit.clicked.connect( lambda: usersCore.userInit(root, server, usersCore) )
     root.ui.btn_UserInitAsGuest.clicked.connect( lambda: usersCore.guestUserInit(usersCore, root) )
@@ -142,8 +145,8 @@ if __name__ == '__main__':
     root.ui.btn_Apply.clicked.connect( lambda: localFunc.apply(root, server, usersCore) )
     root.ui.btn_OpenLogFolder.clicked.connect( lambda: root.rootLogger.openLogFolder() )
     root.ui.cbb_Theme.currentTextChanged.connect( lambda: AqUIFunctions.loadSpecifiedTheme(root, (AqUIFunctions.getSelectedThemeId(root.ui.cbb_Theme))) )
+    root.ui.tbv_HardwareList.setModel(hardwareSystem.mainTableModel)
     
-
     root.rootLogger.info('Привязка кнопок в интерфейсе приложения завершена успешно')
 
     usersCore.lockApp(root, usersCore)
