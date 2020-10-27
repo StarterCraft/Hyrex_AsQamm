@@ -3,6 +3,9 @@ import _asQammServerLibs.hardware as hwCore, zipfile, glob, json, time, os
 from _asQammServerLibs.functions import AqLogger
 
 class AqStatist:
+    class DiscorrectQueryException(Exception):
+        pass
+
     def __init__(self):
         #КОСТЫЛЬ: Упрощённое хранение статистики без использования архивов
         self.currentJsonFile = f'statistic/{time.strftime("%d%b%Y")}.asqd'
@@ -56,3 +59,12 @@ class AqStatist:
                 jsonString.append({'time': f'{time.strftime("%H:%M")}', sensorIdToRegister: valueToRegister})
 
             jsonFile.write(json.dumps(jsonString))
+
+
+    def getQueriedStats(self, query: str):
+        if query not in '1234567890HDMY' or len(query) > 6:
+            raise DiscorrectQueryException
+        else:
+            Query = query
+
+        if len()

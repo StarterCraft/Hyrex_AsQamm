@@ -132,6 +132,7 @@ if __name__ == '__main__':
     AqUIFunctions.mapThemes(root)
     AqUIFunctions.generateLoadingAnimation(root)
 
+    hardwareSystem.setHardwareListModel(root)
     root.ui.btn_UserInit.clicked.connect( lambda: usersCore.userInit(root, server, usersCore) )
     root.ui.btn_UserInitAsGuest.clicked.connect( lambda: usersCore.guestUserInit(usersCore, root) )
     root.ui.btn_LogOut.clicked.connect( lambda: usersCore.logOut(root, server, usersCore) )
@@ -145,7 +146,6 @@ if __name__ == '__main__':
     root.ui.btn_Apply.clicked.connect( lambda: localFunc.apply(root, server, usersCore) )
     root.ui.btn_OpenLogFolder.clicked.connect( lambda: root.rootLogger.openLogFolder() )
     root.ui.cbb_Theme.currentTextChanged.connect( lambda: AqUIFunctions.loadSpecifiedTheme(root, (AqUIFunctions.getSelectedThemeId(root.ui.cbb_Theme))) )
-    root.ui.tbv_HardwareList.setModel(hardwareSystem.mainTableModel)
     
     root.rootLogger.info('Привязка кнопок в интерфейсе приложения завершена успешно')
 

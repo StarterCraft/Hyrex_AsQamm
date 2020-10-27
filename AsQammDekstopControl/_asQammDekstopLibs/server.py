@@ -18,11 +18,21 @@ class AqServerCommutator:
         self.commutatorLogger = AqLogger('ServerCommutator')
 
 
-    def get(self, methodIdStr: str, returnModeCode):
-        try:
-            response = requests.get(f'http://{self.ip}:{self.port}/{methodIdStr}', json = {'tok': self.__token__})
-        except AttributeError:
-            response = requests.get(f'http://{self.ip}/{methodIdStr}', json = {'tok': self.__token__})
+    def get(self, methodIdStr: str, returnModeCode, data: dict = None):
+        if data:
+            sendingDict = {'tok': self.__token__}
+            sendingDict.update(data)
+
+            try:
+                response = requests.get(f'http://{self.ip}:{self.port}/{methodIdStr}', json = sendingDict)
+            except AttributeError:
+                response = requests.get(f'http://{self.ip}/{methodIdStr}', json = sendingDict)
+
+        else:
+            try:
+                response = requests.get(f'http://{self.ip}:{self.port}/{methodIdStr}', json = {'tok': self.__token__})
+            except AttributeError:
+                response = requests.get(f'http://{self.ip}/{methodIdStr}', json = {'tok': self.__token__})
 
         if returnModeCode == int:
             return response
