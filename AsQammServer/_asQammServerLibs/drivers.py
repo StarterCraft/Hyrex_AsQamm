@@ -1,11 +1,11 @@
 from _asQammServerLibs.hardware import (AqAbstractHardwareUnit,
-                                        AqAbstractHardwareModule,
-                                        AqArduinoHardwareModes)
+                                        AqAbstractHardwareModule)
 
 from pyfirmata import (Arduino     as ArduinoUno,
                        ArduinoMega as ArduinoMega,
                        util        as ArduinoUtil,
-                       PinAlreadyTakenError)
+                       PinAlreadyTakenError,
+                       )
 from math import       (log        as log,
                         ceil       as ceil)
 
@@ -43,12 +43,11 @@ class AqArduinoUnoR3(AqAbstractHardwareUnit.ArduinoUnit, ArduinoUno):
                                     'd:9':  None,
                                     'd:10': None,
                                     'd:11': None,
-                                    'd:12': None,
-                                    'd:13': D13LED(self, 'd:13', True, '')}
+                                    'd:12': None}
 
         for key, value in _map.items():
             if value[0] == 1101:
-                self.pinMap.update({key: GroveTemperatureSensor(self, key, ((value[1])['isEnabled']),
+                self.pinMap.update({key: GroveTemperatureSensor(self, key, ((value[1])['enabled']),
                                                                ((value[1])['description']),
                                                                ((value[1])['calibrationValue']),
                                                                ((value[1])['probeFrequency'])
@@ -74,30 +73,27 @@ class AqSeeeduinoV4WithBaseShield(AqAbstractHardwareUnit.ArduinoUnit, ArduinoUno
 
 
     def setPinMap(self, _map):
-        self.pinMap = {'a:0': None, 'd:2' : None,
-                       'a:1': None, 'd:3' : None,
-                       'a:2': None, 'd:4' : None,
-                       'a:3': None, 'd:5' : None,
-                                    'd:6' : None,
-                                    'd:7' : None,
-                                    'd:8' : None,
-                                    'd:13': D13LED(self, 'd:13', True, 'D13LED')}
+        self.pinMap = {'a:0': None, 'd:2': None,
+                       'a:1': None, 'd:3': None,
+                       'a:2': None, 'd:4': None,
+                       'a:3': None, 'd:5': None,
+                                    'd:6': None,
+                                    'd:7': None,
+                                    'd:8': None}
 
         for key, value in _map.items():
             if value[0] == 1101:
-                self.pinMap.update({key: GroveTemperatureSensor(self, key, (value[1])['isEnabled'],
+                self.pinMap.update({key: GroveTemperatureSensor(self, key, (value[1])['enabled'],
                                                                 (value[1])['description'],
                                                                 (value[1])['calibrationValue'], 
                                                                 (value[1])['probeFrequency'])})
             elif value[0] == 1102:
-                self.pinMap.update({key: CapativeSoilMoistureSensor(self, key, (value[1])['isEnabled'],
-                                                                    (value[1])['description'],
-                                                                    (value[1])['probeFrequency'])})
+                self.pinMap.update({key: CapativeSoilMoistureSensor(self, key, value[1])})
             else:
                 continue
 
 #####################################################
-#            #         Датчики         #            #
+#            #         Модули          #            #
 #####################################################
 
 class GroveTemperatureSensor(AqAbstractHardwareModule.ArduinoSensor):
@@ -107,14 +103,12 @@ class GroveTemperatureSensor(AqAbstractHardwareModule.ArduinoSensor):
                  description: str, calibrationValue: int, probeFrequency):
         super().__init__(atBoard, atPin, isEnabled, True, description, self.temperature,
                          'Аналоговый датчик темпepaтуры Grove версии 1.2')
-        self.attrl.extend(['calibrationValue', 'probeFrequency'])
-        self.type = AqAbstractHardwareModule.ArduinoSensor.Analog
-        self.bValue = 4275
-        self.calibrationValue = int(calibrationValue)
+        self.bV = 4275
+        self.cV = int(calibrationValue)
         if probeFrequency is not None:
-            self.probeFrequency = float(probeFrequency)
+            self.pF = float(probeFrequency)
         else:
-            self.probeFrequency = 60.0
+            self.pF = 60.0
 
         while self.motherPin.read() != None:
             self.motherPin.read()
@@ -126,27 +120,23 @@ class GroveTemperatureSensor(AqAbstractHardwareModule.ArduinoSensor):
 
 
     def temperature(self):
-        try:
-            return (1.0 / (log(1023.0 / self.value() - 1.0) / (self.bValue) + 1 / 298.15) - self.calibrationValue)
-        except TypeError:
-            self.temperature()
+        return (1.0 / (log(1023.0 / self.value() - 1.0) / (self.bV) + 1 / 298.15) - self.cV)
 
 
     def calibrate(calibrationValue: int):
-        self.calibrationValue = calibrationValue
+        self.cV = calibrationValue
 
 
 class CapativeSoilMoistureSensor(AqAbstractHardwareModule.ArduinoSensor):
     driverId = 1102
 
     def __init__(self, atBoard: AqAbstractHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool, 
-                 description: str, probeFrequency):
+                 description: str, calibrationValue: int, probeFrequency):
         super().__init__(atBoard, atPin, False, '', description, self.moisture,
                         'Аналоговый ёмкостный датчик влажности почвы версии 1.0')
-        self.attrl.extend(['calibrationValue', 'probeFrequency'])
-        self.type = AqAbstractHardwareModule.ArduinoSensor.Analog
-        self.probeFrequency = float(probeFrequency)
-        
+        self.pF = float(probeFrequency)
+
+
 
     def value(self):
         if self.motherPin.read():
@@ -159,33 +149,3 @@ class CapativeSoilMoistureSensor(AqAbstractHardwareModule.ArduinoSensor):
         if self.value():
             m = self.motherPin.read() * 100
             return ceil(m)
-        else:
-            return
-
-#####################################################
-#            #      Исполнители        #            #
-#####################################################
-
-class D13LED(AqAbstractHardwareModule.ArduinoExecutor):
-    driverId = 1000
-
-    def __init__(self, atBoard: AqAbstractHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool, 
-                 description: str):
-        super().__init__(atBoard, atPin, isEnabled, description)
-        self.type = AqAbstractHardwareModule.ArduinoExecutor.Digital
-
-
-    def checkState(self):
-        if self.motherPin.mode == AqArduinoHardwareModes.Input:
-            return bool(self.motherPin.read())
-        else:
-            self.motherPin.mode = AqArduinoHardwareModes.Input
-            return bool(self.motherPin.read())
-
-
-    def setState(self, state: bool):
-        if self.motherPin.mode == AqArduinoHardwareModes.Output:
-            self.motherPin.write(state)
-        else:
-            self.motherPin.mode = AqArduinoHardwareModes.Output
-            self.motherPin.write(state)

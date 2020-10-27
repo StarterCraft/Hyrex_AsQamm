@@ -35,6 +35,9 @@ class AqUserSystem():
                                   'password': (jsonString['password']), 'avatarAddress': (jsonString['avatarAddress']),
                                   'permits': (jsonString['permits']), 'config': (jsonString['config'])})
 
+        if len(self.users) > len(self.availableFileNames):
+            print(f'35 caught if, len(self.users): {len(self.users)}, len(self.availableFileNames): {len(self.availableFileNames)}')
+
 
     def getUserData(self):
         #Позволяет получить список пользователей в виде dict-объектов, загруженный раннее

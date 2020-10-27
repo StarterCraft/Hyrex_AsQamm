@@ -78,7 +78,7 @@ class AqTokChecker:
             return False
 
 
-class AqConfig:
+class AqConfig():
     def __init__(self, configDict):
         
         self.language = configDict['language']

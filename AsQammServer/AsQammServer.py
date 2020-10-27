@@ -59,7 +59,7 @@ class AqServer:
 
 
 if __name__ == '__main__':
-    IP      = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите IP-адрес для запуска: ')
+    IP = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите IP-адрес для запуска: ')
     portstr = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите порт сервера для запуска: ')
     compart = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Нажмите {Fore.CYAN}ENTER{Style.RESET_ALL}'
                     f' для запуска сервера в обычном режиме. Введите "{Fore.CYAN}--nohardware{Style.RESET_ALL}" и нажмите {Fore.CYAN}ENTER'
@@ -182,28 +182,15 @@ if __name__ == '__main__':
             return {'401': 'UNAUTHORIZED'}
 
 
-    @server.api.get('/getHardwareData', description = 'Получить информацитю о подключённом оборудовании, если таковое присутствует')
+    @server.api.get('/getHardwareData', description = 'pintest')
     def getHardwareData(data: dict, request: Request):
         global server
-        
-        if server.tok.isOk(data['tok']) and hardware:
+        global b
+        print(server.tok.isOk(data['tok']))
+
+        if server.tok.isOk(data['tok']):
             server.serverLogger.debug(f'Вызван метод /getHardwareData со стороны клиента {request.client.host}:{request.client.port}')
             return hardware.getHardwareDataSheet()
-        elif not hardware:
-            return {'505': 'HARDWARE_NOT_INITIALIZED'}
-        else:
-            return {'401': 'UNAUTHORIZED'}
-
-
-    @server.api.get('/getLatestStats', description = 'Получить статистику за x времени')
-    def getLatestStats(data: dict, request: Request):
-        global server
-
-        if server.tok.isOk(data['tok']) and hardware:
-            server.serverLogger.debug(f'Вызван метод /getLatestStats со стороны клиента {request.client.host}:{request.client.port}')
-            return hardware.statisticAgent.getQueriedStats(data['query'])
-        elif not hardware:
-            return {'505': 'HARDWARE_NOT_INITIALIZED'}
         else:
             return {'401': 'UNAUTHORIZED'}
 
