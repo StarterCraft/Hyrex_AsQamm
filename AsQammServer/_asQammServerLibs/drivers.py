@@ -2,7 +2,7 @@ from _asQammServerLibs.hardware import (AqAbstractHardwareUnit,
                                         AqAbstractHardwareModule)
 
 from pyfirmata import (Arduino     as ArduinoUno,
-                       ArduinoMega as ArduinoMega,
+                       ArduinoNano as ArduinoNano,
                        util        as ArduinoUtil,
                        PinAlreadyTakenError,
                        )
