@@ -3,7 +3,7 @@ from _asQammServerLibs.hardware import (AqAbstractHardwareUnit,
                                         AqArduinoHardwareModes)
 
 from pyfirmata import (Arduino     as ArduinoUno,
-                       ArduinoMega as ArduinoMega,
+                       ArduinoNano as ArduinoNano,
                        util        as ArduinoUtil,
                        PinAlreadyTakenError)
 from math import       (log        as log,
