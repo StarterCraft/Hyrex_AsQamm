@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from random import uniform
 from sys import argv as sysArgs
+import socket
 
 from _asQammServerLibs.functions import *
 from _asQammServerLibs.users import *
@@ -59,14 +60,25 @@ class AqServer:
 
 
 if __name__ == '__main__':
-    IP      = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите IP-адрес для запуска: ')
-    portstr = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите порт сервера для запуска: ')
-    compart = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Нажмите {Fore.CYAN}ENTER{Style.RESET_ALL}'
+    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите IP-адрес для запуска: ', end='')
+    IP      = input()
+    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите порт сервера для запуска: ', end='')
+    portstr = input()
+    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Нажмите {Fore.CYAN}ENTER{Style.RESET_ALL}'
                     f' для запуска сервера в обычном режиме. Введите "{Fore.CYAN}--nohardware{Style.RESET_ALL}" и нажмите {Fore.CYAN}ENTER'
-                    f'{Style.RESET_ALL} для запуска сервера в режиме совместимости без оборудования ')
+                    f'{Style.RESET_ALL} для запуска сервера в режиме совместимости без оборудования ', end='')
+    compart = input()
 
     server = AqServer()
     userCore = AqUserSystem()
+
+    if IP.replace(" ", "") == "localhost":
+        localIP = socket.gethostbyname(socket.gethostname())
+
+        server.serverLogger.info("Получен локальный ip адрес: " + localIP)
+        server.serverLogger.info("Создаётся сервер на localhost ({})".format(localIP))
+
+        IP = localIP
 
     if compart == '--nohardware':
         pass
