@@ -66,5 +66,3 @@ class AqStatist:
             raise DiscorrectQueryException
         else:
             Query = query
-
-        if len()
