@@ -1,5 +1,5 @@
 from _asQammServerLibs.functions import AqCrypto, AqConfig, AqLogger
-from random import choice as randomChoice
+from random import choice as randomChoice, shuffle as randomShuffle
 import json, os
 
 class AqUserSystem():
@@ -75,8 +75,13 @@ class AqUserSystem():
     def updateUserRegistry(self, data: list or str, mode: int):
         #Позволяет обновить регистр пользователей двумя способами: дополнением или перезаписью
         if mode == 0 and data == str: #Режим дополнения регистра
+            with open('data/system/ffreg32.sz', 'r') as dataFile:
+                rg = json.loads(dataFile.read())
+
             with open('data/system/ffreg32.sz', 'a+') as dataFile:
-                fileString = json.dumps(data)
+                rg.append(data)
+                randomShuffle(rg)
+                fileString = json.dumps(rg)
                 fileString = self.crypto.encryptContent(fileString)
                 dataFile.write(fileString)
 

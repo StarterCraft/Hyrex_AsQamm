@@ -410,25 +410,26 @@ class AqUsersSystem(AqMainWindow):
                                                                                QPixmap(QImage(str(
                                                                                root.userCreationDlgUi.lnI_CnuAvatarAddr.text())))) )
 
-            root.userCreationDlg.permits = dict( homeRooms = root.userCreationDlgUi.ckb_UserPermit_HomeRooms.isChecked(),
-                                            homeAsAdmin = root.userCreationDlgUi.ckb_UserPermit_HomeAsAdmin.isChecked(),
-                                            defenseBasic = root.userCreationDlgUi.ckb_UserPermit_DefnScr.isChecked(),
-                                            defenseDbEdit = root.userCreationDlgUi.ckb_UserPermit_DefnDbEdit.isChecked(),
-                                            defenseAsAdmin = root.userCreationDlgUi.ckb_UserPermit_DefnAsAdmin.isChecked(),
-                                            plants = root.userCreationDlgUi.ckb_UserPermit_PtsScr.isChecked(),
-                                            plantsAsAdmin = root.userCreationDlgUi.ckb_UserPermit_PtsAsAdmin.isChecked(),
-                                            hardware = root.userCreationDlgUi.ckb_UserPermit_HardwareScr.isChecked(), 
-                                            hardwareAsAdmin = root.userCreationDlgUi.ckb_UserPermit_HardwareAsAdmin.isChecked(),
-                                            configure = root.userCreationDlgUi.ckb_UserPermit_CfgScr.isChecked(),
-                                            configureAsAdmin = root.userCreationDlgUi.ckb_UserPermit_CfgAsAdmin.isChecked() )
             hmta = self.crypto.getHmta()
+            print(hmta.hex())
             server.post('updateUserRg', json, int, [0, hmta.hex()])
 
-            root.userCreationDlg.accepted.connect ( lambda: AqUser(usersCore, root, (root.userCreationDlgUi.lbl_CnuID.text()), 
+            root.userCreationDlg.accepted.connect( lambda:  AqUser(usersCore, root, (root.userCreationDlgUi.lbl_CnuID.text()), 
                                                                   (root.userCreationDlgUi.lnI_CnuDesc.text()), 1, (server.get('getNewUserFilename', str)), 
                                                                   (root.userCreationDlgUi.lnI_CnuAvatarAddr.text()), (root.userCreationDlgUi.lnI_CnuLogin.text()),
                                                                   (self.crypto.getCut(root.userCreationDlgUi.lnI_CnuPassword.text(), hmta)),
-                                                                  (root.userCreationDlg.permits), (AqConfigSystem.loadDefaultConfigDict())) )
+                                                                  {'homeRooms' : root.userCreationDlgUi.ckb_UserPermit_HomeRooms.isChecked(),
+                                                                   'homeAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_HomeAsAdmin.isChecked(),
+                                                                   'defenseBasic' : root.userCreationDlgUi.ckb_UserPermit_DefnScr.isChecked(),
+                                                                   'defenseDbEdit' : root.userCreationDlgUi.ckb_UserPermit_DefnDbEdit.isChecked(),
+                                                                   'defenseAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_DefnAsAdmin.isChecked(),
+                                                                   'plants' : root.userCreationDlgUi.ckb_UserPermit_PtsScr.isChecked(),
+                                                                   'plantsAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_PtsAsAdmin.isChecked(),
+                                                                   'hardware' : root.userCreationDlgUi.ckb_UserPermit_HardwareScr.isChecked(), 
+                                                                   'hardwareAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_HardwareAsAdmin.isChecked(),
+                                                                   'configure' : root.userCreationDlgUi.ckb_UserPermit_CfgScr.isChecked(),
+                                                                   'configureAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_CfgAsAdmin.isChecked()},
+                                                                  (AqConfigSystem.loadDefaultConfigDict())) )
 
             root.userCreationDlg.show()
 

@@ -60,13 +60,15 @@ class AqServer:
 
 
 if __name__ == '__main__':
-    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите IP-адрес для запуска: ', end='')
+    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите IP-адрес для запуска: ', end = '')
     IP      = input()
-    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите порт сервера для запуска: ', end='')
+
+    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите порт сервера для запуска: ', end = '')
     portstr = input()
+
     print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Нажмите {Fore.CYAN}ENTER{Style.RESET_ALL}'
-                    f' для запуска сервера в обычном режиме. Введите "{Fore.CYAN}--nohardware{Style.RESET_ALL}" и нажмите {Fore.CYAN}ENTER'
-                    f'{Style.RESET_ALL} для запуска сервера в режиме совместимости без оборудования ', end='')
+          f' для запуска сервера в обычном режиме. Введите "{Fore.CYAN}--nohardware{Style.RESET_ALL}" и нажмите {Fore.CYAN}ENTER'
+          f'{Style.RESET_ALL} для запуска сервера в режиме совместимости без оборудования ', end = '')
     compart = input()
 
     server = AqServer()
@@ -74,9 +76,7 @@ if __name__ == '__main__':
 
     if IP.replace(" ", "") == "localhost":
         localIP = socket.gethostbyname(socket.gethostname())
-
-        server.serverLogger.info("Получен локальный ip адрес: " + localIP)
-        server.serverLogger.info("Создаётся сервер на localhost ({})".format(localIP))
+        server.serverLogger.info(f'Создаётся сервер на localhost ({localIP})')
 
         IP = localIP
 
