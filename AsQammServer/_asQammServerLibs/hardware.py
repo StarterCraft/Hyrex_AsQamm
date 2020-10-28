@@ -156,7 +156,7 @@ class AqHardwareSystem:
                                        
 
             except JSONDecodeError:
-                self.logger.error(f'''Не удалось прочитать data/system/~!hardware!~.asqd''')
+                self.logger.error(f'''Не удалось получить данные JSON из файла "data/system/~!hardware!~.asqd", проверьте файл на синтаксические ошибки''')
 
         if len(self.installedArduinoHardware) == 0:
             self.logger.critical(f'''Не удалось инициализировать Arduino-модули, используя информацию из файла ~!hardware!~.asqd.'''
