@@ -2,7 +2,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from AsQammDekstop import AqMainWindow
 
 import _asQammDekstopLibs.functions
 from _asQammDekstopLibs.config import AqConfigSystem
@@ -14,7 +13,7 @@ from playsound import *
 import json, os, requests
 
 
-class AqUsersSystem(AqMainWindow):
+class AqUsersSystem:
 
     def __init__(self, root):
 
@@ -407,8 +406,7 @@ class AqUsersSystem(AqMainWindow):
 
             root.userCreationDlgUi.tlb_Browse.clicked.connect( lambda:  root.userCreationDlgUi.filedialog.show() )
             root.userCreationDlgUi.lnI_CnuAvatarAddr.textChanged.connect ( lambda: root.userCreationDlgUi.gfv_CnuAvatarPrev.setPixmap(
-                                                                               QPixmap(QImage(str(
-                                                                               root.userCreationDlgUi.lnI_CnuAvatarAddr.text())))) )
+                                                                               QPixmap(QImage(root.userCreationDlgUi.lnI_CnuAvatarAddr.text()))) )
 
             hmta = self.crypto.getHmta()
             print(hmta.hex())
@@ -429,7 +427,7 @@ class AqUsersSystem(AqMainWindow):
                                                                    'hardwareAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_HardwareAsAdmin.isChecked(),
                                                                    'configure' : root.userCreationDlgUi.ckb_UserPermit_CfgScr.isChecked(),
                                                                    'configureAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_CfgAsAdmin.isChecked()},
-                                                                  (AqConfigSystem.loadDefaultConfigDict())) )
+                                                                  {'preset': 'default'}) )
 
             root.userCreationDlg.show()
 

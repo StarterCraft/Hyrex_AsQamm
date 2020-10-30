@@ -41,7 +41,7 @@ class AqServer:
 
     def mkreg(self):
         try:
-            with open('data/system/ffreg32.sz', 'x') as dataFile:
+            with open('data/system/~!ffreg!~.asqd', 'x') as dataFile:
                 dataFile.write(self.crypto.encryptContent('[]'))
         except FileExistsError:
             pass

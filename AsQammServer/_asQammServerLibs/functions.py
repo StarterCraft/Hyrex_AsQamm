@@ -40,7 +40,14 @@ class AqCrypto:
 
 
     def decryptContent(self, s):
-        return (base64.b64decode(s.encode('utf-8'))).decode('utf-8')
+        if s.endswith('='):
+            se = s + '='
+        elif not s.endswith('=='):
+            se = s + '=='
+        else:
+            return (base64.b64decode(s.encode('utf-8'))).decode('utf-8')
+        
+        return (base64.b64decode(se.encode('utf-8'))).decode('utf-8')
 
 
     def encryptContent(self, s):

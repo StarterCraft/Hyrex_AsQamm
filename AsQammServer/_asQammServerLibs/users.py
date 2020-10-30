@@ -43,7 +43,7 @@ class AqUserSystem():
 
     def getUserRegistry(self):
         #Позволяет получить регистр пользователей в виде list(str, ...)-объектa
-        with open('data/system/ffreg32.sz', 'r') as dataFile:
+        with open('data/system/~!ffreg!~.asqd', 'r') as dataFile:
             fileString = dataFile.readline()
             jsonString = self.crypto.decryptContent(fileString)
             jsonString = json.loads(jsonString)
@@ -74,19 +74,20 @@ class AqUserSystem():
 
     def updateUserRegistry(self, data: list or str, mode: int):
         #Позволяет обновить регистр пользователей двумя способами: дополнением или перезаписью
-        if mode == 0 and data == str: #Режим дополнения регистра
-            with open('data/system/ffreg32.sz', 'r') as dataFile:
-                rg = json.loads(dataFile.read())
+        if mode == 0: #Режим дополнения регистра
+            print('append mode')
+            with open('data/system/~!ffreg!~.asqd', 'r') as dataFile:
+                rg = json.loads(self.crypto.decryptContent(dataFile.read()))
 
-            with open('data/system/ffreg32.sz', 'a+') as dataFile:
+            with open('data/system/~!ffreg!~.asqd', 'w+') as dataFile:
                 rg.append(data)
                 randomShuffle(rg)
                 fileString = json.dumps(rg)
                 fileString = self.crypto.encryptContent(fileString)
                 dataFile.write(fileString)
 
-        elif mode == 1 and data == list: #Режим перезаписи регистра
-            with open('data/system/ffreg32.sz', 'w+') as dataFile:
+        elif mode == 1: #Режим перезаписи регистра
+            with open('data/system/~!ffreg!~.asqd', 'w+') as dataFile:
                 fileString = json.dumps(data)
                 fileString = self.crypto.encryptContent(fileString)
                 dataFile.write(fileString)
