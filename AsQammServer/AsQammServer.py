@@ -67,24 +67,24 @@ if __name__ == '__main__':
     portstr = input()
 
     print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Нажмите {Fore.CYAN}ENTER{Style.RESET_ALL}'
-          f' для запуска сервера в обычном режиме. Введите "{Fore.CYAN}--nohardware{Style.RESET_ALL}" и нажмите {Fore.CYAN}ENTER'
+          f' для запуска сервера в обычном режиме. Введите "{Fore.CYAN}-h{Style.RESET_ALL}" или "{Fore.CYAN}--nohardware{Style.RESET_ALL}" и нажмите {Fore.CYAN}ENTER'
           f'{Style.RESET_ALL} для запуска сервера в режиме совместимости без оборудования ', end = '')
     compart = input()
 
     server = AqServer()
     userCore = AqUserSystem()
 
-    if IP.replace(" ", "") == "localhost":
+    if IP.replace(" ", "").lower() == "localhost":
         localIP = socket.gethostbyname(socket.gethostname())
         server.serverLogger.info(f'Создаётся сервер на localhost ({localIP})')
 
         IP = localIP
 
-    if compart == '--nohardware':
-        pass
-    else:
+    compart = compart.replace(" ", "").lower()
+
+    if compart not in ('--nohardware', '-h'):
         hardware = AqHardwareSystem()
-        assert hardware.isOk
+        assert hardware.isOk, 'Аварийное завершение работы'
 
     @server.api.get('/getUserdata', description = 'Получить словарь данных пользователей')
     def getUserdata(data: dict, request: Request):

@@ -150,7 +150,7 @@ class AqHardwareSystem:
                             self.installedArduinoHardware.append(instance)
 
                    except SerialException:
-                       self.logger.error(f'''Не удалось инициализировать Arduino-модуль типа {hardwareObject["driverId"]} на портy'''
+                       self.logger.error(f'''Не удалось инициализировать Arduino-устройство типа {hardwareObject["driverId"]} на портy '''
                                         f'''{hardwareObject["comPort"]} из-за ошибки 0104: не удалось найти запрашиваемое устройство''')
                        continue
                                        
@@ -159,7 +159,7 @@ class AqHardwareSystem:
                 self.logger.error(f'''Не удалось получить данные JSON из файла "data/system/~!hardware!~.asqd", проверьте файл на синтаксические ошибки''')
 
         if len(self.installedArduinoHardware) == 0:
-            self.logger.critical(f'''Не удалось инициализировать Arduino-модули, используя информацию из файла ~!hardware!~.asqd.'''
+            self.logger.critical(f'''Не удалось инициализировать Arduino-устройство, используя информацию из файла "~!hardware!~.asqd". '''
                                  f'''Пожалуйста, убедитесь, что файл не повреждён и не пуст, что все модули подключены и находятся'''
                                  '''в рабочем состоянии. Для решения данной проблемы попробуйте переустановить AsQammServer, при'''
                                  '''переустановке внимательно следите за правильностью вводимой информации о модулях''')

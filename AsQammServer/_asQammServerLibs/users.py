@@ -21,7 +21,6 @@ class AqUserSystem():
 
         self.crypto.getFileNamesList(self.possibleFileNames) #Выполним маппинг файлов в папке с файлами пользователей
         self.crypto.seekForFiles(self.possibleFileNames, self.availableFileNames, True)
-        print(f'self.availableFileNames: {self.availableFileNames}')
 
         for item in self.availableFileNames: #Для каждого из фалов выполним открытие и выгрузим данные
             with open(r'%s' % item, 'r') as dataFile:
