@@ -60,10 +60,32 @@ class AqServer:
 
 
 if __name__ == '__main__':
-    IP = sysArgs[1]
-    portstr = sysArgs[2]
-    try: compart = sysArgs[3]
-    except IndexError: compart = ''
+    if len(sysArgs) < 2:
+        print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите IP-адрес для запуска: ', end = '')
+        IP = input()
+
+        print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите порт сервера для запуска: ', end = '')
+        portstr = input()
+
+        print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Нажмите {Fore.CYAN}ENTER{Style.RESET_ALL}'
+              f' для запуска сервера в обычном режиме. Введите "{Fore.CYAN}-h{Style.RESET_ALL}" или "{Fore.CYAN}--nohardware{Style.RESET_ALL}" и нажмите {Fore.CYAN}ENTER'
+              f'{Style.RESET_ALL} для запуска сервера в режиме совместимости без оборудования ', end = '')
+        compart = input()
+    elif len(sysArgs) < 3:
+        IP = sysArgs[1]
+
+        print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите порт сервера для запуска: ', end = '')
+        portstr = input()
+
+        print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Нажмите {Fore.CYAN}ENTER{Style.RESET_ALL}'
+              f' для запуска сервера в обычном режиме. Введите "{Fore.CYAN}-h{Style.RESET_ALL}" или "{Fore.CYAN}--nohardware{Style.RESET_ALL}" и нажмите {Fore.CYAN}ENTER'
+              f'{Style.RESET_ALL} для запуска сервера в режиме совместимости без оборудования ', end = '')
+        compart = input()
+    else:
+        IP = sysArgs[1]
+        portstr = sysArgs[2]
+        try: compart = sysArgs[3]
+        except IndexError: compart = ''
 
     server = AqServer()
     userCore = AqUserSystem()
