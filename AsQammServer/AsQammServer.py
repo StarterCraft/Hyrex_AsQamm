@@ -188,7 +188,7 @@ if __name__ == '__main__':
             return {'401': 'UNAUTHORIZED'}
 
 
-    @server.api.get('/getHardwareData', description = 'Получить информацитю о подключённом оборудовании, если таковое присутствует')
+    @server.api.get('/getHardwareData', description = 'Получить информацию о подключённом оборудовании, если таковое присутствует')
     def getHardwareData(data: dict, request: Request):
         global server
         
@@ -218,4 +218,5 @@ if __name__ == '__main__':
     except NameError:
         pass
 
+    print(hardware.statisticAgent.getQueriedStats('01D(COM:a:0:1101)'))
     server.run(IP, int(portstr))

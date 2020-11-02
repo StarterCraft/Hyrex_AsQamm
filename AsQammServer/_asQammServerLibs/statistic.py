@@ -49,8 +49,7 @@ class AqStatist:
 
         with open(self.currentCsvFile, 'r+', encoding = 'utf-8', newline = '') as csvFile:
             try: jsonString = json.loads((pandas.read_csv(csvFile)).to_json(orient = 'records'))
-            except (json.JSONDecodeError, pandas.errors.EmptyDataError): jsonString = [] 
-            print(self.currentCsvFile, jsonString)
+            except (json.JSONDecodeError, pandas.errors.EmptyDataError): jsonString = []
 
         with open(self.currentCsvFile, 'w+', encoding = 'utf-8', newline = '') as csvFile:
             for dictionary in jsonString:
@@ -254,7 +253,7 @@ class AqStatist:
 
             elif Query[0].endswith('D'):
                 maxDay = int(time.strftime('%d')) + 1
-                minDay = maxDay - int((Query[1])[:-1])
+                minDay = maxDay - int((Query[0])[:-1])
                 if minDay <= 0: minDay = reverseDays(minDay)
                 
                 for fily in glob.glob('statistic/*.asqd'):
@@ -288,26 +287,34 @@ class AqStatist:
 
         #Часть выборки с определением оборудования
         Query.append((query[4:-1]).split(', '))
+
         if Stats:
             for statisticItem in Stats[:]:
                 newStatisticItem = {'time': statisticItem['time']}
-                for hardwareDefn in Query[1]:
-                    if hardwareDefn not in statisticItem.keys(): continue
-                    else: newStatisticItem.update({hardwareDefn: statisticItem[hardwareDefn]})
-                Stats.remove(statisticItem)
-                Stats.append(newStatisticItem)
+                if Query[1]:
+                    for hardwareDefn in Query[1]:
+                        if hardwareDefn not in statisticItem.keys(): continue
+                        else:
+                           newStatisticItem.update({hardwareDefn: statisticItem[hardwareDefn]})
+                    Stats.remove(statisticItem)
+                    Stats.append(newStatisticItem)
+                else: pass
 
 
         elif capables:
             for filey in capables:
                 newStatisticItem = {}
-                for hardwareDefn in Query[1]:
+                if Query[1]:
+                    for hardwareDefn in Query[1]:
+                        with open(filey, 'r') as statisticFile:
+                            for item in json.loads((pandas.read_csv(statisticFile)).to_json(orient = 'records')):
+                                newStatisticItem.update({'time': item['time']})
+                                if hardwareDefn not in item.keys(): continue
+                                else: newStatisticItem.update({hardwareDefn: item[hardwareDefn]})
+
+                else:
                     with open(filey, 'r') as statisticFile:
-                        for item in json.loads(statisticFile.read()):
-                            newStatisticItem.update({'time': item['time']})
-                            if hardwareDefn not in item.keys(): continue
-                            else: newStatisticItem.update({hardwareDefn: item[hardwareDefn]})
-
-                Stats.append(newStatisticItem)
-
+                        for item in json.loads((pandas.read_csv(statisticFile)).to_json(orient = 'records')):
+                            newStatisticItem.update(item)
+            Stats.append(newStatisticItem)
         return Stats
