@@ -1,42 +1,58 @@
 #КОСТЫЛЬ: Использование чистого JSON вместо CSV, т. к. с последним не получилось.
-import _asQammServerLibs.hardware as hwCore, zipfile, glob, json, time, os
+import _asQammServerLibs.hardware as hwCore, zipfile, glob, json, pandas, time, os
 from _asQammServerLibs.functions import AqLogger
+
+
+def evalMonths(str):
+    monthsStrings = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    monthsInts = [int for int in range(1, 13)]
+    return int(monthsInts[(monthsStrings.index(str))])
+
+
+def reverseMonths(integer):
+    positiveMonths = [int for int in range(1, 13)]
+    negativeMonths = [int for int in range(-11, 1)]
+    return int(positiveMonths[negativeMonths.index(integer)])
+
+
+def reverseDays(integer):
+    positiveDays = [int for int in range(1, 32)]
+    if ((int(time.strftime('%m')) - 1) == 2):
+        negativeDays = [int for int in range(-29, 1)]
+    else: negativeDays = [int for int in range (-32, 1)]
+    return int(positiveDays[negativeDays.index(integer)])
+
+
+def reverseHours(integer):
+    positiveHours = [int for int in range(1, 24)]
+    negativeHours = [int for int in range(-23, 0)]
+    return int(positiveHours[negativeHours.index(integer)])
+
 
 class AqStatist:
     class DiscorrectQueryException(Exception):
         pass
 
+    class DuplicateQueryArgumentsException(Exception):
+        pass
+
     def __init__(self):
         #КОСТЫЛЬ: Упрощённое хранение статистики без использования архивов
-        self.currentJsonFile = f'statistic/{time.strftime("%d%b%Y")}.asqd'
+        self.currentCsvFile = f'statistic/{time.strftime("%d%b%Y")}.asqd'
         self.logger = AqLogger('Server>Statist')
-        with open(self.currentJsonFile, 'a+', encoding = 'utf-8') as jsonFile:
-            jsonFile.seek(0)
-            if not jsonFile.read():
-                jsonFile.write('[]')
-                jsonFile.seek(0)
-            else:
-                pass
 
 
     def registerStatistic(self, sensorIdToRegister: str, valueToRegister):
         assert valueToRegister
-        if f'statistic/{time.strftime("%d%b%Y")}.asqd' != self.currentJsonFile:
-            self.currentJsonFile = f'statistic/{time.strftime("%d%b%Y")}.asqd'
-            with open(self.currentJsonFile, 'w+', encoding = 'utf-8') as jsonFile:
-                jsonFile.write('[]')
-        else:
-            with open(self.currentJsonFile, 'a+', encoding = 'utf-8') as jsonFile:
-                jsonFile.seek(0)
-                if not jsonFile.read():
-                    jsonFile.write('[]')
-                else:
-                    pass
+        if f'statistic/{time.strftime("%d%b%Y")}.asqd' != self.currentCsvFile:
+            self.currentCsvFile = f'statistic/{time.strftime("%d%b%Y")}.asqd'
 
-        with open(self.currentJsonFile, 'r+', encoding = 'utf-8') as jsonFile:
-            jsonString = json.loads(jsonFile.read())
+        with open(self.currentCsvFile, 'r+', encoding = 'utf-8', newline = '') as csvFile:
+            try: jsonString = json.loads((pandas.read_csv(csvFile)).to_json(orient = 'records'))
+            except (json.JSONDecodeError, pandas.errors.EmptyDataError): jsonString = [] 
+            print(self.currentCsvFile, jsonString)
 
-        with open(self.currentJsonFile, 'w+', encoding = 'utf-8') as jsonFile:
+        with open(self.currentCsvFile, 'w+', encoding = 'utf-8', newline = '') as csvFile:
             for dictionary in jsonString:
                 try:
                     if   dictionary['time'] == f'{time.strftime("%H:%M")}' and (dictionary[sensorIdToRegister] != valueToRegister or 
@@ -58,11 +74,240 @@ class AqStatist:
                 #Если строки с текущим временем не было найдено
                 jsonString.append({'time': f'{time.strftime("%H:%M")}', sensorIdToRegister: valueToRegister})
 
-            jsonFile.write(json.dumps(jsonString))
+            csvFile.write((pandas.read_json(json.dumps(jsonString), orient = 'records')).to_csv(index = False))
 
 
     def getQueriedStats(self, query: str):
-        if query not in '1234567890HDMY' or len(query) > 6:
-            raise DiscorrectQueryException
-        else:
-            Query = query
+        Query = []
+        Stats = []
+        capables = []
+        lockedArgs = []
+
+
+        #Если выборка состоит из 1 аргумента и не имеет уточнения оборудования
+        if len(query) == 5:
+            Query.append(query[:-2])
+            if Query[0].endswith('Y'):
+                maxYear = int(time.strftime('%Y'))
+                minYear = maxYear - int((Query[0])[:-1])
+
+                for fily in glob.glob('statistic/*.asqd'):
+                    if int((fily.replace('\\', '/'))[15:-5]) in range(minYear, maxYear):
+                        capables.append(fily.replace('\\', '/'))
+                    else:
+                        continue
+
+
+            elif Query[0].endswith('M'):
+                maxMonth = int(time.strftime('%m'))
+                minMonth = maxMonth - int((Query[0])[:-1])
+                if minMonth <= 0: minMonth = reverseMonths(minMonth)
+
+                for fily in glob.glob('statistic/*.asqd'):
+                    if evalMonths((fily.replace('\\', '/'))[12:-9]) in range(minMonth, maxMonth):
+                        capables.append(fily.replace('\\', '/'))
+                    else:
+                        continue
+
+
+            elif Query[0].endswith('D'):
+                maxDay = int(time.strftime('%d')) + 1
+                minDay = maxDay - int((Query[1])[:-1])
+                if minDay <= 0: minDay = reverseDays(minDay)
+                
+                for fily in glob.glob('statistic/*.asqd'):
+                    if int((fily.replace('\\', '/'))[10:-12]) in range(minDay, maxDay):
+                        capables.append(fily.replace('\\', '/'))
+                    else:
+                        continue
+                    
+
+            elif Query[0].endswith('H'):
+                maxHour = int(time.strftime('%H')) + 1
+                minHour = maxHour - int((Query[1])[:-1])
+                if minHour < 0: minHour = reverseHours(minHour)
+
+                if minHour > int(time.strftime('%H')):
+                    with open(f'statistic/{int(time.strftime("%d")) - 1}{time.strftime("%b%Y")}', 'r') as statisticFile:
+                        for statisticItem in json.loads(statisticFile.read()):
+                            if int((statisticItem['time'])[:-3]) >= minHour:
+                                Stats.append(statisticItem)
+
+                    with open(self.currentCsvFile, 'r') as statisticFile:
+                        for statisticItem in json.loads(statisticFile.read()):
+                            if int((statisticItem['time'])[:-3]) in range(minHour, maxHour):
+                                Stats.append(statisticItem)
+
+                else:
+                     with open(self.currentCsvFile, 'r') as statisticFile:
+                        for statisticItem in json.loads(statisticFile.read()):
+                            if int((statisticItem['time'])[:-3]) in range(minHour, maxHour):
+                                Stats.append(statisticItem)
+
+
+        #Если выборка состоит из 2 аргументов, но без уточнения оборудования
+        elif len(query) == 8:
+            #Часть выборки 1
+            Query.append(query[:-5])
+            if Query[0].endswith('Y'):
+                lockedArgs.append('Y')
+                maxYear = int(time.strftime('%Y'))
+                minYear = maxYear - int((Query[0])[:-1])
+
+                for fily in glob.glob('statistic/*.asqd'):
+                    if int((fily.replace('\\', '/'))[15:-5]) in range(minYear, maxYear):
+                        capables.append(fily.replace('\\', '/'))
+                    else:
+                        continue
+
+
+            elif Query[0].endswith('M'):
+                lockedArgs.extend(['M', 'Y'])
+                maxMonth = int(time.strftime('%m'))
+                minMonth = maxMonth - int((Query[0])[:-1])
+                if minMonth <= 0: minMonth = reverseMonths(minMonth)
+
+                for fily in glob.glob('statistic/*.asqd'):
+                    if evalMonths((fily.replace('\\', '/'))[12:-9]) in range(minMonth, maxMonth):
+                        capables.append(fily.replace('\\', '/'))
+                    else:
+                        continue
+
+
+            elif Query[0].endswith('D'):
+                lockedArgs.extend(['M', 'Y', 'D'])
+                maxDay = int(time.strftime('%d')) + 1
+                minDay = maxDay - int((Query[1])[:-1])
+                if minDay <= 0: minDay = reverseDays(minDay)
+                
+                for fily in glob.glob('statistic/*.asqd'):
+                    if int((fily.replace('\\', '/'))[10:-12]) in range(minDay, maxDay):
+                        capables.append(fily.replace('\\', '/'))
+                    else:
+                        continue
+
+            #Часть выборки 2
+            Query.append(query[3:-2])
+            if Query[1].endswith('M') and ('M' not in lockedArgs):
+                maxMonth = int(time.strftime('%m')) + 1
+                minMonth = maxMonth - int((Query[1])[:-1])
+                
+                for fily in capables[:]:
+                    if evalMonths(fily[12:-9]) not in range(minMonth, maxMonth):
+                        capables.remove(fily)
+                    else:
+                        continue
+
+
+            elif Query[1].endswith('D') and ('D' not in lockedArgs):
+                maxDay = int(time.strftime('%d')) + 1
+                minDay = maxDay - int((Query[1])[:-1])
+                if minDay <= 0: minDay = reverseDays(minDay)
+                
+                for fily in capables[:]:
+                    if int(fily[10:-12]) not in range(minDay, maxDay):
+                        capables.remove(fily)
+                    else:
+                        continue
+
+
+            elif Query[1].endswith('H') and ('H' not in lockedArgs):
+                maxHour = int(time.strftime('%H')) + 1
+                minHour = maxHour - int((Query[1])[:-1])
+                if minHour < 0: minHour = reverseHours(minHour)
+
+                for fily in capables[:]:
+                    with open(fily, 'r') as filey:
+                        for statisticItem in json.loads(filey.read()):
+                            if int((statisticItem['time'])[:-3]) in range(minHour, maxHour):
+                                Stats.append(statisticItem)
+
+
+            elif (Query[1])[2:] in lockedArgs:
+                raise DuplicateQueryArgumentsException('Двойное упоминание одинаковых аргументов в строке выборки')
+
+        #Если выборка состоит из одного аргумента и определения оборудования
+        elif query[3:5] not in '1234567890' and query[5:6] not in 'HDMY' and not query.endswith('()'):
+            Query.append(query[:3])
+            if Query[0].endswith('Y'):
+                maxYear = int(time.strftime('%Y'))
+                minYear = maxYear - int((Query[0])[:-1])
+
+                for fily in glob.glob('statistic/*.asqd'):
+                    if int((fily.replace('\\', '/'))[15:-5]) in range(minYear, maxYear):
+                        capables.append(fily.replace('\\', '/'))
+                    else:
+                        continue
+
+
+            elif Query[0].endswith('M'):
+                maxMonth = int(time.strftime('%m'))
+                minMonth = maxMonth - int((Query[0])[:-1])
+                if minMonth <= 0: minMonth = reverseMonths(minMonth)
+
+                for fily in glob.glob('statistic/*.asqd'):
+                    if evalMonths((fily.replace('\\', '/'))[12:-9]) in range(minMonth, maxMonth):
+                        capables.append(fily.replace('\\', '/'))
+                    else:
+                        continue
+
+
+            elif Query[0].endswith('D'):
+                maxDay = int(time.strftime('%d')) + 1
+                minDay = maxDay - int((Query[1])[:-1])
+                if minDay <= 0: minDay = reverseDays(minDay)
+                
+                for fily in glob.glob('statistic/*.asqd'):
+                    if int((fily.replace('\\', '/'))[10:-12]) in range(minDay, maxDay):
+                        capables.append(fily.replace('\\', '/'))
+                    else:
+                        continue
+                    
+
+            elif Query[0].endswith('H'):
+                maxHour = int(time.strftime('%H')) + 1
+                minHour = maxHour - int((Query[1])[:-1])
+                if minHour < 0: minHour = reverseHours(minHour)
+
+                if minHour > int(time.strftime('%H')):
+                    with open(f'statistic/{int(time.strftime("%d")) - 1}{time.strftime("%b%Y")}', 'r') as statisticFile:
+                        for statisticItem in json.loads(statisticFile.read()):
+                            if int((statisticItem['time'])[:-3]) >= minHour:
+                                Stats.append(statisticItem)
+
+                    with open(self.currentCsvFile, 'r') as statisticFile:
+                        for statisticItem in json.loads(statisticFile.read()):
+                            if int((statisticItem['time'])[:-3]) in range(minHour, maxHour):
+                                Stats.append(statisticItem)
+
+                else:
+                     with open(self.currentCsvFile, 'r') as statisticFile:
+                        for statisticItem in json.loads(statisticFile.read()):
+                            if int((statisticItem['time'])[:-3]) in range(minHour, maxHour):
+                                Stats.append(statisticItem)
+
+        #Часть выборки с определением оборудования
+        Query.append((query[4:-1]).split(', '))
+        if Stats:
+            for statisticItem in Stats[:]:
+                newStatisticItem = {'time': statisticItem['time']}
+                for hardwareDefn in Query[1]:
+                    if hardwareDefn not in statisticItem.keys(): continue
+                    else: newStatisticItem.update({hardwareDefn: statisticItem[hardwareDefn]})
+                Stats.remove(statisticItem)
+                Stats.append(newStatisticItem)
+
+
+        elif capables:
+            for filey in capables:
+                newStatisticItem = {}
+                for hardwareDefn in Query[1]:
+                    with open(filey, 'r') as statisticFile:
+                        for item in json.loads(statisticFile.read()):
+                            newStatisticItem.update({'time': item['time']})
+                            if hardwareDefn not in item.keys(): continue
+                            else: newStatisticItem.update({hardwareDefn: item[hardwareDefn]})
+
+                Stats.append(newStatisticItem)
+
+        return Stats

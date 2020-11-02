@@ -60,16 +60,10 @@ class AqServer:
 
 
 if __name__ == '__main__':
-    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите IP-адрес для запуска: ', end = '')
-    IP      = input()
-
-    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите порт сервера для запуска: ', end = '')
-    portstr = input()
-
-    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Нажмите {Fore.CYAN}ENTER{Style.RESET_ALL}'
-          f' для запуска сервера в обычном режиме. Введите "{Fore.CYAN}-h{Style.RESET_ALL}" или "{Fore.CYAN}--nohardware{Style.RESET_ALL}" и нажмите {Fore.CYAN}ENTER'
-          f'{Style.RESET_ALL} для запуска сервера в режиме совместимости без оборудования ', end = '')
-    compart = input()
+    IP = sysArgs[1]
+    portstr = sysArgs[2]
+    try: compart = sysArgs[3]
+    except IndexError: compart = ''
 
     server = AqServer()
     userCore = AqUserSystem()
@@ -208,7 +202,7 @@ if __name__ == '__main__':
 
 
     @server.api.get('/getLatestStats', description = 'Получить статистику за x времени')
-    def getLatestStats(data: dict, request: Request):
+    def getQueriedStats(data: dict, request: Request):
         global server
 
         if server.tok.isOk(data['tok']) and hardware:

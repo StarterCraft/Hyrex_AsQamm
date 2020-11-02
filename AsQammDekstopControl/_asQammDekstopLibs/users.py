@@ -14,9 +14,7 @@ import json, os, requests
 
 
 class AqUsersSystem:
-
     def __init__(self, root):
-
         self.crypto = _asQammDekstopLibs.functions.AqCrypto()
         self.config = AqConfigSystem()
         self.loggedIn = bool(False)
@@ -37,9 +35,7 @@ class AqUsersSystem:
         
 
     def lockApp(self, root, usersCore):
-        
         if not self.loggedIn:
-            
             root.ui.lbl_SkinName.setText('Войдите:')
             root.ui.frame_top.hide()
             root.ui.frame_left_menu.hide()
@@ -135,9 +131,7 @@ class AqUsersSystem:
 
 
     def loadUsers(self, root, server, usersCore):
-
         with open(r'%s' % str(self.sysFileNames[0]), 'r') as dataFile:
-
             fileString = dataFile.readline()
             jsonString = self.crypto.decryptContent(fileString)
             jsonString = json.loads(jsonString)
@@ -199,7 +193,6 @@ class AqUsersSystem:
            
              
     def userInit(self, root, server, usersCore):
-
         self.selector = [AqUser for AqUser in self.users if (AqUser.login == root.ui.lnI_Login.text())]
         self.matches = []
         exiter = bool()
@@ -257,7 +250,6 @@ class AqUsersSystem:
                 
 
     def guestUserInit(self, usersCore, root):
-
         usersCore.users[0].setAsCurrent(True)
         self.userSystemLogger.info(f'У активного пользователя (Гость) установлен параметр активности: {usersCore.users[0].current}, экземпляр назначен активным пользователем')
 
