@@ -1,6 +1,5 @@
-#КОСТЫЛЬ: Использование чистого JSON вместо CSV, т. к. с последним не получилось.
-import _asQammServerLibs.hardware as hwCore, zipfile, glob, json, pandas, time, os
-from _asQammServerLibs.functions import AqLogger
+import zipfile, glob, json, pandas, time, os
+from libs.functions import AqLogger
 
 
 def evalMonths(str):
@@ -46,10 +45,17 @@ class AqStatist:
         assert valueToRegister
         if f'statistic/{time.strftime("%d%b%Y")}.asqd' != self.currentCsvFile:
             self.currentCsvFile = f'statistic/{time.strftime("%d%b%Y")}.asqd'
+            with open(self.currentCsvFile, 'x', encoding = 'utf-8', newline = '') as csvFile:
+                pass
 
-        with open(self.currentCsvFile, 'r+', encoding = 'utf-8', newline = '') as csvFile:
-            try: jsonString = json.loads((pandas.read_csv(csvFile)).to_json(orient = 'records'))
-            except (json.JSONDecodeError, pandas.errors.EmptyDataError): jsonString = []
+        try:
+            with open(self.currentCsvFile, 'r+', encoding = 'utf-8', newline = '') as csvFile:
+                try: jsonString = json.loads((pandas.read_csv(csvFile)).to_json(orient = 'records'))
+                except (json.JSONDecodeError, pandas.errors.EmptyDataError): jsonString = []
+                
+        except FileNotFoundError:
+            with open(self.currentCsvFile, 'x', encoding = 'utf-8', newline = '') as csvFile:
+                jsonString = []
 
         with open(self.currentCsvFile, 'w+', encoding = 'utf-8', newline = '') as csvFile:
             for dictionary in jsonString:
@@ -243,6 +249,7 @@ class AqStatist:
                 maxMonth = int(time.strftime('%m'))
                 minMonth = maxMonth - int((Query[0])[:-1])
                 if minMonth <= 0: minMonth = reverseMonths(minMonth)
+                if minMonth > maxMonth: minMonth, maxMonth = maxMonth, minMonth
 
                 for fily in glob.glob('statistic/*.asqd'):
                     if evalMonths((fily.replace('\\', '/'))[12:-9]) in range(minMonth, maxMonth):
@@ -255,6 +262,7 @@ class AqStatist:
                 maxDay = int(time.strftime('%d')) + 1
                 minDay = maxDay - int((Query[0])[:-1])
                 if minDay <= 0: minDay = reverseDays(minDay)
+                if minDay > maxDay: minDay, maxDay = maxDay, minDay
                 
                 for fily in glob.glob('statistic/*.asqd'):
                     if int((fily.replace('\\', '/'))[10:-12]) in range(minDay, maxDay):
@@ -265,29 +273,33 @@ class AqStatist:
 
             elif Query[0].endswith('H'):
                 maxHour = int(time.strftime('%H')) + 1
-                minHour = maxHour - int((Query[1])[:-1])
+                minHour = maxHour - int((Query[0])[:-1]) - 1
                 if minHour < 0: minHour = reverseHours(minHour)
+                if minHour > maxHour: minHour, maxHour = maxHour. minHour
 
                 if minHour > int(time.strftime('%H')):
                     with open(f'statistic/{int(time.strftime("%d")) - 1}{time.strftime("%b%Y")}', 'r') as statisticFile:
-                        for statisticItem in json.loads(statisticFile.read()):
-                            if int((statisticItem['time'])[:-3]) >= minHour:
-                                Stats.append(statisticItem)
+                        for statisticItem in json.loads((pandas.read_csv(statisticFile)).to_json(orient = 'records')):
+                            if int((statisticItem['time'])[:-3]) in range(minHour, maxHour) and int(statisticItem['time'][3:]) in range(
+                            int(time.strftime('%M'))): Stats.append(statisticItem)
 
                     with open(self.currentCsvFile, 'r') as statisticFile:
-                        for statisticItem in json.loads(statisticFile.read()):
-                            if int((statisticItem['time'])[:-3]) in range(minHour, maxHour):
-                                Stats.append(statisticItem)
+                        for statisticItem in json.loads((pandas.read_csv(statisticFile)).to_json(orient = 'records')):
+                            if int((statisticItem['time'])[:-3]) in range(minHour, maxHour) and int(statisticItem['time'][3:]) in range(
+                            int(time.strftime('%M'))): Stats.append(statisticItem)
 
                 else:
                      with open(self.currentCsvFile, 'r') as statisticFile:
-                        for statisticItem in json.loads(statisticFile.read()):
-                            if int((statisticItem['time'])[:-3]) in range(minHour, maxHour):
-                                Stats.append(statisticItem)
+                        for statisticItem in json.loads((pandas.read_csv(statisticFile)).to_json(orient = 'records')):
+                            if int((statisticItem['time'])[:-3]) in range(minHour, maxHour) and int(statisticItem['time'][3:]) in range(
+                            int(time.strftime('%M'))): Stats.append(statisticItem)
+
+                for statisticItem in Stats[:]:
+                    if (int(statisticItem['time'][:-3]) == minHour
+                        and int(statisticItem['time'][3:]) not in range(int(time.strftime('%M')), 59)): Stats.remove(statisticItem)
 
         #Часть выборки с определением оборудования
         Query.append((query[4:-1]).split(', '))
-
         if Stats:
             for statisticItem in Stats[:]:
                 newStatisticItem = {'time': statisticItem['time']}

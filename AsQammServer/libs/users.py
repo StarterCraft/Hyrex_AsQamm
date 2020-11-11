@@ -1,4 +1,4 @@
-from _asQammServerLibs.functions import AqCrypto, AqConfig, AqLogger
+from libs.functions import AqCrypto, AqConfig, AqLogger
 from random import choice as randomChoice, shuffle as randomShuffle
 import json, os
 

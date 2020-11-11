@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtGui
-from _asQammDekstopLibs.functions import AqLogger
+from libs.functions import AqLogger
 import json
 
 class AqHardwareSystem:

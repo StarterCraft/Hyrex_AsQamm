@@ -5,16 +5,16 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from playsound import *
 
-from _asQammDekstopUI.userCreationDlg import Ui_Dlg_CreateNewUserInUserDb
-from _asQammDekstopUI.userEditDlg import Ui_Dlg_EditUserInUserDb
-from _asQammDekstopUI.userSelfEditDlg import Ui_Dlg_EditCurrentUserInUserDb
-from _asQammDekstopUI.applyChangesDlg import Ui_Dlg_ApplyChanges
+from uibld.userCreationDlg import Ui_Dlg_CreateNewUserInUserDb
+from uibld.userEditDlg import Ui_Dlg_EditUserInUserDb
+from uibld.userSelfEditDlg import Ui_Dlg_EditCurrentUserInUserDb
+from uibld.applyChangesDlg import Ui_Dlg_ApplyChanges
 
-from _asQammDekstopUI import *
-from _asQammDekstopLibs.resources import *
-from _asQammDekstopLibs.logging import *
-from _asQammDekstopLibs.config import *
-from _asQammDekstopLibs.server import *
+from uibld import *
+from libs.resources import *
+from libs.logging import *
+from libs.config import *
+from libs.server import *
 
 
 class AqMainWindow(QMainWindow):
@@ -26,7 +26,7 @@ class AqMainWindow(QMainWindow):
         self.ui.setupUi(self)
         self.mkdirs()
 
-        self.rootLogger = AqLogger('Main')
+        self.rootLogger = AqLogger('Core')
 
         self.popups = []
         self.sounds = {
@@ -81,9 +81,9 @@ class AqMainWindow(QMainWindow):
         sys.exit(app.exec_())
         
 
-from _asQammDekstopLibs.users import *
-from _asQammDekstopLibs.functions import AqUIFunctions, AqLocalFunctions, AqThread
-from _asQammDekstopLibs.hardware import AqHardwareSystem
+from libs.users import *
+from libs.functions import AqUIFunctions, AqLocalFunctions, AqThread
+from libs.hardware import AqHardwareSystem
 
 
 if __name__ == '__main__':

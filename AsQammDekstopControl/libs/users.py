@@ -1,21 +1,16 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-
-import _asQammDekstopLibs.functions
-from _asQammDekstopLibs.config import AqConfigSystem
-from _asQammDekstopLibs.logging import AqLogger
+import libs.functions
+from libs.config import AqConfigSystem
+from libs.logging import AqLogger
 
 from random import choice as randomChoice, shuffle as randomShuffle
 from playsound import *
 
-import json, os, requests
+import PyQt5.QtCore, PyQt5.QtGui, json, os, requests
 
 
 class AqUsersSystem:
     def __init__(self, root):
-        self.crypto = _asQammDekstopLibs.functions.AqCrypto()
+        self.crypto = libs.functions.AqCrypto()
         self.config = AqConfigSystem()
         self.loggedIn = bool(False)
         self.users = []
@@ -39,7 +34,7 @@ class AqUsersSystem:
             root.ui.lbl_SkinName.setText('Войдите:')
             root.ui.frame_top.hide()
             root.ui.frame_left_menu.hide()
-            root.ui.box_Login.setGeometry(QtCore.QRect(360, 130, 280, 130))
+            root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(360, 130, 280, 130))
             root.ui.lbl_LoginStatus.hide()
 
             root.ui.btn_Toggle.setEnabled(False)
@@ -71,7 +66,7 @@ class AqUsersSystem:
 
             root.ui.frame_top.show()
             root.ui.frame_left_menu.show()
-            root.ui.box_Login.setGeometry(QtCore.QRect(310, 120, 280, 130))
+            root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(310, 120, 280, 130))
 
             root.ui.btn_Toggle.setEnabled(True)
             root.ui.btn_page1.setEnabled(True)
@@ -121,7 +116,7 @@ class AqUsersSystem:
             AqConfigSystem.applyConfig(root, usersCore)
 
             if currentUser.configPreset != 'default':
-                _asQammDekstopLibs.functions.AqUIFunctions.loadSpecifiedTheme(root, currentUser.config.theme)
+                libs.functions.AqUIFunctions.loadSpecifiedTheme(root, currentUser.config.theme)
             else:
                 pass
 
@@ -200,18 +195,18 @@ class AqUsersSystem:
 
         r = server.get('getUserRg', json)
         try:
-            self.myThread = _asQammDekstopLibs.functions.AqThread(_asQammDekstopLibs.functions.AqThread.AqPasswordChecker,
+            self.myThread = libs.functions.AqThread(libs.functions.AqThread.AqPasswordChecker,
                                                                     passwordText      = root.ui.lnI_Password.text(),
                                                                     userPassword      = self.selector[0].password,
                                                                     bytesObjectsIter  = r,
                                                                     loadingScreenText = root.ui.lbl_LoadingText)
-            self.myThread.started.connect( lambda: _asQammDekstopLibs.functions.AqUIFunctions.showLoadingAnimation(root) )
+            self.myThread.started.connect( lambda: libs.functions.AqUIFunctions.showLoadingAnimation(root) )
             self.myThread.finished.connect( lambda: self.userCheck(root, usersCore, self.myThread.exitVar) )
             self.myThread.start()
 
         except IndexError:
-            _asQammDekstopLibs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
-            root.ui.box_Login.setGeometry(QtCore.QRect(360, 130, 280, 150))
+            libs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
+            root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(360, 130, 280, 150))
             root.ui.lbl_LoginStatus.show()
             root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
             root.ui.lbl_LoginStatus.setText('Неверный логин или пароль!')
@@ -225,7 +220,7 @@ class AqUsersSystem:
 
     def userCheck(self, root, usersCore, boolean):
         if boolean:
-            _asQammDekstopLibs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_1)
+            libs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_1)
             self.selector[0].setAsCurrent(True)
             self.setCurrentUser(self.selector[0])
             self.selector[0].edited = False
@@ -240,8 +235,8 @@ class AqUsersSystem:
             playsound(root.sounds['login'], False)
             self.userSystemLogger.info(f'Вход в систему произведён пользователем {self.selector[0].login}')
         else:
-            _asQammDekstopLibs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
-            root.ui.box_Login.setGeometry(QtCore.QRect(360, 130, 280, 150))
+            libs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
+            root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(360, 130, 280, 150))
             root.ui.lbl_LoginStatus.show()
             root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
             root.ui.lbl_LoginStatus.setText('Неверный логин или пароль!')
@@ -469,7 +464,7 @@ class AqUsersSystem:
         self.lockApp(root, usersCore)
 
 
-from _asQammDekstopLibs.config import AqConfig
+from libs.config import AqConfig
 
 
 class AqUser(AqUsersSystem):
@@ -481,7 +476,7 @@ class AqUser(AqUsersSystem):
        self.filepath = Filepath
        self.description = Desc
        self.avatarAddress = AvAddr
-       self.avatar = QPixmap((QImage(r'%s' % str(self.avatarAddress))))
+       self.avatar = PyQt5.QtGui.QPixmap((PyQt5.QtGui.QImage(fr'{self.avatarAddress}')))
        self.login = Login
        self.password = Password
        self.permits = Permits
@@ -507,7 +502,7 @@ class AqUser(AqUsersSystem):
         self.description = Desc
         self.avatarAddress = NewAvAddr
         self.permits = Permits
-        self.avatar = QPixmap((QImage(r'%s' % str(self.avatarAddress))))
+        self.avatar = PyQt5.QtGui.QPixmap((PyQt5.QtGui.QImage(fr'{self.avatarAddress}')))
 
         if self.current:
             root.ui.gfv_CurrentUserAvatar.setPixmap(self.avatar)

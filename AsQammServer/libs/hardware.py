@@ -2,8 +2,8 @@ from time import      (sleep       as slp)
 from pyfirmata import (Arduino     as ArduinoUno,
                        ArduinoMega as ArduinoMega,
                        util        as ArduinoUtil,
-                       UNAVAILABLE, INPUT, ANALOG,
-                       OUTPUT, PWM, SERVO,
+                       UNAVAILABLE, ANALOG, SERVO,
+                       PWM, INPUT, OUTPUT,
                        PinAlreadyTakenError)
 
 from math import       (log        as log,
@@ -11,7 +11,8 @@ from math import       (log        as log,
 from json import       (loads      as loadJson,
                         JSONDecodeError)
 
-from _asQammServerLibs.functions import AqLogger
+from libs import frange
+from libs.functions import AqLogger
 from serial.serialutil import SerialException
 
 
@@ -36,6 +37,18 @@ class AqAbstractHardwareUnit:
             return f'{self.motherPort}:{self.driverId}'
 
 
+        def startIterator(self):
+            self.iterator.start()
+
+
+        def setPinMap(self, _map, drv):
+            self.pinMap = {}
+            for definer in self.analogPins: self.pinMap.update({definer: None})
+            self.pinMap.update({'d:13': drv.arduModules[1000](self, 'd:13', isEnabled = True, name = 'D13Led', description = 'D13 LightED')})
+            for pin, module in _map.items():
+                self.pinMap.update({pin: drv.arduModules[module[0]](self, pin, **(module[1]))})
+
+
         def getPinMap(self, mode = None):
             if mode == None:
                 items = []
@@ -54,8 +67,7 @@ class AqAbstractHardwareUnit:
             if mode == object:
                 items = []
                 for pin, module in self.pinMap.items():
-                    if not module:
-                        continue
+                    if not module: continue
                     else:
                         items.append(tuple([pin, module]))
                         continue
@@ -69,7 +81,7 @@ class AqAbstractHardwareModule:
         Digital = type('DigitalSensor', (object,), {})
 
         def __init__(self, atBoard: AqAbstractHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool, isCalib: bool,
-                     name: str, bkmeth, desc: str):
+                     name: str, desc: str, typeDesc: str, bkmeth):
             self.attrl = ['description', 'isEnabled']
             self.motherBoard = atBoard
             self.motherPinAddress = atPin
@@ -78,6 +90,7 @@ class AqAbstractHardwareModule:
             self.isCalibrateable = isCalib
             self.name = name
             self.description = desc
+            self.typeDescription = typeDesc
             self._bkmeth = bkmeth
 
         def __repr__(self):
@@ -94,13 +107,15 @@ class AqAbstractHardwareModule:
         Analog = type('AnalogExecutor', (object,), {})
         Digital = type('DigitalExecutor', (object,), {})
 
-        def __init__(self, atBoard: AqAbstractHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool, description: str):
+        def __init__(self, atBoard: AqAbstractHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool,
+                     name: str, desc: str, typeDesc: str):
             self.attrl = ['description', 'isEnabled']
             self.motherBoard = atBoard
             self.motherPinAddress = atPin
             self.motherPin = self.motherBoard.get_pin(f'{self.motherPinAddress}:i')
-            self.isEnabled = isEnabled
-            self.description = description
+            self.name = name
+            self.description = desc
+            self.typeDescription = typeDesc
 
         def getId(self):
             return f'{self.motherBoard.motherPort}:{self.motherPinAddress}:{self.driverId}'
@@ -115,8 +130,8 @@ class AqArduinoHardwareModes:
     Off = UNAVAILABLE
 
 
-import _asQammServerLibs.drivers as drivers
-from _asQammServerLibs.statistic import AqStatist
+import drivers
+from libs.statistic import AqStatist
 from threading import Thread
 from colorama import Fore as Fore, Style as Style
 
@@ -126,7 +141,7 @@ class AqHardwareSystem:
         self.isOk = bool()
         self.installedArduinoHardware = []
         self.monitors = []
-        self.logger = AqLogger('Server>HardwareSystem')
+        self.logger = AqLogger('Hardware')
         self.statisticAgent = AqStatist()
 
         self.logger.debug('Инициализация оборудования')
@@ -135,28 +150,19 @@ class AqHardwareSystem:
                jsonString = loadJson(configFile.read())
 
                for hardwareObject in jsonString:
-                   self.logger.debug(f'Подключение к устройству на {hardwareObject["comPort"]}...')
+                   self.logger.debug(f'Подключение к устройству на {hardwareObject[1]}...')
                    try:
-                       if   hardwareObject['driverId'] == 1071: #КОСТЫЛЬ: Использование driverId для выявления типа устройства
-                            instance = drivers.AqArduinoUnoR3(hardwareObject['comPort'], hardwareObject['pinMap'],
-                                                              hardwareObject['isEnabled'], hardwareObject['description'])
-                            self.logger.debug(f'Инициализация Arduino Uno R3 на {hardwareObject["comPort"]}...')
-                            self.installedArduinoHardware.append(instance)
-
-                       elif hardwareObject['driverId'] == 1072:
-                            instance = drivers.AqSeeeduinoV4WithBaseShield(hardwareObject['comPort'], hardwareObject['pinMap'],
-                                                                           hardwareObject['isEnabled'], hardwareObject['description'])
-                            self.logger.debug(f'Инициализация Seeeduino V4 на {hardwareObject["comPort"]}...')
-                            self.installedArduinoHardware.append(instance)
-
+                       instance = (drivers.arduBoards[hardwareObject[0]])(hardwareObject[1], drivers, **hardwareObject[2])
+                       self.installedArduinoHardware.append(instance)
                    except SerialException:
-                       self.logger.error(f'''Не удалось инициализировать Arduino-устройство типа {hardwareObject["driverId"]} на портy '''
-                                        f'''{hardwareObject["comPort"]} из-за ошибки 0104: не удалось найти запрашиваемое устройство''')
+                       self.logger.error(f'''Не удалось инициализировать Arduino-устройство типа {hardwareObject[0]} на портy '''
+                                        f'''{hardwareObject[1]} из-за ошибки 0104: не удалось найти запрашиваемое устройство''')
                        continue
                                        
 
             except JSONDecodeError:
-                self.logger.error(f'''Не удалось получить данные JSON из файла "data/system/~!hardware!~.asqd", проверьте файл на синтаксические ошибки''')
+                self.logger.error(f'''Не удалось получить данные JSON из файла "data/system/~!hardware!~.asqd", проверьте файл на'''
+                                  f'''синтаксические ошибки''')
 
         if len(self.installedArduinoHardware) == 0:
             self.logger.critical(f'''Не удалось инициализировать Arduino-устройство, используя информацию из файла "~!hardware!~.asqd". '''
@@ -190,7 +196,6 @@ class AqHardwareSystem:
             for pin, module in unit.getPinMap():
                 if module != None:
                     mq += 1
-                    print(module)
                     if (module[1])['isEnabled']:
                         eq += 1
                     continue
@@ -219,7 +224,6 @@ class AqArduinoUnitMonitor(Thread):
     def run(self):
         for pin, module in (self.assignedBoard.getPinMap(mode = object)):
             try:
-                print(module)
                 if module.driverId in range(1101, 1199):
                     self.assignedBoardModules.append(module)
                 else:
@@ -235,7 +239,7 @@ class AqArduinoUnitMonitor(Thread):
             except AttributeError:
                 continue
 
-        blinker = AqArduinoD13Blinker(self.hardwareSystem, (self.assignedBoard.pinMap)['d:13'])
+        blinker = AqArduinoD13Blinker(self.hardwareSystem, (self.assignedBoard.pinMap)['d:13'], (self.assignedBoard.pinMap)['a:0'])
         blinker.start()
 
         for monitor in self.assignedBoardMonitors:
@@ -261,17 +265,21 @@ class AqArduinoSensorMonitor(Thread):
 
 
 class AqArduinoD13Blinker(Thread):
-    def __init__(self, hardwareSystem: AqHardwareSystem, assignToExecutor: AqAbstractHardwareModule.ArduinoExecutor):
+    def __init__(self, hardwareSystem: AqHardwareSystem, assignToExecutor: AqAbstractHardwareModule.ArduinoExecutor, trigger):
         Thread.__init__(self, target = self.run, args = (), name = f'{assignToExecutor.getId()}:monitor', daemon = True)
         self.assignedExecutor = assignToExecutor
+        self.trigger = trigger
 
 
     def run(self):
         while True:
+            if self.trigger.baked() > 27 and self.trigger.baked() < 28: y = 0.64
+            elif self.trigger.baked() > 28 and self.trigger.baked() < 29: y = 0.32
+            elif self.trigger.baked() > 29: y = 0.16
             if self.assignedExecutor.checkState():
-                slp(0.64)
+                print(self.trigger.baked())
+                slp(y)
                 self.assignedExecutor.setState(False)
             else:
                 self.assignedExecutor.setState(True)
-            slp(0.64)
-            
+            slp(y)

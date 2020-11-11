@@ -1,5 +1,5 @@
-from _asQammDekstopLibs.config import AqConfigSystem
-from _asQammDekstopLibs.logging import AqLogger
+from libs.config import AqConfigSystem
+from libs.logging import AqLogger
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *

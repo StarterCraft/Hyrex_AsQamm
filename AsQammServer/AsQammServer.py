@@ -1,21 +1,20 @@
-import uvicorn, py3rijndael
+import uvicorn, socket
 from typing import Optional
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from random import uniform
 from sys import argv as sysArgs
-import socket
 
-from _asQammServerLibs.functions import *
-from _asQammServerLibs.users import *
-from _asQammServerLibs.hardware import *
+from libs.functions import *
+from libs.users import *
+from libs.hardware import *
 from PyQt5.QtWidgets import QApplication
 
 
 class AqServer:
     def __init__(self):
         self.api = FastAPI()
-        self.serverLogger = AqLogger('Server')
+        self.serverLogger = AqLogger('Core')
         self.crypto = AqCrypto()
         self.tok = AqTokChecker()
         
@@ -240,5 +239,4 @@ if __name__ == '__main__':
     except NameError:
         pass
 
-    print(hardware.statisticAgent.getQueriedStats('01D(COM:a:0:1101)'))
     server.run(IP, int(portstr))
