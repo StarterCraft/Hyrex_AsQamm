@@ -1,5 +1,7 @@
 Root:
     scr_mngr: scr_mngr
+    server: app.server
+    crypto: app.crypto
     
     ScreenManager:
         id: scr_mngr
@@ -43,7 +45,7 @@ Root:
                             pos_hint: {'center_x': 0.5}
                             size_hint: None, None
                             size: signin_like_guest.size
-                            on_press: root.checkDataLogin()
+                            on_press: await root.checkDataLogin()
 
                         MDRaisedButton:
                             id: signin_like_guest

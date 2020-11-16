@@ -91,10 +91,8 @@ if __name__ == '__main__':
     userCore = AqUserSystem()
 
     if IP.replace(" ", "").lower() == "localhost":
-        localIP = socket.gethostbyname(socket.gethostname())
-        server.serverLogger.info(f'Создаётся сервер на localhost ({localIP})')
-
-        IP = localIP
+        IP = socket.gethostbyname(socket.gethostname())
+        server.serverLogger.info(f'Создаётся сервер на localhost ({IP})')
 
     compart = compart.replace(" ", "").lower()
 
@@ -240,5 +238,4 @@ if __name__ == '__main__':
     except NameError:
         pass
 
-    print(hardware.statisticAgent.getQueriedStats('01D(COM:a:0:1101)'))
     server.run(IP, int(portstr))
