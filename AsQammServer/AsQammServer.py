@@ -90,10 +90,8 @@ if __name__ == '__main__':
     userCore = AqUserSystem()
 
     if IP.replace(" ", "").lower() == "localhost":
-        localIP = socket.gethostbyname(socket.gethostname())
-        server.serverLogger.info(f'Создаётся сервер на localhost ({localIP})')
-
-        IP = localIP
+        IP = socket.gethostbyname(socket.gethostname())
+        server.serverLogger.info(f'Создаётся сервер на localhost ({IP})')
 
     compart = compart.replace(" ", "").lower()
 

@@ -1,14 +1,17 @@
-import requests, http, json
-from libs.logging import *
-import libs.functions
+import requests, http, json, socket
+from _asQammDekstopLibs.logging import *
+import _asQammDekstopLibs.functions
 
 
 class AqServerCommutator:
     def __init__(self, root):
         with open('data/config/~!serverdata!~.asqd', 'r') as configFlie:
-            fileString = libs.functions.AqCrypto.decryptContent(libs.functions.AqCrypto, (configFlie.read()))
+            fileString = _asQammDekstopLibs.functions.AqCrypto.decryptContent(_asQammDekstopLibs.functions.AqCrypto, (configFlie.read()))
             jsonString = json.loads(fileString)
             self.ip = jsonString['ip']
+            if self.ip.replace(" ", "").lower() == "localhost":
+                self.ip = socket.gethostbyname(socket.gethostname())
+
             if jsonString['port'] != None:
                 self.port = jsonString['port']
             else:

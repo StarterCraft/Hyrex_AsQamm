@@ -1,0 +1,67 @@
+<RCC>
+  <qresource prefix="white">
+    <file>white/config_ico_-c.png</file>
+    <file>white/more_ico.png</file>
+    <file>white/minus_ico.png</file>
+    <file>white/plus_ico.png</file>
+    <file>white/account-group.png</file>
+    <file>white/apply_ico.png</file>
+    <file>white/config_ico.png</file>
+    <file>white/control_ico.png</file>
+    <file>white/defense_ico.png</file>
+    <file>white/deny_ico.png</file>
+    <file>white/house_ico.png</file>
+    <file>white/interfacemode_ico.png</file>
+    <file>white/menu_ico.png</file>
+    <file>white/open_ico.png</file>
+    <file>white/plants_ico.png</file>
+    <file>white/save_ico.png</file>
+  </qresource>
+  <qresource prefix="black">
+    <file>black/arrowDown_ico.png</file>
+    <file>black/arrowUp_ico.png</file>
+    <file>black/minus_ico.png</file>
+    <file>black/more_ico.png</file>
+    <file>black/plus_ico.png</file>
+    <file>black/question.png</file>
+    <file>black/save_ico_-d_.png</file>
+  </qresource>
+  <qresource prefix="inactive">
+    <file>inactive/apply_ico_-i_.png</file>
+    <file>inactive/config_ico_-i_.png</file>
+    <file>inactive/control_ico_-i_.png</file>
+    <file>inactive/defense_ico_-i_.png</file>
+    <file>inactive/house_ico_-i_.png</file>
+    <file>inactive/interfacemode_ico_-i_.png</file>
+    <file>inactive/menu_ico_-i_.png</file>
+    <file>inactive/open_ico_-i_.png</file>
+    <file>inactive/plants_ico_-i_.png</file>
+    <file>inactive/save_ico_-i_.png</file>
+  </qresource>
+  <qresource prefix="green">
+    <file>green/minus_ico.png</file>
+    <file>green/plus_ico.png</file>
+    <file>green/apply_ico.png</file>
+    <file>green/config_ico.png</file>
+	<file>green/config_ico_-c.png</file>
+    <file>green/control_ico.png</file>
+    <file>green/defense_ico.png</file>
+    <file>green/deny_ico.png</file>
+    <file>green/house_ico.png</file>
+    <file>green/icon.png</file>
+    <file>green/interfacemode_ico.png</file>
+    <file>green/menu_ico.png</file>
+    <file>green/open_ico.png</file>
+    <file>green/plants_ico.png</file>
+    <file>green/save_ico.png</file>
+	<file>green/more_ico.png</file>
+  </qresource>
+  <qresource prefix="&lt;resource root>">
+    <file>loading.gif</file>
+    <file>loading.webp</file>
+    <file>error.ico</file>
+    <file>guest.jpg</file>
+    <file>icon.ico</file>
+    <file>logo-alpha.png</file>
+  </qresource>
+</RCC>

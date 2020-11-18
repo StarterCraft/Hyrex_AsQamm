@@ -1,0 +1,56 @@
+Root:
+    scr_mngr: scr_mngr
+    server: app.server
+    crypto: app.crypto
+    
+    ScreenManager:
+        id: scr_mngr
+        login_screen: login_screen
+
+        Screen:
+            id: login_screen
+            name: 'Войти в систему'
+            username: username
+            password: password
+
+            MDCard:
+                id: login_card
+                size_hint: 0.8, 0.6
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    spacing: '25dp'
+                    padding: '10dp'
+
+                    MDTextField:
+                        id: username
+                        hint_text: "Логин"
+                        helper_text_mode: "on_focus"
+
+                    MDTextField:
+                        id: password
+                        hint_text: "Пароль"
+                        helper_text_mode: "on_focus"
+                        password: True
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        spacing: '25dp'
+                        padding: '15dp'
+
+                        MDRaisedButton:
+                            id: sign
+                            text: "Войти"
+                            pos_hint: {'center_x': 0.5}
+                            size_hint: None, None
+                            size: signin_like_guest.size
+                            on_press: await root.checkDataLogin()
+
+                        MDRaisedButton:
+                            id: signin_like_guest
+                            text: "Войти как гость"
+                            pos_hint: {'center_x': 0.5}
+                            size_hint: None, None
+                            size: '100dp', '30dp'
+                            
