@@ -1255,7 +1255,7 @@ QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
 </string>
             </property>
             <property name="currentIndex">
-             <number>6</number>
+             <number>3</number>
             </property>
             <widget class="QWidget" name="page_1">
              <property name="styleSheet">

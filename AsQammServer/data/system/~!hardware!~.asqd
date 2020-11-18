@@ -8,9 +8,27 @@
 					"description": "Тестовый датчик температуры",
 					"isEnabled": true,
 					"calibrationValue": 167,
+                    "outputAccuracy": 2,
 					"probeFrequency": 60
 					}]
 			}
 		}
-	]
+	],
+
+    [1071, "COM6", {
+        "isEnabled": true,
+        "description": "testing Arduino UNO R3 board",
+        "pinMap": {
+            "a:0": [1102, {
+                "name": "влажность",
+                "description": "Тестовый датчик влажности",
+                "isEnabled": true,
+                "lowCalibrationValue": 850,
+                "topCalibrationValue": 600,
+                "outputAccuracy": 0,
+                "probeFrequency": 60
+                }]
+            }
+        }
+    ]
 ]

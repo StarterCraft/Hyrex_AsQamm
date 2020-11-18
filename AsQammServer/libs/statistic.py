@@ -39,10 +39,14 @@ class AqStatist:
         #КОСТЫЛЬ: Упрощённое хранение статистики без использования архивов
         self.currentCsvFile = f'statistic/{time.strftime("%d%b%Y")}.asqd'
         self.logger = AqLogger('Server>Statist')
+        self.isBusy = bool(False)
 
 
     def registerStatistic(self, sensorIdToRegister: str, valueToRegister):
         assert valueToRegister
+        self.isBusy = True
+        timer = time.perf_counter()
+
         if f'statistic/{time.strftime("%d%b%Y")}.asqd' != self.currentCsvFile:
             self.currentCsvFile = f'statistic/{time.strftime("%d%b%Y")}.asqd'
             with open(self.currentCsvFile, 'x', encoding = 'utf-8', newline = '') as csvFile:
@@ -80,6 +84,11 @@ class AqStatist:
                 jsonString.append({'time': f'{time.strftime("%H:%M")}', sensorIdToRegister: valueToRegister})
 
             csvFile.write((pandas.read_json(json.dumps(jsonString), orient = 'records')).to_csv(index = False))
+
+        self.isBusy = False
+        endtimer = time.perf_counter()
+        self.logger.debug(f'Статистический агент сообщил, что регистрация значения заняла {endtimer / 1000} секунд.')
+        del timer, endtimer
 
 
     def getQueriedStats(self, query: str):

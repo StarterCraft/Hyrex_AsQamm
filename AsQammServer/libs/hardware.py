@@ -24,7 +24,7 @@ class AqAbstractHardwareUnit:
     class ArduinoUnit:
         def __init__(self, comPort, isEnabled: bool, desc: str):
             self.motherPort = comPort
-            self.iterator = ArduinoUtil.Iterator(self)
+            if isEnabled: self.iterator = ArduinoUtil.Iterator(self)
             self.isEnabled = isEnabled
             self.description = desc
 
@@ -85,7 +85,8 @@ class AqAbstractHardwareModule:
             self.attrl = ['description', 'isEnabled']
             self.motherBoard = atBoard
             self.motherPinAddress = atPin
-            self.motherPin = self.motherBoard.get_pin(f'{self.motherPinAddress}:i')
+            try: self.motherPin = self.motherBoard.get_pin(f'{self.motherPinAddress}:i')
+            except AttributeError: pass
             self.isEnabled = isEnabled
             self.isCalibrateable = isCalib
             self.name = name
@@ -112,7 +113,8 @@ class AqAbstractHardwareModule:
             self.attrl = ['description', 'isEnabled']
             self.motherBoard = atBoard
             self.motherPinAddress = atPin
-            self.motherPin = self.motherBoard.get_pin(f'{self.motherPinAddress}:i')
+            try: self.motherPin = self.motherBoard.get_pin(f'{self.motherPinAddress}:i')
+            except AttributeError: pass
             self.name = name
             self.description = desc
             self.typeDescription = typeDesc
@@ -154,6 +156,7 @@ class AqHardwareSystem:
                    try:
                        instance = (drivers.arduBoards[hardwareObject[0]])(hardwareObject[1], drivers, **hardwareObject[2])
                        self.installedArduinoHardware.append(instance)
+                       self.logger.info(f'Устройство типа {hardwareObject[0]} на портy {hardwareObject[1]} подключено.')
                    except SerialException:
                        self.logger.error(f'''Не удалось инициализировать Arduino-устройство типа {hardwareObject[0]} на портy '''
                                         f'''{hardwareObject[1]} из-за ошибки 0104: не удалось найти запрашиваемое устройство''')
@@ -168,7 +171,7 @@ class AqHardwareSystem:
             self.logger.critical(f'''Не удалось инициализировать Arduino-устройство, используя информацию из файла "~!hardware!~.asqd". '''
                                  f'''Пожалуйста, убедитесь, что файл не повреждён и не пуст, что все модули подключены и находятся'''
                                  '''в рабочем состоянии. Для решения данной проблемы попробуйте переустановить AsQammServer, при'''
-                                 '''переустановке внимательно следите за правильностью вводимой информации о модулях''')
+                                 '''переустановке внимательно следите за правильностью вводимой информации об оборудовании.''')
             self.isOk = False
             self.logger.critical(f'Аварийное завершение работы')
         else:
@@ -180,11 +183,9 @@ class AqHardwareSystem:
            if unit.isEnabled:
                instance = AqArduinoUnitMonitor(self, unit)
                self.monitors.append(instance)
-           else:
-               pass
 
         for monitor in self.monitors:
-            self.logger.debug('Запуск мониторинга')
+            self.logger.debug(f'Запуск мониторинга для Arduino-устройства {monitor.assignedBoard.motherPort}')
             monitor.start()
 
     
@@ -239,8 +240,7 @@ class AqArduinoUnitMonitor(Thread):
             except AttributeError:
                 continue
 
-        blinker = AqArduinoD13Blinker(self.hardwareSystem, (self.assignedBoard.pinMap)['d:13'], (self.assignedBoard.pinMap)['a:0'])
-        blinker.start()
+        if self.assignedBoard.motherPort == 'COM5': AqArduinoD13Blinker(self.hardwareSystem, (self.assignedBoard.pinMap)['d:13'], (self.assignedBoard.pinMap)['a:0']).start()
 
         for monitor in self.assignedBoardMonitors:
             monitor.start()
@@ -256,7 +256,12 @@ class AqArduinoSensorMonitor(Thread):
     def run(self):
         while True:
             try:
-                self.statistic.registerStatistic(self.assignedSensor.getId(), self.assignedSensor.baked())
+                if not self.statistic.isBusy: self.statistic.registerStatistic(self.assignedSensor.getId(), self.assignedSensor.baked())
+                elif self.statistic.isBusy:
+                    while self.statistic.isBusy:
+                        slp(0.48)
+                    self.statistic.registerStatistic(self.assignedSensor.getId(), self.assignedSensor.baked())
+                    
             except AssertionError:
                 slp(0.48)
                 continue
@@ -277,7 +282,6 @@ class AqArduinoD13Blinker(Thread):
             elif self.trigger.baked() > 28 and self.trigger.baked() < 29: y = 0.32
             elif self.trigger.baked() > 29: y = 0.16
             if self.assignedExecutor.checkState():
-                print(self.trigger.baked())
                 slp(y)
                 self.assignedExecutor.setState(False)
             else:

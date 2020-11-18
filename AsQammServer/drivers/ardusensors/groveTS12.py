@@ -11,13 +11,16 @@ class GroveTemperatureSensor(AqAbstractHardwareModule.ArduinoSensor):
         self.type = AqAbstractHardwareModule.ArduinoSensor.Analog
         self.bValue = 4275
         self.calibrationValue = int(kwargs['calibrationValue'])
+        self.outputAccuracy = int(kwargs['outputAccuracy'])
         if kwargs['probeFrequency']: self.probeFrequency = float(kwargs['probeFrequency'])
         else: self.probeFrequency = 60.0
 
-        while not self.motherPin.read():
-            self.motherPin.read()
-            slp(0.5)
-        
+        try:
+            while not self.motherPin.read():
+                self.motherPin.read()
+                slp(0.5)
+        except AttributeError: pass
+
                      
     def value(self):
         if self.motherPin.read():
@@ -26,11 +29,11 @@ class GroveTemperatureSensor(AqAbstractHardwareModule.ArduinoSensor):
 
     def temperature(self):
         try:
-            return (1.0 / (log(1023.0 / self.value() - 1.0) / (self.bValue) + 1 / 298.15) - self.calibrationValue)
+            return round((1.0 / (log(1023.0 / self.value() - 1.0) / (self.bValue) + 1 / 298.15) - self.calibrationValue), self.outputAccuracy)
         except TypeError:
             slp(2)
             self.temperature()
 
 
-    def calibrate(calibrationValue: int):
+    def calibrate(self, calibrationValue: int):
         self.calibrationValue = calibrationValue
