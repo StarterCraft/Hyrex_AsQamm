@@ -4,19 +4,19 @@ Root:
     crypto: app.crypto
     
     ScreenManager:
-        id: scr_mngr
-        login_screen: login_screen
-        loading: loading
+        id: scrMngr
+        login_screen: loginScreen
+        loadingAnimation: loadingAnimation
         setupServer: setupServer
 
         Screen:
-            id: login_screen
-            name: 'login_screen'
+            id: loginScreen
+            name: 'loginScreen'
             username: username
             password: password
 
             MDCard:
-                id: login_card
+                id: crd_Login
                 size_hint: 0.8, 0.6
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
@@ -26,14 +26,14 @@ Root:
                     padding: '10dp'
 
                     MDTextField:
-                        id: username
+                        id: lnI_Username
                         hint_text: "Логин"
                         required: True
                         helper_text_mode: "on_error"
                         helper_text: "Введите логин"
 
                     MDTextField:
-                        id: password
+                        id: lnI_Password
                         hint_text: "Пароль"
                         required: True
                         helper_text_mode: "on_error"
@@ -46,7 +46,7 @@ Root:
                         padding: '15dp'
 
                         MDRaisedButton:
-                            id: sign
+                            id: btn_SignIn
                             text: "Войти"
                             pos_hint: {'center_x': 0.5}
                             size_hint: None, None
@@ -54,15 +54,15 @@ Root:
                             on_press: root.checkDataLogin()
 
                         MDRaisedButton:
-                            id: signin_like_guest
+                            id: btn_SignInLikeGuest
                             text: "Войти как гость"
                             pos_hint: {'center_x': 0.5}
                             size_hint: None, None
                             size: '100dp', '30dp'
 
         Screen:
-            id: loading
-            name: 'loading'
+            id: loadingAnimation
+            name: 'loadingAnimation'
             Image:
                 source: 'images/loading.gif'
                 anim_delay: 0.025
@@ -72,7 +72,7 @@ Root:
             name: 'setupServer'
 
             MDCard:
-                id: ip_card
+                id: crd_SetServerIp
                 size_hint: 0.8, 0.6
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 orientation: "vertical"
@@ -89,7 +89,7 @@ Root:
                         text_color: 1, 1, 1, 1
 
                     MDTextField:
-                        id: ip
+                        id: lnI_ServerIp
                         hint_text: "Адрес сервера"
                         required: True
                         helper_text_mode: "on_error"
@@ -101,7 +101,7 @@ Root:
                         size_hint: 1, 0.5
 
                         MDRaisedButton:
-                            id: confirm
+                            id: btn_ConfirmServerIpAddress
                             text: "Подтвердить"
                             pos_hint: {'center_x': 0.5}
                             size_hint: None, None
