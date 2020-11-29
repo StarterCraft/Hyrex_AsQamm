@@ -1,6 +1,7 @@
 import json, base64, os, glob, ffmpeg, hashlib, time, math
 from libs.logging import AqLogger
 from playsound import *
+from threading import Thread
 
 class AqCrypto:
     def __init__(self):
@@ -53,3 +54,7 @@ class AqCrypto:
 
     def getCut(self, _str, bytes):
         return (hashlib.pbkdf2_hmac('sha256', _str.encode('utf-8'), bytes, 256256).hex())
+
+class AqThread(Thread):
+    def __init__(self, target, args=()):
+        Thread.__init__(self, target=target, args=args)

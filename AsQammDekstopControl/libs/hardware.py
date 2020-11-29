@@ -5,6 +5,8 @@ import json
 class AqHardwareSystem:
     def __init__(self, root, server):
         self.hardware = server.get('getHardwareData', json)
+        if self.hardware == {'505':'HARDWARE_NOT_INITIALIZED'}:
+            self.hardware = {}
         self.logger = AqLogger('Hardware')
         self.mainTableModel = QtGui.QStandardItemModel(0, 6)
         

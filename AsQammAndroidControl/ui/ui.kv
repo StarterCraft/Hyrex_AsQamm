@@ -6,10 +6,12 @@ Root:
     ScreenManager:
         id: scr_mngr
         login_screen: login_screen
+        loading: loading
+        setupServer: setupServer
 
         Screen:
             id: login_screen
-            name: 'Войти в систему'
+            name: 'login_screen'
             username: username
             password: password
 
@@ -26,12 +28,16 @@ Root:
                     MDTextField:
                         id: username
                         hint_text: "Логин"
-                        helper_text_mode: "on_focus"
+                        required: True
+                        helper_text_mode: "on_error"
+                        helper_text: "Введите логин"
 
                     MDTextField:
                         id: password
                         hint_text: "Пароль"
-                        helper_text_mode: "on_focus"
+                        required: True
+                        helper_text_mode: "on_error"
+                        helper_text: "Введите пароль"
                         password: True
 
                     MDBoxLayout:
@@ -45,7 +51,7 @@ Root:
                             pos_hint: {'center_x': 0.5}
                             size_hint: None, None
                             size: signin_like_guest.size
-                            on_press: await root.checkDataLogin()
+                            on_press: root.checkDataLogin()
 
                         MDRaisedButton:
                             id: signin_like_guest
@@ -53,4 +59,54 @@ Root:
                             pos_hint: {'center_x': 0.5}
                             size_hint: None, None
                             size: '100dp', '30dp'
+
+        Screen:
+            id: loading
+            name: 'loading'
+            Image:
+                source: 'images/loading.gif'
+                anim_delay: 0.025
+
+        Screen:
+            id: setupServer
+            name: 'setupServer'
+
+            MDCard:
+                id: ip_card
+                size_hint: 0.8, 0.6
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                orientation: "vertical"
+                padding: '10dp'
+
+                MDBoxLayout:
+                    orientation: "vertical"
+                    size_hint: 1, 0.5
+
+                    MDLabel:
+                        text: "Не удалось подключиться к серверу. Попробуйте указать другой адрес сервера."
+                        halign: "center"
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+
+                    MDTextField:
+                        id: ip
+                        hint_text: "Адрес сервера"
+                        required: True
+                        helper_text_mode: "on_error"
+                        helper_text: "Введите адрес"
+
+                        
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        size_hint: 1, 0.5
+
+                        MDRaisedButton:
+                            id: confirm
+                            text: "Подтвердить"
+                            pos_hint: {'center_x': 0.5}
+                            size_hint: None, None
+                            size: '100dp', '30dp'
+                            on_press: None
+            
+
                             

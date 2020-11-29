@@ -59,6 +59,9 @@ class AqServer:
 
 
 if __name__ == '__main__':
+
+    hardware = None
+
     if len(sysArgs) < 2:
         print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите IP-адрес для запуска: ', end = '')
         IP = input()
@@ -234,7 +237,7 @@ if __name__ == '__main__':
 
     try:
         hardware.startMonitoring()
-    except NameError:
+    except (NameError, AttributeError):
         pass
 
     server.run(IP, int(portstr))

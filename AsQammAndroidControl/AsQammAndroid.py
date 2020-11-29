@@ -4,10 +4,13 @@ from kivymd.uix.label import MDLabel
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
+from kivymd.toast import toast
 
 from libs.server import AqServerCommutator
-from libs.functions import AqCrypto
+from libs.functions import AqCrypto, AqThread
 from libs.logging import AqLogger
+
+import requests
 
 import json
 
@@ -15,27 +18,52 @@ class Root(AnchorLayout): # главный класс приложения
     
     scr_mngr = ObjectProperty(None)
 
-    async def checkDataLogin(self):
+    def checkingLogin(self):
         username = self.scr_mngr.login_screen.username.text
         password = self.scr_mngr.login_screen.password.text
 
-        userData = self.server.get('getUserdata', json)
-        rg = self.server.get('getUserRg', json)
 
-        users = [i for i in userData if i['login'] == username]
+        if username.replace(" ", "") == "" and password.replace(" ", "") == "":
+           self.server.commutatorLogger.info("Введите логин и пароль")
+           toast("Введите логин и пароль")
 
-        isSign = False
+        elif username.replace(" ", "") == "":
+            self.server.commutatorLogger.info("Введите логин")
+            toast("Введите логин")
 
-        if len(users):
-            for i in rg:
-                if users[0]['password'] == self.crypto.getCut(password, bytes.fromhex(i)):
-                    self.server.commutatorLogger.info("вы вОшЛЫ! ЫыЫы")
-                    sign = True
-                    break
+        elif password.replace(" ", "") == "":
+            self.server.commutatorLogger.info("Введите пароль")
+            toast("Введите пароль")
 
-        if not isSign:
-            self.server.commutatorLogger.info("логин ИЛИ пароль неверный, ВоЗМоЖНО Вы ТУпЫе")
+        else:
+            self.change_screen("loading")
 
+            try:
+                userData = self.server.get('getUserdata', json)
+                rg = self.server.get('getUserRg', json)
+            except requests.exceptions.ConnectionError:
+                self.server.commutatorLogger.info("Сервер не найден")
+                self.change_screen("setupServer")
+                return
+
+            users = [i for i in userData if i['login'] == username]
+
+            self.isSign = False
+
+            if len(users):
+                for i in rg:
+                    if users[0]['password'] == self.crypto.getCut(password, bytes.fromhex(i)):
+                        self.server.commutatorLogger.info("вы вОшЛЫ! ЫыЫы")
+                        self.isSign = True
+                        break
+
+            if not isSign:
+                self.server.commutatorLogger.info("логин ИЛИ пароль неверный, ВоЗМоЖНО Вы ТУпЫе")
+                self.change_screen("login_screen")
+
+    def checkDataLogin(self):
+        thread = AqThread(target=self.checkingLogin)
+        thread.start()
 
     def change_screen(self, screen, *args):
         self.scr_mngr.current = screen
