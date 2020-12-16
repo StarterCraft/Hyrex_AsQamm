@@ -6,9 +6,73 @@ from random import choice as randomChoice, shuffle as randomShuffle
 from playsound import *
 
 import PyQt5.QtCore, PyQt5.QtGui, json, os, requests
+from   PyQt5.QtWidgets import QMessageBox, QFileDialog
 
 
 class AqUsersSystem:
+    class PasswordChecker(libs.functions.AqThread):
+        def setup(self, **kwargs):
+            self.text = kwargs['passwordText']
+            self.password = kwargs['userPassword']
+            self.r = kwargs['bytesObjectsIter']
+            self.textLabel = kwargs['loadingScreenTextLbl']
+            self.exitVar = bool()
+
+
+        def run(self):
+            self.started.emit()
+
+            self.textLabel.setText('Ожидание ответа сервера...')
+            matches = []
+            for i in self.r:
+                self.textLabel.setText('Вход...')
+                if self.password == libs.functions.AqCrypto.getCut(self.text, bytes.fromhex(i)):
+                    matches.append(True)
+                    self.exitVar = True
+                    self.finished.emit()
+                    self.textLabel.setText('Подготовка интерфейса...')
+                    break
+                else:
+                    matches.append(False)
+                    self.textLabel.setText('Подготовка интерфейса...')
+                    continue
+
+            if [bool for bool in matches if (bool == True)] == []:
+                self.exitVar = False
+                self.finished.emit()
+            else:
+                pass
+
+
+    class LogoutProcessor(libs.functions.AqThread):
+        def setup(self, server, usersCore):
+            self.server = server
+            self.usersCore = usersCore
+
+        def run(self):
+            self.started.emit()
+
+            playsound(self.root.sounds['logOut'], False)
+            self.usersCore.loggedIn = False
+            self.usersCore.userSystemLogger.debug('Система пользователей перешла в состояние: (Вход в систему не произведён)')
+
+            self.usersCore.currentUser.setAsCurrent(False)
+            self.usersCore.userSystemLogger.info(f'У активного пользователя {str(self.usersCore.currentUser.login)} установлен параметр активности: '
+                                       f'{str(self.usersCore.currentUser.current)}')
+            self.usersCore.currentUser = None
+                
+            self.root.ui.liw_UsersDbList.clear()
+            self.usersCore.userSystemLogger.info('Очистка списка пользователей')
+         
+            self.usersCore.availableFileNames.clear()
+            self.usersCore.possibleFileNames.clear()
+            self.usersCore.cleanUserList()
+            self.usersCore.userSystemLogger.info('Выход из системы завершён')
+            self.usersCore.loadUsers(self.root, self.server, self.usersCore)
+
+            self.finished.emit()
+
+
     def __init__(self, root):
         self.crypto = libs.functions.AqCrypto()
         self.config = AqConfigSystem()
@@ -34,7 +98,7 @@ class AqUsersSystem:
             root.ui.lbl_SkinName.setText('Войдите:')
             root.ui.frame_top.hide()
             root.ui.frame_left_menu.hide()
-            root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(360, 130, 280, 130))
+            root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(500, 120, 280, 130))
             root.ui.lbl_LoginStatus.hide()
 
             root.ui.btn_Toggle.setEnabled(False)
@@ -66,7 +130,7 @@ class AqUsersSystem:
 
             root.ui.frame_top.show()
             root.ui.frame_left_menu.show()
-            root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(310, 120, 280, 130))
+            root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(450, 110, 280, 130))
 
             root.ui.btn_Toggle.setEnabled(True)
             root.ui.btn_page1.setEnabled(True)
@@ -141,32 +205,33 @@ class AqUsersSystem:
         r = server.get('getUserdata', json)
         server.commutatorLogger.info('Подключение к серверу установлено')
 
-        if (len(list(r))) == 0:
-            QMessageBox.warning(root, 'Ошибка инициализации системы пользователей', 
-                                      '''Не удалось найти ни одного аккаунта пользователя, за исключением аккаунта гостя. Большая часть функциональности недоступна. Проверьте, что вы создали хотя бы одного пользователя с правами админинстратора.''')
+        if not (len(list(r))):
+            libs.functions.AqUIFunctions.showMessageBox(root, libs.functions.AqUIFunctions.CriticalMessageboxLevel,
+                                                        'Ошибка инициализации системы пользователей', 
+                                                        'Не удалось найти ни одного аккаунта пользователя, за исключением аккаунта гостя.'
+                                                        'Большая часть функциональности недоступна. Проверьте, что вы создали хотя бы одного'
+                                                        'пользователя с правами админинстратора.')
 
-        print(len(r))
         for item in r:
             try:
                 if self.currentUser.login == (item['login']): #Если логин текущего пользователя совпадает с загруженным
-                    print('if 163')
                     usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
                                       (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
                     usersCore.setCurrentUser(usersCore.instance)
                     usersCore.instance.edited = False
-                    self.userSystemLogger.info('Загружен пользователь ' + str(usersCore.instance.login))
+                    self.userSystemLogger.debug('Загружен пользователь ' + str(usersCore.instance.login))
+
                 else:
-                    print('if 170')
                     usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
                                       (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
                     usersCore.instance.edited = False
-                    self.userSystemLogger.info('Загружен пользователь ' + str(usersCore.instance.login))
+                    self.userSystemLogger.debug('Загружен пользователь ' + str(usersCore.instance.login))
+
             except (AttributeError, RuntimeError):
-                print('exc 176')
                 usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
                                   (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
                 usersCore.instance.edited = False
-                self.userSystemLogger.info('Загружен пользователь ' + str(usersCore.instance.login))
+                self.userSystemLogger.debug('Загружен пользователь ' + str(usersCore.instance.login))
 
         del r
 
@@ -195,14 +260,13 @@ class AqUsersSystem:
 
         r = server.get('getUserRg', json)
         try:
-            self.myThread = libs.functions.AqThread(libs.functions.AqThread.AqPasswordChecker,
-                                                                    passwordText      = root.ui.lnI_Password.text(),
-                                                                    userPassword      = self.selector[0].password,
-                                                                    bytesObjectsIter  = r,
-                                                                    loadingScreenText = root.ui.lbl_LoadingText)
-            self.myThread.started.connect( lambda: libs.functions.AqUIFunctions.showLoadingAnimation(root) )
-            self.myThread.finished.connect( lambda: self.userCheck(root, usersCore, self.myThread.exitVar) )
-            self.myThread.start()
+            paThread  =   self.PasswordChecker(root, passwordText         = root.ui.lnI_Password.text(),
+                                                     userPassword         = self.selector[0].password,
+                                                     bytesObjectsIter     = r,
+                                                     loadingScreenTextLbl = root.ui.lbl_LoadingText)
+            paThread.started.connect( lambda: libs.functions.AqUIFunctions.showLoadingAnimation(root) )
+            paThread.finished.connect( lambda: self.userCheck(root, usersCore, paThread.exitVar) )
+            paThread.start()
 
         except IndexError:
             libs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
@@ -348,16 +412,19 @@ class AqUsersSystem:
             if self.msg == QMessageBox.Yes:
                 if (userToDelete.type == (0 or '0') or userToDelete.description == 'Guest'):
                     self.msg = QMessageBox.critical(root, 'Действие невозможно', 'Вы не можете удалить системного пользователя!')
+                elif (userToDelete.current):
+                    self.msg = QMessageBox.critical(root, 'Действие невозможно', 'Вы не можете удалить аккаунт пользователя, '
+                                                                                 'через который выполнен вход!')
 
                 else:
                     userToDelete.toDelete = True
                     self.msg = QMessageBox.information(root, 'Подтверждение операции', f'Для завершения удаления пользователя {userToDelete.login} нажмите "Применить".')
 
             elif self.msg == QMessageBox.No:
-                pass
+                return
 
         except AttributeError:
-            pass
+            return
 
 
     def generateIdForNewUser(self):
@@ -441,27 +508,17 @@ class AqUsersSystem:
             pass
 
 
-    def logOut(self, root, server, usersCore):
+    def logOutBegin(self, root, server, usersCore):
         self.userSystemLogger.info('Инициирован выход из системы.')
-        playsound(root.sounds['logOut'], False)
+        libs.functions.AqUIFunctions.showLoadingAnimation(root)
+        myThread = self.LogoutProcessor(root, server, usersCore)
+        myThread.finished.connect( lambda: self.logOutLock(root, usersCore) )
+        myThread.start()
 
-        self.loggedIn = False
-        self.userSystemLogger.debug('Система пользователей перешла в состояние: (Вход в систему не произведён)')
 
-        self.currentUser.setAsCurrent(False)
-        self.userSystemLogger.info('У активного пользователя ' + str(self.currentUser.login) + ' установлен параметр активности: ' + 
-                                         str(self.currentUser.current))
-        self.currentUser = None
-                
-        root.ui.liw_UsersDbList.clear()
-        self.userSystemLogger.info('Очистка списка пользователей')
-         
-        self.availableFileNames.clear()
-        self.possibleFileNames.clear()
-        self.cleanUserList()
-        self.userSystemLogger.info('Выход из системы завершён')
-        self.loadUsers(root, server, usersCore)
+    def logOutLock(self, root, usersCore):
         self.lockApp(root, usersCore)
+        libs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
 
 
 from libs.config import AqConfig

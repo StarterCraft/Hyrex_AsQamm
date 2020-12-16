@@ -344,8 +344,6 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /data/system/~!guest!~.asqd
-/AsQamm/alphalogo.psd
-/AsQammDekstopConrol/AsQamm/alphalogo.psd
 /AsQammDekstopConrol/data/personal
 /Hyrex AsQamm/AsQammDekstopConrol/AsQamm/alphalogo.psd
 /Hyrex AsQamm/AsQammDekstopConrol/data/personal
@@ -356,3 +354,4 @@ healthchecksdb
 /AsQammServer/statistic
 /AsQammDekstopControl/pyduino_sketch
 /AsQammDekstopControl/images/images.zip
+*.psd

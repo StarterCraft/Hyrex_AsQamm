@@ -8,7 +8,20 @@ import json, base64, os, glob, ffmpeg, hashlib, time, math
 from playsound import *
 
 
-class AqUIFunctions():
+class AqUIFunctions:
+    class InfoMessageboxLevel:       pass
+    class WarningMessageboxLevel:    pass
+    class CriticalMessageboxLevel:   pass
+
+    @staticmethod
+    def showMessageBox(root: QtCore.QObject, level: (InfoMessageboxLevel or
+                                                     WarningMessageboxLevel or
+                                                     CriticalMessageboxLevel), title: str, message: str):
+
+        if   level == InfoMessageboxLevel: QtWidgets.QMessageBox.information(root, title, message)
+        elif level == WarningMessageboxLevel: QtWidgets.QMessageBox.warning(root, title, message)
+        elif level == CriticalMessageboxLevel: QtWidgets.QMessageBox.critical(root, title, message)
+
 
     @staticmethod
     def createLabelsAtMainMenu(root):
@@ -183,14 +196,27 @@ class AqUIFunctions():
         
     @staticmethod
     def showLoadingAnimation(root):
+        if not root.ui.frame_left_menu.isVisible(): 
+            root.ui.lbl_LoadingAnimation.setGeometry(QtCore.QRect(385, 50, 200, 200))
+            root.ui.lbl_LoadingText.setGeometry(QtCore.QRect(360, 260, 250, 25))
+        else:
+            root.ui.lbl_LoadingAnimation.setGeometry(QtCore.QRect(360, 50, 200, 200))
+            root.ui.lbl_LoadingText.setGeometry(QtCore.QRect(335, 260, 250, 25))
+            root.ui.frame_top.hide()
+
         root.ui.stack.setCurrentWidget(root.ui.page_loading)
         root.animation3.start()
 
         
     @staticmethod
-    def hideLoadingAnimation(root, switchTo):
-        root.ui.stack.setCurrentWidget(switchTo)
+    def hideLoadingAnimation(root, switchTo: QWidget):
+        if not root.ui.frame_top.isVisible() and switchTo != root.ui.page_login:
+            root.ui.frame_top.show()
+        else:
+            root.ui.frame_top.hide()
+
         root.animation3.stop()
+        root.ui.stack.setCurrentWidget(switchTo)
 
         
     @staticmethod
@@ -345,122 +371,70 @@ class AqUIFunctions():
 
 class AqThread(QThread):
     started = pyqtSignal()
+    changeLoadingLblText = pyqtSignal()
     finished = pyqtSignal()
-
-    class AqPasswordChecker:
-        pass
-
-    class AqPinTester:
-        pass
-
-    def __init__(self, threadType, **kwargs):
-        QThread.__init__(self)
-        if threadType == self.AqPasswordChecker:
-            self.type = self.AqPasswordChecker
-            self.text = kwargs['passwordText']
-            self.password = kwargs['userPassword']
-            self.r = kwargs['bytesObjectsIter']
-            self.textLabel = kwargs['loadingScreenText']
-            self.exitVar = bool()
-        elif threadType == self.AqPinTester:
-            self.type = self.AqPinTester
-            self.server = kwargs['server']
-            self.exitVar = float()
-
-
-    def run(self):
-        if self.type == self.AqPasswordChecker:
-            self.started.emit()
-            self.textLabel.setText('Ожидание ответа сервера...')
-            matches = []
-            for i in self.r:
-                self.textLabel.setText('Вход...')
-                if self.password == AqCrypto.getCut(AqCrypto, self.text, bytes.fromhex(i)):
-                    matches.append(True)
-                    self.exitVar = True
-                    self.finished.emit()
-                    self.textLabel.setText('Подготовка интерфейса...')
-                    break
-                else:
-                    matches.append(False)
-                    self.textLabel.setText('Подготовка интерфейса...')
-                    continue
-
-            if [bool for bool in matches if (bool == True)] == []:
-                self.exitVar = False
-                self.finished.emit()
-            else:
-                pass
-        elif self.type == self.AqPinTester:
-            self.started.emit()
-            B = 4275
-            R0 = 100000
-            while True:
-                reading = (self.server.get('pin', json))['0']
-                R = 1023.0 / reading - 1.0
-                R = R0*R 
-                temperature = 1.0/(math.log(R/R0)/B+1/298.15)-167
-
-                self.exitVar = temperature
-                print(f't: {temperature} °C')
-                self.finished.emit()
-                time.sleep(5)
-                continue            
+    
+    def __init__(self, root, *args, **kwargs):
+        QThread.__init__(self, parent = root)
+        self.root = root
+        self.loadingLblText = str()
+        self.setup(*args, **kwargs)
 
 
 class AqCrypto:
-    def __init__(self):
-        self.cryptoLogger = AqLogger('Crypto')
-
-    def getFileNamesList(self, exportList):
+    @staticmethod
+    def getFileNamesList(exportList):
         for i in range(10, 99):
-            self.initialFilename = str(r'customuser_' + str(r'{0}').format(i))
-            self.initialFilename = self.initialFilename.encode('utf-8')
-            self.initialFilename = base64.b64encode(self.initialFilename)
-            self.initialFilename = self.initialFilename.decode('utf-8')
-            self.initialFilename = self.initialFilename[0:-2]
-            self.initialFilename = self.initialFilename.encode('utf-8')
+            initialFilename = str(r'customuser_' + str(r'{0}').format(i))
+            initialFilename = initialFilename.encode('utf-8')
+            initialFilename = base64.b64encode(initialFilename)
+            initialFilename = initialFilename.decode('utf-8')
+            initialFilename = initialFilename[0:-2]
+            initialFilename = initialFilename.encode('utf-8')
             
-            exportList.append(self.initialFilename)
+            exportList.append(initialFilename)
 
-        self.cryptoLogger.debug('Созданы возможные имена файлов профилей пользователей')
-
-
-    def seekForFiles(self, root, importList, exportList, flag):
-
+        
+    @staticmethod
+    def seekForFiles(root, importList, exportList, flag):
         for item in importList:
-                self.gotName = glob.glob(str(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8')))))
+                gotName = glob.glob(str(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8')))))
 
                 if flag:
-                    if self.gotName == []:
+                    if gotName == []:
                         continue
                     else:
                         exportList.append(r'{0}'.format(self.gotName[0]))
 
                 else:
-                    if self.gotName != []:
+                    if gotName != []:
                         continue
                     else:
                         exportList.append(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8'))))
 
 
-    def decryptContent(self, s):
+    @staticmethod
+    def decryptContent(s):
         return (base64.b64decode(s.encode('utf-8'))).decode('utf-8')
 
-
-    def encryptContent(self, s):
+    
+    @staticmethod
+    def encryptContent(s):
         return (base64.b64encode(s.encode('utf-8'))).decode('utf-8')
 
-
+    
+    @staticmethod
     def rawContent(s):
         return str(r'{0}'.format(s))
 
-
-    def getHmta(self):
+    
+    @staticmethod
+    def getHmta():
         return os.urandom(32)
 
-
-    def getCut(self, _str, bytes):
+    
+    @staticmethod
+    def getCut(_str, bytes):
         return (hashlib.pbkdf2_hmac('sha256', _str.encode('utf-8'), bytes, 256256).hex())
 
 

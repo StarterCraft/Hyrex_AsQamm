@@ -4,13 +4,15 @@ import libs.functions
 
 
 class AqServerCommutator:
+
+    class InvalidServerAddressError(Exception):
+       pass
+
     def __init__(self):
         with open('data/config/~!serverdata!~.asqd', 'r') as configFlie:
-            fileString = libs.functions.AqCrypto.decryptContent(libs.functions.AqCrypto, (configFlie.read()))
+            fileString = libs.functions.AqCrypto.decryptContent(configFlie.read())
             jsonString = json.loads(fileString)
             self.ip = jsonString['ip']
-            if self.ip.replace(" ", "").lower() == "localhost":
-                self.ip = socket.gethostbyname(socket.gethostname())
 
             if jsonString['port'] != None:
                 self.port = jsonString['port']
@@ -30,12 +32,18 @@ class AqServerCommutator:
                 response = requests.get(f'http://{self.ip}:{self.port}/{methodIdStr}', json = sendingDict)
             except AttributeError:
                 response = requests.get(f'http://{self.ip}/{methodIdStr}', json = sendingDict)
+            except:
+                self.commutatorLogger.error(f'Не удалось подключиться к серверу по адресу {self.ip}')
+                raise self.InvalidServerAddressError
 
         else:
             try:
                 response = requests.get(f'http://{self.ip}:{self.port}/{methodIdStr}', json = {'tok': self.__token__})
             except AttributeError:
                 response = requests.get(f'http://{self.ip}/{methodIdStr}', json = {'tok': self.__token__})
+            except:
+                self.commutatorLogger.error(f'Не удалось подключиться к серверу по адресу {self.ip}')
+                raise self.InvalidServerAddressError
 
         if returnModeCode == int:
             return response
@@ -58,6 +66,9 @@ class AqServerCommutator:
                 response = requests.post(f'http://{self.ip}/{methodIdStr}', data = postData)
             elif inputModeCode == json:
                 response = requests.post(f'http://{self.ip}/{methodIdStr}', json = postData)
+        except:
+            self.commutatorLogger.error(f'Не удалось подключиться к серверу по адресу {self.ip}')
+            raise self.InvalidServerAddressError
 
         if returnModeCode == int:
             return response
@@ -80,5 +91,8 @@ class AqServerCommutator:
                 response = requests.delete(f'http://{self.ip}/{methodIdStr}', data = {'tok': self.__token__, 'data': delData})
             elif inputModeCode == json:
                 response = requests.delete(f'http://{self.ip}/{methodIdStr}', json = {'tok': self.__token__, 'data': delData})
+        except:
+            self.commutatorLogger.error(f'Не удалось подключиться к серверу по адресу {self.ip}')
+            raise self.InvalidServerAddressError
 
-        return response
+        if response: return response
