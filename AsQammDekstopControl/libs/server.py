@@ -10,6 +10,9 @@ class AqServerCommutator:
             jsonString = json.loads(fileString)
             self.ip = jsonString['ip']
 
+            if self.ip.replace(' ', '').lower() == 'localhost':
+                self.ip = socket.gethostbyname(socket.gethostname())
+
             if jsonString['port']:
                 self.port = jsonString['port']
             else: pass

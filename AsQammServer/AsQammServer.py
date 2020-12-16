@@ -79,7 +79,7 @@ if __name__ == '__main__':
     runningMode = None
 
     #Определим, запускаемся ли из оболочки Python или из exe
-    if   sysArgs[0].endswith('.py'):
+    if sysArgs[0].endswith('.py'):
         runningMode = 'PYTHONENV'
     else:
         runningMode = 'EXE'
@@ -124,14 +124,15 @@ if __name__ == '__main__':
     server = AqServer()
     userCore = AqUserSystem()
 
-
     if (('-h' or '--hardware-offline') not in addArgs):
-        print(addArgs)
         hardware = AqHardwareSystem()
         assert hardware.isOk, 'Аварийное завершение работы'
 
     if not hardware:
         server.serverLogger.info('Сервер будет запущен без инициализации обоудования')
+
+    if IP.replace(' ', '').lower() == 'localhost':
+        IP = socket.gethostbyname(socket.gethostname())
 
     if ('-n' or '--ngrok') in addArgs: 
         server.publishViaNgrok = True

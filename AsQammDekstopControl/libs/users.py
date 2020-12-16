@@ -206,7 +206,7 @@ class AqUsersSystem:
         server.commutatorLogger.info('Подключение к серверу установлено')
 
         if not (len(list(r))):
-            libs.functions.AqUIFunctions.showMessageBox(root, libs.functions.AqUIFunctions.CriticalMessageboxLevel,
+            libs.functions.AqUIFunctions.showMessageBox(libs.functions.AqUIFunctions, root, libs.functions.AqUIFunctions.CriticalMessageboxLevel,
                                                         'Ошибка инициализации системы пользователей', 
                                                         'Не удалось найти ни одного аккаунта пользователя, за исключением аккаунта гостя.'
                                                         'Большая часть функциональности недоступна. Проверьте, что вы создали хотя бы одного'
@@ -270,7 +270,7 @@ class AqUsersSystem:
 
         except IndexError:
             libs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
-            root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(360, 130, 280, 150))
+            root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(500, 120, 280, 150))
             root.ui.lbl_LoginStatus.show()
             root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
             root.ui.lbl_LoginStatus.setText('Неверный логин или пароль!')
@@ -300,7 +300,7 @@ class AqUsersSystem:
             self.userSystemLogger.info(f'Вход в систему произведён пользователем {self.selector[0].login}')
         else:
             libs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
-            root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(360, 130, 280, 150))
+            root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(500, 120, 280, 150))
             root.ui.lbl_LoginStatus.show()
             root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
             root.ui.lbl_LoginStatus.setText('Неверный логин или пароль!')
@@ -314,6 +314,7 @@ class AqUsersSystem:
 
         self.loggedIn = True
         self.cleanUserList()
+        self.currentUser = self.users[0]
         self.lockApp(root, usersCore)
 
         self.userSystemLogger.info('Вход в систему произведён в режиме гостя')
