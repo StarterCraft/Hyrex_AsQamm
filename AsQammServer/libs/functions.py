@@ -5,71 +5,60 @@ initColorama()
 
 
 class AqCrypto:
-    def __init__(self):
-        self.cryptoLogger = AqLogger('Crypto')
-
-    def getFileNamesList(self, exportList):
-
+    @staticmethod
+    def getFileNamesList(exportList):
         for i in range(10, 99):
-            self.initialFilename = str(r'customuser_' + str(r'{0}').format(i))
-            self.initialFilename = self.initialFilename.encode('utf-8')
-            self.initialFilename = base64.b64encode(self.initialFilename)
-            self.initialFilename = self.initialFilename.decode('utf-8')
-            self.initialFilename = self.initialFilename[0:-2]
-            self.initialFilename = self.initialFilename.encode('utf-8')
+            initialFilename = str(r'customuser_' + str(r'{0}').format(i))
+            initialFilename = initialFilename.encode('utf-8')
+            initialFilename = base64.b64encode(initialFilename)
+            initialFilename = initialFilename.decode('utf-8')
+            initialFilename = initialFilename[0:-2]
+            initialFilename = initialFilename.encode('utf-8')
             
-            exportList.append(self.initialFilename)
+            exportList.append(initialFilename)
 
-
-    def seekForFiles(self, importList, exportList, flag):
-
+        
+    @staticmethod
+    def seekForFiles(root, importList, exportList, flag):
         for item in importList:
-                self.gotName = glob.glob(str(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8')))))
+                gotName = glob.glob(str(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8')))))
 
                 if flag:
-                    if self.gotName == []:
+                    if gotName == []:
                         continue
                     else:
                         exportList.append(r'{0}'.format(self.gotName[0]))
 
                 else:
-                    if self.gotName != []:
+                    if gotName != []:
                         continue
                     else:
                         exportList.append(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8'))))
 
 
-    def decryptContent(self, s):
-        if s.endswith('='):
-            se = s + '='
-        elif not s.endswith('=='):
-            se = s + '=='
-        else:
-            return (base64.b64decode(s.encode('utf-8'))).decode('utf-8')
-        
-        return (base64.b64decode(se.encode('utf-8'))).decode('utf-8')
+    @staticmethod
+    def decryptContent(s):
+        return (base64.b64decode(s.encode('utf-8'))).decode('utf-8')
 
-
-    def encryptContent(self, s):
+    
+    @staticmethod
+    def encryptContent(s):
         return (base64.b64encode(s.encode('utf-8'))).decode('utf-8')
 
+    
+    @staticmethod
+    def rawContent(s):
+        return str(r'{0}'.format(s))
 
-    def getHmta(self):
+    
+    @staticmethod
+    def getHmta():
         return os.urandom(32)
 
-
-    def getCut(self, _str, bytes):
+    
+    @staticmethod
+    def getCut(_str, bytes):
         return (hashlib.pbkdf2_hmac('sha256', _str.encode('utf-8'), bytes, 256256).hex())
-
-
-    def createInstanceToken(self):
-        __sig__ = secrets.token_urlsafe(128)
-        with open('data/ffd32.bin', 'rb+') as dataFile:
-            fileByteString = dataFile.readline()
-            fileString = fileByteString.decode('ascii')
-            jsonObject = json.loads(fileString)
-            jsonObject.append(str(__sig__))
-        return __sig__
 
 
 class AqTokChecker:
