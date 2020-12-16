@@ -19,7 +19,7 @@ class AqCrypto:
 
         
     @staticmethod
-    def seekForFiles(root, importList, exportList, flag):
+    def seekForFiles(importList, exportList, flag):
         for item in importList:
                 gotName = glob.glob(str(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8')))))
 
@@ -27,7 +27,7 @@ class AqCrypto:
                     if gotName == []:
                         continue
                     else:
-                        exportList.append(r'{0}'.format(self.gotName[0]))
+                        exportList.append(r'{0}'.format(gotName[0]))
 
                 else:
                     if gotName != []:
@@ -68,7 +68,7 @@ class AqTokChecker:
 
 
     def isOk(self, tok: str):
-        if bytes(AqCrypto.encryptContent(AqCrypto, tok), 'utf-8') in self.tok:
+        if bytes(AqCrypto.encryptContent(tok), 'utf-8') in self.tok:
             return True
         else:
             return False

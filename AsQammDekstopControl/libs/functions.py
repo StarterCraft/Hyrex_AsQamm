@@ -13,14 +13,13 @@ class AqUIFunctions:
     class WarningMessageboxLevel:    pass
     class CriticalMessageboxLevel:   pass
 
-    @staticmethod
-    def showMessageBox(root: QtCore.QObject, level: (InfoMessageboxLevel or
+    def showMessageBox(self, root: QtCore.QObject, level: (InfoMessageboxLevel or
                                                      WarningMessageboxLevel or
                                                      CriticalMessageboxLevel), title: str, message: str):
 
-        if   level == InfoMessageboxLevel: QtWidgets.QMessageBox.information(root, title, message)
-        elif level == WarningMessageboxLevel: QtWidgets.QMessageBox.warning(root, title, message)
-        elif level == CriticalMessageboxLevel: QtWidgets.QMessageBox.critical(root, title, message)
+        if   level == self.InfoMessageboxLevel: QtWidgets.QMessageBox.information(root, title, message)
+        elif level == self.WarningMessageboxLevel: QtWidgets.QMessageBox.warning(root, title, message)
+        elif level == self.CriticalMessageboxLevel: QtWidgets.QMessageBox.critical(root, title, message)
 
 
     @staticmethod
