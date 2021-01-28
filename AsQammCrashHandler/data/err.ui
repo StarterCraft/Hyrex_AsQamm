@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>230</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Обработчик ошибок AsQamm</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="req.qrc">
+    <normaloff>:/error.ico</normaloff>:/error.ico</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QDialog { background-color: rgb(45, 45, 45); color: white; }
+
+QGroupBox { font: 10pt &quot;Segoe UI Semibold&quot;; color: white; }
+
+QCheckBox, QLabel { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
+QCheckBox:disabled { color: gray; }
+
+/*  QScrollBar::vertical */
+
+ QScrollBar:vertical
+ {
+     background-color: #2A2929;
+     width: 15px;
+     margin: 15px 3px 15px 3px;
+     border: 1px transparent #2A2929;
+ }
+
+
+ QScrollBar::handle:vertical
+ {
+     background-color: rgb(45, 45, 45);         /* #605F5F; */
+     min-height: 5px;
+	 border: 2px solid white;
+	 border-radius: 4px;
+ }
+
+
+ QScrollBar::sub-line:vertical
+ {
+     margin: 3px 0px 3px 0px;
+     border-image: url(:/qss_icons/rc/up_arrow_disabled.png);
+     height: 10px;
+     width: 10px;
+     subcontrol-position: top;
+     subcontrol-origin: margin;
+ }
+
+
+ QScrollBar::add-line:vertical
+ {
+     margin: 3px 0px 3px 0px;
+     border-image: url(:/qss_icons/rc/down_arrow_disabled.png);
+     height: 10px;
+     width: 10px;
+     subcontrol-position: bottom;
+     subcontrol-origin: margin;
+ }
+
+
+ QScrollBar::sub-line:vertical:hover,QScrollBar::sub-line:vertical:on
+ {
+
+     border-image: url(:/qss_icons/rc/up_arrow.png);
+     height: 10px;
+     width: 10px;
+     subcontrol-position: top;
+     subcontrol-origin: margin;
+ }
+
+
+ QScrollBar::add-line:vertical:hover, QScrollBar::add-line:vertical:on
+ {
+     border-image: url(:/qss_icons/rc/down_arrow.png);
+     height: 10px;
+     width: 10px;
+     subcontrol-position: bottom;
+     subcontrol-origin: margin;
+ }
+
+
+ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical
+ {
+     background: none;
+ }
+
+
+ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
+ {
+     background: none;
+ }
+
+/*  QScrollBar::horizontal */
+QScrollBar:horizontal
+ {
+     height: 15px;
+     margin: 3px 15px 3px 15px;
+     border: 1px transparent #2A2929;
+     background-color: #2A2929;    
+ }
+
+ QScrollBar::handle:horizontal
+ {
+     background-color: rgb(45, 45, 45);      
+     min-width: 5px;
+     border: 2px solid white;
+     border-radius: 4px;
+ }
+
+ QScrollBar::add-line:horizontal
+ {
+     margin: 0px 3px 0px 3px;
+     border-image: url(./images/right_arrow_disabled.png);       
+     width: 10px;
+     height: 10px;
+     subcontrol-position: right;
+     subcontrol-origin: margin;
+ }
+
+ QScrollBar::sub-line:horizontal
+ {
+     margin: 0px 3px 0px 3px;
+     border-image: url(./images/left_arrow_disabled.png);        
+     height: 10px;
+     width: 10px;
+     subcontrol-position: left;
+     subcontrol-origin: margin;
+ }
+
+ QScrollBar::add-line:horizontal:hover,QScrollBar::add-line:horizontal:on
+ {
+     border-image: url(./images/right_arrow.png);               
+     height: 10px;
+     width: 10px;
+     subcontrol-position: right;
+     subcontrol-origin: margin;
+ }
+
+ QScrollBar::sub-line:horizontal:hover, QScrollBar::sub-line:horizontal:on
+ {
+     border-image: url(./images/left_arrow.png);               
+     height: 10px;
+     width: 10px;
+     subcontrol-position: left;
+     subcontrol-origin: margin;
+ }
+
+ QScrollBar::up-arrow:horizontal, QScrollBar::down-arrow:horizontal
+ {
+     background: none;
+ }
+
+ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
+ {
+     background: none;
+ }
+
+
+QComboBox {
+	color: black;
+    border: 1px solid gray;
+    border-radius: 3px;
+    padding: 1px 18px 1px 3px;
+    min-width: 6em;
+	font: 8pt &quot;Segoe UI Semilight&quot;;
+}
+
+
+QComboBox:hover {
+	border: 1px solid rgb(254, 254, 254);
+	background-color: rgb(236, 236, 236);
+}
+
+
+QPushButton { 
+	color: black;
+    background-color: rgb(215, 215, 215);
+	border: 1px solid gray;
+	border-radius: 3px;  
+	min-width: 6em;
+	font: 8pt &quot;Segoe UI Semibold&quot;;
+}
+
+
+QPushButton:hover { 
+	background-color: rgb(235, 235, 235);
+}
+
+
+QPushButton:pressed { 
+	background-color: rgb(221, 221, 221);
+}
+
+QComboBox:disabled { color: gray; background-color: rgb(35, 35, 35); }
+
+
+QComboBox::down-arrow {
+    image: url(:/images/arrowDown_ico.png);
+}
+
+
+QComboBox::up-arrow { image: url(:/images/arrowUp_ico.png); }
+
+
+QComboBox:editable {
+    background: white;
+}
+
+
+QComboBox:!editable, QComboBox::drop-down:editable {
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+}
+
+
+/* QComboBox gets the &quot;on&quot; state when the popup is open */
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,
+                                stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);
+}
+
+
+QComboBox:on { /* shift the text when the popup opens */
+    padding-top: 3px;
+    padding-left: 4px;
+}
+
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+
+    border-left-width: 1px;
+    border-left-color: darkgray;
+    border-left-style: solid; /* just a single line */
+    border-top-right-radius: 3px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 3px;
+}
+
+
+QLineEdit { 
+	border-radius: 3px;
+	border: 1px solid white;
+	font: 8pt &quot;Segoe UI Semilight&quot;;
+ }
+
+QLineEdit:hover { 
+	border-color: rgb(42, 105, 23);
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QFrame" name="frame">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QLabel" name="lbl_ErrorSign">
+      <property name="geometry">
+       <rect>
+        <x>6</x>
+        <y>18</y>
+        <width>80</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="req.qrc">:/error.ico</pixmap>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lbl_ErrorTitle">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>12</y>
+        <width>281</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI Semibold</family>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font:  11pt &quot;Segoe UI Semibold&quot;</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="scaledContents">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lbl_ErrorDesc">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>40</y>
+        <width>281</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lnI_lineEdit">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>150</y>
+        <width>281</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="placeholderText">
+       <string>{адрес} или {адрес}:{порт}</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lbl_lineEditTitle">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>150</y>
+        <width>91</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="btn_OpenCrashReport">
+       <property name="minimumSize">
+        <size>
+         <width>80</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Просмотреть очёт об ошибке</string>
+       </property>
+       <property name="text">
+        <string>Просмотр</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_Accept">
+       <property name="minimumSize">
+        <size>
+         <width>80</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Отправить отчёт об ошибке в Hyrex и закрыть</string>
+       </property>
+       <property name="text">
+        <string>Отправить</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_Close">
+       <property name="minimumSize">
+        <size>
+         <width>80</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Не отправлять отчёт об ошибке в Hyrex и закрыть</string>
+       </property>
+       <property name="text">
+        <string>Закрыть</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_OpenSessionLog">
+       <property name="minimumSize">
+        <size>
+         <width>80</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Просмотреть журнал сессии</string>
+       </property>
+       <property name="text">
+        <string>Журнал</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="req.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>btn_Close</sender>
+   <signal>clicked()</signal>
+   <receiver>Dialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>260</x>
+     <y>240</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>25</x>
+     <y>236</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_Accept</sender>
+   <signal>clicked()</signal>
+   <receiver>Dialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>181</x>
+     <y>249</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>6</x>
+     <y>250</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

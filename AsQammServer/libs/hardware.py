@@ -11,7 +11,6 @@ from math import       (log        as log,
 from json import       (loads      as loadJson,
                         JSONDecodeError)
 
-from libs import frange
 from libs.functions import AqLogger
 from serial.serialutil import SerialException
 

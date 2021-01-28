@@ -35,6 +35,7 @@ class AqStatist:
     class DuplicateQueryArgumentsException(Exception):
         pass
 
+
     def __init__(self):
         #КОСТЫЛЬ: Упрощённое хранение статистики без использования архивов
         self.currentCsvFile = f'statistic/{time.strftime("%d%b%Y")}.asqd'

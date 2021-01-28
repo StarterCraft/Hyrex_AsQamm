@@ -355,3 +355,8 @@ healthchecksdb
 /AsQammDekstopControl/pyduino_sketch
 /AsQammDekstopControl/images/images.zip
 *.psd
+/AsQammCrashHandler/build/AsQammCrashHandler/base_library.zip
+*.pkg
+*.toc
+/AsQammCrashHandler/build/AsQammCrashHandler/PYZ-00.pyz
+/AsQammCrashHandler/build/AsQammCrashHandler/xref-AsQammCrashHandler.html

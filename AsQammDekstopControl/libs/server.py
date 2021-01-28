@@ -1,6 +1,7 @@
-import requests, http, json, socket
-from libs.logging import *
-import libs.functions
+from libs.logging      import *
+from libs.exceptions   import ServerConnectionError
+
+import libs.functions, requests, http, json, socket
 
 
 class AqServerCommutator:
@@ -33,12 +34,30 @@ class AqServerCommutator:
                 response = requests.get(f'http://{self.ip}:{self.port}/{methodIdStr}', json = sendingDict)
             except AttributeError:
                 response = requests.get(f'http://{self.ip}/{methodIdStr}', json = sendingDict)
+            except:
+                try:
+                    self.commutatorLogger.error(f'Не удалось подключиться к серверу по адресу {self.ip}:{self.port}')
+                    raise ServerConnectionError(f'Не удалось подключиться к серверу по адресу {self.ip}:{self.port}', 
+                                                data = (f'{self.ip}:{self.port}',))
+                except NameError:
+                    self.commutatorLogger.error(f'Не удалось подключиться к серверу по адресу {self.ip}')
+                    raise ServerConnectionError(f'Не удалось подключиться к серверу по адресу {self.ip}',
+                                                addr = (f'{self.ip}',))
 
         else:
             try:
                 response = requests.get(f'http://{self.ip}:{self.port}/{methodIdStr}', json = {'tok': self.__token__})
             except AttributeError:
                 response = requests.get(f'http://{self.ip}/{methodIdStr}', json = {'tok': self.__token__})
+            except:
+                try:
+                    self.commutatorLogger.error(f'Не удалось подключиться к серверу по адресу {self.ip}:{self.port}')
+                    raise ServerConnectionError(f'Не удалось подключиться к серверу по адресу {self.ip}:{self.port}', 
+                                                data = (f'{self.ip}:{self.port}',))
+                except NameError:
+                    self.commutatorLogger.error(f'Не удалось подключиться к серверу по адресу {self.ip}')
+                    raise ServerConnectionError(f'Не удалось подключиться к серверу по адресу {self.ip}',
+                                                data = (f'{self.ip}',))
 
         if returnModeCode == int:
             return response
@@ -61,6 +80,15 @@ class AqServerCommutator:
                 response = requests.post(f'http://{self.ip}/{methodIdStr}', data = postData)
             elif inputModeCode == json:
                 response = requests.post(f'http://{self.ip}/{methodIdStr}', json = postData)
+        except:
+            try:
+                self.commutatorLogger.error(f'Не удалось подключиться к серверу по адресу {self.ip}:{self.port}')
+                raise ServerConnectionError(f'Не удалось подключиться к серверу по адресу {self.ip}:{self.port}', 
+                                            data = (f'{self.ip}:{self.port}',))
+            except NameError:
+                self.commutatorLogger.error(f'Не удалось подключиться к серверу по адресу {self.ip}')
+                raise ServerConnectionError(f'Не удалось подключиться к серверу по адресу {self.ip}',
+                                            data = (f'{self.ip}',))
 
         if returnModeCode == int:
             return response
@@ -83,5 +111,14 @@ class AqServerCommutator:
                 response = requests.delete(f'http://{self.ip}/{methodIdStr}', data = {'tok': self.__token__, 'data': delData})
             elif inputModeCode == json:
                 response = requests.delete(f'http://{self.ip}/{methodIdStr}', json = {'tok': self.__token__, 'data': delData})
+        except:
+            try:
+                self.commutatorLogger.error(f'Не удалось подключиться к серверу по адресу {self.ip}:{self.port}')
+                raise ServerConnectionError(f'Не удалось подключиться к серверу по адресу {self.ip}:{self.port}', 
+                                            data = (f'{self.ip}:{self.port}',))
+            except NameError:
+                self.commutatorLogger.error(f'Не удалось подключиться к серверу по адресу {self.ip}')
+                raise ServerConnectionError(f'Не удалось подключиться к серверу по адресу {self.ip}',
+                                            data = (f'{self.ip}',))
 
-        return response
+        if response: return response

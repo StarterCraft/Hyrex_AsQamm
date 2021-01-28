@@ -3,39 +3,10 @@ from colorama import Fore as Fore, Style as Style, init as initColorama
 from playsound import *
 initColorama()
 
+sessionLogFilename = f'logs/{(time.strftime("""%d.%m.%Y_%H%M%S""", time.localtime()))}_AsQammLog.log'
+
 
 class AqCrypto:
-    @staticmethod
-    def getFileNamesList(exportList):
-        for i in range(10, 99):
-            initialFilename = str(r'customuser_' + str(r'{0}').format(i))
-            initialFilename = initialFilename.encode('utf-8')
-            initialFilename = base64.b64encode(initialFilename)
-            initialFilename = initialFilename.decode('utf-8')
-            initialFilename = initialFilename[0:-2]
-            initialFilename = initialFilename.encode('utf-8')
-            
-            exportList.append(initialFilename)
-
-        
-    @staticmethod
-    def seekForFiles(importList, exportList, flag):
-        for item in importList:
-                gotName = glob.glob(str(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8')))))
-
-                if flag:
-                    if gotName == []:
-                        continue
-                    else:
-                        exportList.append(r'{0}'.format(gotName[0]))
-
-                else:
-                    if gotName != []:
-                        continue
-                    else:
-                        exportList.append(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8'))))
-
-
     @staticmethod
     def decryptContent(s):
         return (base64.b64decode(s.encode('utf-8'))).decode('utf-8')
@@ -140,7 +111,7 @@ class AqLogger:
         
         self.Logger.setLevel(logging.DEBUG)
 
-        formatter = logging.Formatter("""{%(asctime)s} [%(name)s:%(levelname)s] [%(filename)s <%(lineno)s>: %(module)s.%(funcName)s] %(message)s""")
+        formatter = logging.Formatter("""{%(asctime)s} [%(name)s:%(levelname)s] [%(filename)s <%(lineno)s>: %(module)s.%(funcName)s]:  %(message)s""")
         handler = logging.FileHandler((r'{0}'.format(self.filenames[0])), 'a+', 'utf-8')
         handler.setFormatter(formatter)
 
@@ -148,7 +119,7 @@ class AqLogger:
 
 
     def getFilename(self):
-        self.filenames.append(str( 'log/' + (time.strftime("""%d.%m.%Y_%H%M%S""", (time.localtime())))  + '_AsQammLog.log'))
+        self.filenames.append(str( 'logs/' + (time.strftime("""%d.%m.%Y_%H%M%S""", (time.localtime())))  + '_AsQammLog.log'))
 
 
     def debug(self, message: str):

@@ -1,6 +1,6 @@
 from libs.functions import AqCrypto, AqConfig, AqLogger
 from random import choice as randomChoice, shuffle as randomShuffle
-import json, os
+import os, json, base64, glob
 
 class AqUserSystem():
     def __init__(self):
@@ -12,6 +12,38 @@ class AqUserSystem():
         self.loadUserData() #Сразу после инициализации системы пользователей загружаем их
 
 
+    @staticmethod
+    def getFilenames(exportList):
+        for i in range(10, 99):
+            initialFilename = str(r'customuser_' + str(r'{0}').format(i))
+            initialFilename = initialFilename.encode('utf-8')
+            initialFilename = base64.b64encode(initialFilename)
+            initialFilename = initialFilename.decode('utf-8')
+            initialFilename = initialFilename[0:-2]
+            initialFilename = initialFilename.encode('utf-8')
+            
+            exportList.append(initialFilename)
+
+        
+    @staticmethod
+    def seekForFiles(importList, exportList, flag):
+        for item in importList:
+                gotName = glob.glob(str(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8')))))
+
+                if flag:
+                    if gotName == []:
+                        continue
+                    else:
+                        exportList.append(r'{0}'.format(gotName[0]))
+
+                else:
+                    if gotName != []:
+                        continue
+                    else:
+                        exportList.append(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8'))))
+
+
+
     def loadUserData(self):
         #Позволяет загрузить пользователей из ASQD-файлов (в виде dict-объекта)
 
@@ -19,8 +51,8 @@ class AqUserSystem():
         self.possibleFileNames.clear()
         self.availableFileNames.clear()
 
-        self.crypto.getFileNamesList(self.possibleFileNames) #Выполним маппинг файлов в папке с файлами пользователей
-        self.crypto.seekForFiles(self.possibleFileNames, self.availableFileNames, True)
+        self.getFilenames(self.possibleFileNames) #Выполним маппинг файлов в папке с файлами пользователей
+        self.seekForFiles(self.possibleFileNames, self.availableFileNames, True)
 
         for item in self.availableFileNames: #Для каждого из фалов выполним открытие и выгрузим данные
             with open(r'%s' % item, 'r') as dataFile:
@@ -112,5 +144,5 @@ class AqUserSystem():
 
     def getFilenameForNewUser(self):
         self.emptyFileNames = []
-        self.crypto.seekForFiles(self.possibleFileNames, self.emptyFileNames, False)
+        self.seekForFiles(self.possibleFileNames, self.emptyFileNames, False)
         return str(randomChoice(self.emptyFileNames))

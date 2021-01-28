@@ -1,11 +1,13 @@
-from libs.config import AqConfigSystem
-from libs.logging import AqLogger
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-import json, base64, os, glob, ffmpeg, hashlib, time, math
-from playsound import *
+from libs.config                       import AqConfigSystem
+from libs.logging                      import AqLogger
+from PyQt5                             import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore                      import *
+from PyQt5.QtGui                       import *
+from PyQt5.QtWidgets                   import *
+from playsound                         import *
+
+import json, base64, os, glob, ffmpeg
+import subprocess, hashlib, time, math
 
 
 class AqUIFunctions:
@@ -368,6 +370,7 @@ class AqUIFunctions:
                 root.ui.btn_HardwareAdditionalSettings.setIcon(icon15)
 
 
+
 class AqThread(QThread):
     started = pyqtSignal()
     changeLoadingLblText = pyqtSignal()
@@ -381,37 +384,6 @@ class AqThread(QThread):
 
 
 class AqCrypto:
-    @staticmethod
-    def getFileNamesList(exportList):
-        for i in range(10, 99):
-            initialFilename = str(r'customuser_' + str(r'{0}').format(i))
-            initialFilename = initialFilename.encode('utf-8')
-            initialFilename = base64.b64encode(initialFilename)
-            initialFilename = initialFilename.decode('utf-8')
-            initialFilename = initialFilename[0:-2]
-            initialFilename = initialFilename.encode('utf-8')
-            
-            exportList.append(initialFilename)
-
-        
-    @staticmethod
-    def seekForFiles(root, importList, exportList, flag):
-        for item in importList:
-                gotName = glob.glob(str(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8')))))
-
-                if flag:
-                    if gotName == []:
-                        continue
-                    else:
-                        exportList.append(r'{0}'.format(self.gotName[0]))
-
-                else:
-                    if gotName != []:
-                        continue
-                    else:
-                        exportList.append(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8'))))
-
-
     @staticmethod
     def decryptContent(s):
         return (base64.b64decode(s.encode('utf-8'))).decode('utf-8')
@@ -513,3 +485,13 @@ class AqLocalFunctions:
 
         root.rootLogger.info(f'Сохранение {self.checker} пользователей с изменениями успешно завершено')
         QMessageBox.information(root, 'Сохранение завершено', f'Сохранено {self.checker} пользователей!')
+
+
+class AqCrashHandler:
+    def __init__(self):
+        self.pathToExecutable = 'crashHandler.exe'
+
+
+    def handle(self, exception: Exception, sessionLogFileAddr: str):
+        failureType = str()
+        return subprocess.Popen(f'{self.pathToExecutable} {failureType} {sessionLogFileAddr}')

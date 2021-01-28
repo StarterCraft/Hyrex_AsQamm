@@ -1,12 +1,13 @@
-import libs.functions
-from libs.config import AqConfigSystem
-from libs.logging import AqLogger
+from libs              import AqProtectedAttribute
+from libs.config       import AqConfigSystem
+from libs.logging      import AqLogger
+from PyQt5.QtWidgets   import QMessageBox, QFileDialog
 
-from random import choice as randomChoice, shuffle as randomShuffle
-from playsound import *
 
-import PyQt5.QtCore, PyQt5.QtGui, json, os, requests
-from   PyQt5.QtWidgets import QMessageBox, QFileDialog
+from random            import choice as randomChoice, shuffle as randomShuffle
+from playsound         import *
+
+import PyQt5.QtCore, PyQt5.QtGui, json, os, requests, libs.functions
 
 
 class AqUsersSystem:
@@ -190,7 +191,7 @@ class AqUsersSystem:
 
 
     def loadUsers(self, root, server, usersCore):
-        with open(r'%s' % str(self.sysFileNames[0]), 'r') as dataFile:
+        with open(rf'{str(self.sysFileNames[0])}', 'r') as dataFile:
             fileString = dataFile.readline()
             jsonString = self.crypto.decryptContent(fileString)
             jsonString = json.loads(jsonString)
@@ -298,6 +299,7 @@ class AqUsersSystem:
                     
             playsound(root.sounds['login'], False)
             self.userSystemLogger.info(f'Вход в систему произведён пользователем {self.selector[0].login}')
+
         else:
             libs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
             root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(500, 120, 280, 150))
@@ -529,38 +531,37 @@ class AqUser(AqUsersSystem):
     
     def __init__(self, usersCore, root, Id, Desc, Type, Filepath, AvAddr, Login, Password, Permits, ConfigDict):
        
-       self.id = Id
-       self.type = Type
-       self.filepath = Filepath
-       self.description = Desc
-       self.avatarAddress = AvAddr
-       self.avatar = PyQt5.QtGui.QPixmap((PyQt5.QtGui.QImage(fr'{self.avatarAddress}')))
-       self.login = Login
-       self.password = Password
-       self.permits = Permits
-       self.configDict = ConfigDict
-       self.configPreset = ConfigDict['preset']
+        self.id = Id
+        self.type = Type
+        self.filepath = Filepath
+        self.description = Desc
+        self.avatarAddress = AvAddr
+        self.avatar = PyQt5.QtGui.QPixmap((PyQt5.QtGui.QImage(fr'{self.avatarAddress}')))
+        self.login = AqProtectedAttribute(Login)
+        self.password = AqProtectedAttribute(Password)
+        self.permits = AqProtectedAttribute(Permits)
+        self.configDict = ConfigDict
+        self.configPreset = ConfigDict['preset']
        
-       if self.configPreset != None:
-           self.config = usersCore.config.loadDefaultConfig(root)
-       else:
-           self.config = AqConfig(ConfigDict)
+        if self.configPreset != None:
+            self.config = usersCore.config.loadDefaultConfig(root)
+        else:
+            self.config = AqConfig(ConfigDict)
 
-       self.current = bool(False)
-       self.edited = bool(True)
-       self.toDelete = bool(False)
+        self.current = bool(False)
+        self.edited = bool(True)
+        self.toDelete = bool(False)
 
-       usersCore.addToUserList(root, self, 0)
+        usersCore.addToUserList(root, self, 0)
 
 
     def setup(self, usersCore, root, Password, Desc, NewAvAddr, Permits):
-
         self.edited = True
-        self.password = Password
         self.description = Desc
         self.avatarAddress = NewAvAddr
-        self.permits = Permits
         self.avatar = PyQt5.QtGui.QPixmap((PyQt5.QtGui.QImage(fr'{self.avatarAddress}')))
+        self.password = AqProtectedAttribute(Password)
+        self.permits = AqProtectedAttribute(Permits)
 
         if self.current:
             root.ui.gfv_CurrentUserAvatar.setPixmap(self.avatar)
@@ -570,11 +571,10 @@ class AqUser(AqUsersSystem):
 
 
     def setAsCurrent(self, bool):
-       self.current = bool
+        self.current = bool
 
 
     def getPermits(self, permitToKnow):
-
         if permitToKnow == 'pxHomeRooms':
             return self.permits['homeRooms']
         elif permitToKnow == 'pxHomeAsAdmin':

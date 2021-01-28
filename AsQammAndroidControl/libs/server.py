@@ -4,7 +4,6 @@ import libs.functions
 
 
 class AqServerCommutator:
-
     class InvalidServerAddressError(Exception):
        pass
 
