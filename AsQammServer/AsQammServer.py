@@ -82,11 +82,10 @@ class AqServer:
 
 if __name__ == '__main__':
     try:
-        print(1 / 0)
         hardware = None
         runningMode = None
 
-        #Определим, запускаемся ли из оболочки Python или из exe
+        # Определим, запускаемся ли из оболочки Python или из exe
         if sysArgs[0].endswith('.py'):
             runningMode = 'PYTHONENV'
         else:
