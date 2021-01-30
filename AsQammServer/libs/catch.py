@@ -31,8 +31,7 @@ class AqCrashHandler:
     localsFormatted = False
     saveTo = 'crashReports/'
 
-    codes = {'ServerConnectionError': 'SCF404',
-             'Other': 'UND000'}
+    codes = {'Other': 'UND000'}
 
     ignoreTypes = True
     ignoreVarnames  = True
