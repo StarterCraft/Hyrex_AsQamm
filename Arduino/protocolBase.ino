@@ -1,7 +1,16 @@
-#include "AsQammProtocol.h"
-
 String received[16];
 bool receive = true;
+
+
+void processCommand(String command) {
+    if (!(command.length() >= 5 && command.length() <= 15 &&
+        command[4] == '(' && (command [9] == ')' || command[14] == ')'))) {
+        
+        Serial.println("ERR;");
+    }
+
+    //Определять функции здесь
+}
 
 
 void setup()
