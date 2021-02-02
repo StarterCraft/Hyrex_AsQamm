@@ -1,6 +1,5 @@
 import os, sys, json, base64, subprocess
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from github import *
 from ui import Ui_Dialog
 from req_rc import *
 
@@ -91,7 +90,10 @@ class AqHandlerWindow(QtWidgets.QDialog):
 
                 with open('data/config/~!serverdata!~.asqd', 'w') as configFile: 
                     jsonString = json.loads(fileString)
-                    jsonString['ip'] = self.ui.lnI_lineEdit.text()
+                    address = self.ui.lnI_lineEdit.text().split(':')
+                    if len(address) == 2: jsonString['ip'], jsonString['port'] = address[0], int(address[1])
+                    else: jsonString['ip'], jsonString['port'] = address[0], None
+
                     configFile.write(self.encryptContent(json.dumps(jsonString)))
 
             sys.exit()

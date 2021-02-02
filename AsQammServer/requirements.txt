@@ -9,3 +9,4 @@ fastapi==0.63.0
 PyQt5==5.15.2
 pyserial==3.5
 secrets==1.0.2
+os=windows
