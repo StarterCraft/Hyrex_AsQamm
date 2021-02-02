@@ -360,3 +360,4 @@ healthchecksdb
 *.toc
 /AsQammCrashHandler/build/AsQammCrashHandler/PYZ-00.pyz
 /AsQammCrashHandler/build/AsQammCrashHandler/xref-AsQammCrashHandler.html
+*.vcxitems
