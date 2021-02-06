@@ -120,7 +120,6 @@ class AqUIFunctions:
                 root.ui.lbl_MenuHint5.hide()
 
             # выполним горизонтальную анимацию
-            
             root.animation1 = QPropertyAnimation(root.ui.frame_left_menu, b"minimumWidth")
             root.animation1.setDuration(200)
             root.animation1.setStartValue(width)
@@ -137,7 +136,6 @@ class AqUIFunctions:
 
             
         elif widgetId == 2: # проверяем второй вариант
-
             height = root.ui.tbw_DefnCamList.height()
             maxExtend == maxLength
             standard = 64

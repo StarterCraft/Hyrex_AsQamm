@@ -277,7 +277,7 @@ if __name__ == '__main__':
 
 
     except Exception as exception:
-        if type(exception) == AssertionError: sys.exit()
+        if type(exception) == AssertionError: exit()
         else:
             from libs.catch import AqCrashHandler
             AqCrashHandler().handle(exception, sessionLogFilename)

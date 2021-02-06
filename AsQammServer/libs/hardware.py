@@ -1,3 +1,12 @@
+'''
+Модуль, в котором представлен основополагающий код для работы
+с `комплексами`, `исполнителями` и `модулями`, классы вышеперечисленных
+объектов, а также код Менеджера оборудования и Центра оборудования.
+===
+Последний раз обновлялся: предварительный патч к обновлению pre-α 115,
+дата изменения: 6 февраля 2021
+'''
+
 from time import      (sleep       as slp)
 from pyfirmata import (Arduino     as ArduinoUno,
                        ArduinoMega as ArduinoMega,
@@ -16,16 +25,27 @@ from serial.serialutil import SerialException
 
 
 class AqAbstractHardwareComplex:
+    '''
+    Класс `комплекса` - высокоуровневого объединения нескольких исполнителей.
+    Пока не разработан.
+    '''
     pass
 
 
 class AqAbstractHardwareUnit:
+    '''
+    Класс, представляющий `исполнителя` — устройства, находящегося в подчинении
+    сервера. Все классы поддерживаемых типов устройств-исполнителей являются
+    подклассами этого класса.
+    '''
     class ArduinoUnit:
         def __init__(self, comPort, isEnabled: bool, desc: str):
             self.motherPort = comPort
             if isEnabled: self.iterator = ArduinoUtil.Iterator(self)
             self.isEnabled = isEnabled
             self.description = desc
+
+            self.add_cmd_handler(0x71, self.parseString)
 
 
         def __repr__(self):
@@ -43,7 +63,8 @@ class AqAbstractHardwareUnit:
         def setPinMap(self, _map, drv):
             self.pinMap = {}
             for definer in self.analogPins: self.pinMap.update({definer: None})
-            self.pinMap.update({'d:13': drv.arduModules[1000](self, 'd:13', isEnabled = True, name = 'D13Led', description = 'D13 LightED')})
+            self.pinMap.update({'d:13': drv.arduModules[1000](self, 'd:13', isEnabled = True,
+                                                              name = 'D13Led', description = 'D13 Built-in LED')})
             for pin, module in _map.items():
                 self.pinMap.update({pin: drv.arduModules[module[0]](self, pin, **(module[1]))})
 
@@ -74,6 +95,46 @@ class AqAbstractHardwareUnit:
             return items
 
 
+        def sendString(self, string: str):
+            '''
+            Отправить ASCII-совместимую строку на Arduino (никаких 
+            символов Юникода!)
+
+            :param 'string': str
+                Строка, которую необходимо отправить
+
+            :returns: None
+            '''
+            self.send_sysex(0x71, ArduinoUtil.str_to_two_byte_iter(string))
+
+
+        def send_sysex(self, sysexCmd, data = []):
+            '''
+            Отправить сообщение SysEx (фикс метода из pyfirmata).
+
+            :param 'sysexCmd': byte
+                Байт с командой SysEx
+
+            :param 'data': bytearray
+                Массив байтов с необходимой информацией в виде
+                семибайтовых групп.
+            '''
+            msg = bytearray([pyfirmata.pyfirmata.START_SYSEX, sysexCmd])
+            msg.extend(data)
+            msg.append(pyfirmata.pyfirmata.END_SYSEX)
+            self.sp.write(msg)
+
+
+        def parseString(self, *args, **kwargs):
+            '''
+            Обработать полученную от Arduino-исполнителя строку.
+            Вызывается автоматически при получении строкового сообщения.
+
+            :returns: None
+            '''
+            received = ArduinoUtil.two_byte_iter_to_str(args)
+
+
 class AqAbstractHardwareModule:
     class ArduinoSensor:
         Analog = type('AnalogSensor', (object,), {})
@@ -93,11 +154,14 @@ class AqAbstractHardwareModule:
             self.typeDescription = typeDesc
             self._bkmeth = bkmeth
 
+
         def __repr__(self):
             return f'{self.driverId} device at {self.motherBoard} ({self.motherPinAddress})'
 
+
         def getId(self):
             return f'{self.motherBoard.motherPort}:{self.motherPinAddress}:{self.driverId}'
+
 
         def baked(self):
             return self._bkmeth()
@@ -117,6 +181,7 @@ class AqAbstractHardwareModule:
             self.name = name
             self.description = desc
             self.typeDescription = typeDesc
+
 
         def getId(self):
             return f'{self.motherBoard.motherPort}:{self.motherPinAddress}:{self.driverId}'
