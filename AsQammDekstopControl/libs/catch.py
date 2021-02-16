@@ -39,7 +39,7 @@ class AqCrashHandler:
 
     ignoredTypes = ['type', 'function', 'method', 'module', 'wrappertype', 'sip.wrappertype',
                     'DockOption', 'enumtype', 'enum.EnumMeta', 'RenderFlag', 'PaintDeviceMetric',
-                    'pyqtBoundSignal', 'PyQt5.QtCore.QtMsgType',
+                    'pyqtBoundSignal', 'PyQt5.QtCore.QtMsgType', 'AqProtectedAttribute',
                     'colorama.ansi.AnsiFore', 'colorama.ansi.AnsiStyle']
 
     ignoredVarnames = ['function', 'method', 'exception', 'qt_resource_data', 'qt_resource_name', 

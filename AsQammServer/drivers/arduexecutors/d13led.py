@@ -6,6 +6,7 @@ class D13LED(AqAbstractHardwareModule.ArduinoExecutor):
     def __init__(self, atBoard: AqAbstractHardwareUnit.ArduinoUnit, atPin: str, **kwargs):
         super().__init__(atBoard, atPin, kwargs['isEnabled'], kwargs['name'], kwargs['description'], '')
         self.type = AqAbstractHardwareModule.ArduinoExecutor.Digital
+        self.motherBoard.sendString('LEDo()') #Включить моргание светодиода
 
 
     def checkState(self):

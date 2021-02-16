@@ -44,6 +44,7 @@ class AqAbstractHardwareUnit:
             if isEnabled: self.iterator = ArduinoUtil.Iterator(self)
             self.isEnabled = isEnabled
             self.description = desc
+            self.result = float()
 
             self.add_cmd_handler(0x71, self.parseString)
 
@@ -331,23 +332,3 @@ class AqArduinoSensorMonitor(Thread):
                 continue
 
             slp(self.assignedSensor.probeFrequency)
-
-
-class AqArduinoD13Blinker(Thread):
-    def __init__(self, hardwareSystem: AqHardwareSystem, assignToExecutor: AqAbstractHardwareModule.ArduinoExecutor, trigger):
-        Thread.__init__(self, target = self.run, args = (), name = f'{assignToExecutor.getId()}:monitor', daemon = True)
-        self.assignedExecutor = assignToExecutor
-        self.trigger = trigger
-
-
-    def run(self):
-        while True:
-            if self.trigger.baked() > 27 and self.trigger.baked() < 28: y = 0.64
-            elif self.trigger.baked() > 28 and self.trigger.baked() < 29: y = 0.32
-            elif self.trigger.baked() > 29: y = 0.16
-            if self.assignedExecutor.checkState():
-                slp(y)
-                self.assignedExecutor.setState(False)
-            else:
-                self.assignedExecutor.setState(True)
-            slp(y)
