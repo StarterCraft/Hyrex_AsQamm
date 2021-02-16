@@ -17,14 +17,24 @@
 auto led = JLed(13).Off().Forever();
 
 
-void LEDo(int mode) {
+void LEDo(unsigned int effect, unsigned int duration = 360) {
   //Команда LEDo(mode) осуществляет управление
-  //светодиодом на D13:
-  //  param 'mode': int
-  //    0 для выключения мигания, 1 для включения мигания
-  
-  if (mode == 0) led.Off().Forever();
-  if (mode == 1) led.Blink(350, 350).Forever();
+  //светодиодом индикации на D13:
+  //  param 'effect': int
+  //    Выбор эффекта. Допустимы варианты:
+  //    0 — отключить индикацию;
+  //    1 — включить, эффект мигания;
+  //    2 — включить, эффект "Дыхание";
+  //    3 — включить, эффект "Свеча"
+  //
+  //  param 'duration': int = 360
+  //    Длительность эффекта. Параметр
+  //    игнорируется, если 'effect' = 0.
+
+  if (effect == 0) led.Off().Forever();
+  if (effect == 1) led.Blink(duration, duration).Forever();
+  if (effect == 2) led.Breathe(duration).Forever();
+  if (effect == 3) led.Candle().Forever();
 }
 
 
@@ -65,7 +75,6 @@ void stringCallback(char *received) {
   methodName[4] = '\0';
 
   
-
   //Если есть аргументы:
   if (received[5] != ')') {
     //Проверим, есть ли запятая в команде
@@ -109,9 +118,7 @@ void stringCallback(char *received) {
   }
 
 
-  if (strcmp(methodName, "LEDo") == 0) {    
-    LEDo(atoi(argument1));
-  }
+  if (strcmp(methodName, "LEDo") == 0) LEDo(atoi(argument1), atoi(argument2));
 }
 
 
