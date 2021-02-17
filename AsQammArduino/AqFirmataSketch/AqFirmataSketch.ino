@@ -7,32 +7,43 @@
     Copyright (C) 2021 Arseniï Mirüsenko. All rights reserved.
     ~~~
     Данный скетч Firmata предназначен для работы с Hyrex AsQamm. Он
-    поддерживает возможность использования пользовательских функциий и
+    поддерживает возможность использования пользовательских функций и
     приёма строковых команд.
 */
 
+/*==============================================================================
+ *  ПОДКЛЮЧЕНИЕ ОСНОВНЫХ БИБЛИОТЕК
+ *============================================================================*/
+
 #include <Servo.h>
-
 #include <Wire.h>
-
 #include <Firmata.h>
-
 #include <jled.h>
 
-#define I2C_WRITE B00000000
-#define I2C_READ B00001000
-#define I2C_READ_CONTINUOUSLY B00010000
-#define I2C_STOP_READING B00011000
-#define I2C_READ_WRITE_MODE_MASK B00011000
-#define I2C_10BIT_ADDRESS_MODE_MASK B00100000
-#define I2C_END_TX_MASK B01000000
-#define I2C_STOP_TX 1
-#define I2C_RESTART_TX 0
-#define I2C_MAX_QUERIES 8
-#define I2C_REGISTER_NOT_SPECIFIED - 1
+/*==============================================================================
+ *  ПОДКЛЮЧЕНИЕ AsQamm-функций
+ *============================================================================*/
+
+#include "AqArduino_DHTFeature.h"   //Имя метода: DHTt
+
+/*==============================================================================
+ *  СТАНДАРТНЫЕ #define
+ *============================================================================*/
+
+#define I2C_WRITE                     B00000000
+#define I2C_READ                      B00001000
+#define I2C_READ_CONTINUOUSLY         B00010000
+#define I2C_STOP_READING              B00011000
+#define I2C_READ_WRITE_MODE_MASK      B00011000
+#define I2C_10BIT_ADDRESS_MODE_MASK   B00100000
+#define I2C_END_TX_MASK               B01000000
+#define I2C_STOP_TX                           1
+#define I2C_RESTART_TX                        0
+#define I2C_MAX_QUERIES                       8
+#define I2C_REGISTER_NOT_SPECIFIED           -1
 
 // the minimum interval for sampling analog input
-#define MINIMUM_SAMPLING_INTERVAL 1
+#define MINIMUM_SAMPLING_INTERVAL             1
 
 /*==============================================================================
  * GLOBAL VARIABLES
@@ -720,87 +731,6 @@ void LEDo(const unsigned int effect, const unsigned int duration = 360) {
     if (effect == 3) led.Candle().Forever();
 }
 
-
-void DHTt(const unsigned int pin, const unsigned int sensorType = 22) {
-    //Команда опрашивает любой датчик
-    //температуры вида DHT (DHT11, DHT22).
-    //Отправляет обратно строку вида
-    //"OK;{темпертура};{влажность}".
-    //Используется код из https://clck.ru/TJyCA
-    //
-    //    param 'pin': int
-    //        Пин, на котором расположен DHT.
-    //
-    //    param 'sensorType': int = 22
-    //        Тип DHT. Допусимые значения: 11, 22
-
-    static uint64_t prevMillis = 0;
-    byte data[5];
-    char catres[16], result[32];
-    const unsigned int interval = 2000;
-    int humidity, temperature;
-    boolean returned;
-
-    if (!(sensorType == 11 || sensorType == 22)) {
-        Firmata.sendString("ERR;DHTt;SENS");
-        return;
-    }
-
-    if (millis() - prevMillis > interval) {
-        prevMillis += interval;
-
-        //Допросим DHT
-        byte duration = 0;
-        byte j = 0;
-        for (byte i = 0; i < 5; i++) {
-            data[i] = 0;
-        }
-        pinMode(pin, OUTPUT);
-        digitalWrite(pin, LOW);
-
-        if (sensorType == 22) delay(1);                   //более 800mks нужно чтобы рабудить датчик DHT21-22
-        if (sensorType == 11) delay(18);                  //для DHT11
-        
-        pinMode(pin, INPUT);                              //начинаем слушать датчик
-        delayMicroseconds(50);
-        for (byte i = 0; i < 41; i++) {                   //читаем 41 положительный импульс (первый неинформативный)
-            duration = pulseIn(pin, HIGH, 200);
-            if (!duration) break;
-            if (i) {                                      //записываем сo 2 (i==1) импульса (1,?,?,...?)
-                data[j / 8] <<= 1;                        //пишем в младший бит "0"
-                if (duration > 50)
-                    data[j / 8] |= 1;                     //пишем в младший бит "1"
-                j++;
-            }
-        }
-
-        uint8_t sum = data[0] + data[1] + data[2] + data[3];
-        if (sum == data[4]) returned = true;
-        else returned = false;
-
-        //Пришёл ли ответ, или ошибка?
-        if (returned) {
-            humidity = (data[0] << 8) | data[1]; //считаем Н и Т первого датчика
-            temperature = ((data[2] & 0x7F) << 8) | data[3];
-            if (data[2] & 0x80)  temp1 *= -1;
-
-            //Отправляем результаты измерений
-            strcpy(result, "OK;");
-            strcat(result, itoa(temperature, catres, DEC));
-            strncat(result, ";", 1);
-            char catres[16];                              //Очищаем массив символов, переопределив его
-
-            itoa(humidity, catres, DEC);
-            strcat(result, itoa(humidity, catres, DEC))
-
-            Firmata.sendString(result);
-            return;
-        } else {
-            Firmata.sendString("ERR;DHTt;CSUM");
-            return;
-        }
-    }
-}
 /*============================================================================*/
 
 void stringCallback(char * received) {
@@ -873,6 +803,10 @@ void stringCallback(char * received) {
         }
     }
 
+    /*LC_CM*/
+    //Здесь подключаем местоды, которые будут вызываться строковыми
+    //командами; подключение идёт по образцу ниже:
+    //  if (strcmp(methodName, {имя метода}) == 0) {имя метода}({аргумент1}, {аргумент2})
     if (strcmp(methodName, "LEDo") == 0) LEDo(atoi(argument1), atoi(argument2));
 }
 
