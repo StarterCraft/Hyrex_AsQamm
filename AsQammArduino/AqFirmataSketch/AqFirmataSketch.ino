@@ -24,7 +24,7 @@
  *  ПОДКЛЮЧЕНИЕ AsQamm-функций
  *============================================================================*/
 
-#include "AqArduino_DHTFeature.h"   //Имя метода: DHTt
+#include <AsQammArduinoFeature_DHTNew.h>   //Имя метода: DHTt
 
 /*==============================================================================
  *  СТАНДАРТНЫЕ #define
@@ -808,6 +808,7 @@ void stringCallback(char * received) {
     //командами; подключение идёт по образцу ниже:
     //  if (strcmp(methodName, {имя метода}) == 0) {имя метода}({аргумент1}, {аргумент2})
     if (strcmp(methodName, "LEDo") == 0) LEDo(atoi(argument1), atoi(argument2));
+    if (strcmp(methodName, "DHTt") == 0) DHTt(atoi(argument1));    
 }
 
 /*==============================================================================
@@ -924,6 +925,7 @@ void loop() {
                 }
             }
         }
+
         // report i2c data for all device with read continuous mode enabled
         if (queryIndex > -1) {
             for (byte i = 0; i < queryIndex + 1; i++) {
