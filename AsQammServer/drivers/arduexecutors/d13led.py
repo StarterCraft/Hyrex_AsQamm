@@ -8,19 +8,3 @@ class D13LED(AqAbstractHardwareModule.ArduinoExecutor):
         self.type = AqAbstractHardwareModule.ArduinoExecutor.Digital
         self.motherBoard.sendString('LEDo()') #Включить моргание светодиода
 
-
-    def checkState(self):
-        if self.motherPin.mode == AqArduinoHardwareModes.Input:
-            return bool(self.motherPin.read())
-        else:
-            self.motherPin.mode = AqArduinoHardwareModes.Input
-            return bool(self.motherPin.read())
-
-
-    def setState(self, state: bool):
-        if self.motherPin.mode == AqArduinoHardwareModes.Output:
-            self.motherPin.write(state)
-        else:
-            self.motherPin.mode = AqArduinoHardwareModes.Output
-            self.motherPin.write(state)
-

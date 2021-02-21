@@ -7,7 +7,6 @@ class AqSeeeduinoV4WithBaseShield(AqAbstractHardwareUnit.ArduinoUnit, pyfirmata.
     analogPins = ['a:0', 'a:1', 'a:2', 'a:3']
 
     def __init__(self, comPort: str, dr, **kwargs):
-        if kwargs['isEnabled']: pyfirmata.Arduino.__init__(self, comPort)
         AqAbstractHardwareUnit.ArduinoUnit.__init__(self, comPort, kwargs['isEnabled'], kwargs['description'])
         try:
            self.iterator.setName(f'Iterator:ArduinoUno:{self.motherPort}')

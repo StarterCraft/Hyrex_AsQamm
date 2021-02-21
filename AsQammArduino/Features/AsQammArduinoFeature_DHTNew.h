@@ -3,7 +3,9 @@
 #include <Firmata.h>
 #include <dhtnew.h>
 
+
 uint64_t readingTime;
+
 
 void DHTt(const uint8_t pin) {
     DHTNEW sensor(pin);

@@ -8,15 +8,11 @@
 '''
 
 from time import      (sleep       as slp)
-from pyfirmata import (Arduino     as ArduinoUno,
-                       ArduinoMega as ArduinoMega,
+from pyfirmata import (Arduino     as DefaultArduino,
                        util        as ArduinoUtil,
                        UNAVAILABLE, ANALOG, SERVO,
-                       PWM, INPUT, OUTPUT,
-                       PinAlreadyTakenError)
+                       PWM, INPUT, OUTPUT)
 
-from math import       (log        as log,
-                        ceil       as ceil)
 from json import       (loads      as loadJson,
                         JSONDecodeError)
 
@@ -34,13 +30,58 @@ class AqAbstractHardwareComplex:
 
 class AqAbstractHardwareUnit:
     '''
-    Класс, представляющий `исполнителя` — устройства, находящегося в подчинении
-    сервера. Все классы поддерживаемых типов устройств-исполнителей являются
-    подклассами этого класса.
+    Класс, представляющий любого `исполнителя` — устройства, находящегося в 
+    подчинении сервера. Все классы поддерживаемых типов устройств-исполнителей
+    являются подклассами этого класса.
+
+    `Исполнители` могут иметь подчинённых себе `модулей`, если это предусмотрено
+    типом этого исполнителя. Они могут быть объединены в `комплексы` для более
+    глубокого взаимодействия друг с другом.
+
+    Абсолютно любого исполнителя можно отключить от системы, для этого существует
+    атрибут 'isEnabled'.
     '''
+    isEnabled = bool()
+
     class ArduinoUnit:
-        def __init__(self, comPort, isEnabled: bool, desc: str):
+        '''
+        Класс Arduino-исполнителя. Имеет базовую функциональность PyFirmata,
+        функциональность приёма и отправки строковых сообщений ASCII,
+        функциональность работы с модулями.
+        '''
+        def __init__(self, comPort: str, isEnabled: bool, desc: str,
+                     overrideDefaultTemplate: bool = False):
+            '''
+            Инициализировать экземпляр базового класса Arduino-исполнителя.
+            Такие исполнители работают на базе протокола Firmata, сервер
+            использует библиотеку PyFirmata для коммутации с ними.
+            PyFirmata.Arduino инициализируется по умолчанию здесь, но эту
+            возможность можно отключить лля того, чтобы не использовать
+            стандартный внутренний шаблон PyFirmata (не рyirmata.Arduino)
+
+            :param 'comPort': str
+                COM-порт, на котором необходимо запустить службу PyFirmata
+                для этого исполнителя
+
+            :param 'isEnabled': bool
+                Использовать ли это устройство или нет. Если задан False, то
+                итератор PyFirmata не будет запущен (его можно запустить с 
+                помощью метода startIterator()), регистрация данных с датчиков,
+                отслеживание правил и отправка команд на модули вывода осущест-
+                ляться не будут
+
+            :param 'desc': str
+                Обязательное описание исполнителя. Может быть пустым
+
+            :param 'overrideDefaultTemplate': bool = False
+                Этот параметр позволяет отключить инициализацию стандартного
+                pyfirmata.Arduino. Если True, то стандартный внутренний шаблон
+                PyFirmata не будет инициализирован, и будет необходимо дополни-
+                тельно инициализировать другой объект pyfirmata.Board
+            '''
+
             self.motherPort = comPort
+            if isEnabled and not overrideDefaultTemplate: DefaultArduino.__init__(self, comPort)
             if isEnabled: self.iterator = ArduinoUtil.Iterator(self)
             self.isEnabled = isEnabled
             self.description = desc
@@ -54,10 +95,20 @@ class AqAbstractHardwareUnit:
         
 
         def getId(self):
+            '''
+            Каждый объект оборудования в Hyrex AsQamm имеет собственный внут-
+            ренний индентификатор. У Arduino-исполнителей он формируется по
+            следующей схеме:
+
+            '{COM-порт, на котором находится исполнитель}:{ID драйвера}'
+            '''
             return f'{self.motherPort}:{self.driverId}'
 
 
         def startIterator(self):
+            '''
+            Запустить итератор PyFirmata
+            '''
             self.iterator.start()
 
 
@@ -75,10 +126,8 @@ class AqAbstractHardwareUnit:
                 items = []
                 moduleDict = {}
                 for pin, module in self.pinMap.items():
-                    if not module:
-                        continue
-                    elif module.driverId == 1000:
-                        continue
+                    if not module: continue
+                    elif module.driverId == 1000: continue
                     else:
                         for attrib in module.attrl:
                             moduleDict.update({attrib: getattr(module, attrib)})
@@ -153,7 +202,7 @@ class AqAbstractHardwareModule:
             self.name = name
             self.description = desc
             self.typeDescription = typeDesc
-            self._bkmeth = bkmeth
+            self.baked = bkmeth
 
 
         def __repr__(self):
@@ -162,10 +211,6 @@ class AqAbstractHardwareModule:
 
         def getId(self):
             return f'{self.motherBoard.motherPort}:{self.motherPinAddress}:{self.driverId}'
-
-
-        def baked(self):
-            return self._bkmeth()
 
 
     class ArduinoExecutor:
@@ -200,7 +245,6 @@ class AqArduinoHardwareModes:
 import drivers
 from libs.statistic import AqStatist
 from threading import Thread
-from colorama import Fore as Fore, Style as Style
 
 
 class AqHardwareSystem:
