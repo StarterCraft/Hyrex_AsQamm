@@ -125,7 +125,7 @@ class AqUsersSystem:
             currentUser = self.getCurrentUser()
 
             root.ui.lbl_SkinName.setText('Наш дом')
-            root.ui.lbl_CurrentUserUsername.setText(currentUser.login)
+            root.ui.lbl_CurrentUserUsername.setText(currentUser.login.value)
             root.ui.lbl_CurrentUserDescription.setText(currentUser.description)
             root.ui.gfv_CurrentUserAvatar.setPixmap(currentUser.avatar)
 
@@ -240,11 +240,11 @@ class AqUsersSystem:
     def addToUserList(self, root, object, mode):
         if mode == 0:
             self.users.append(object)
-            root.ui.liw_UsersDbList.addItems([object.login])
+            root.ui.liw_UsersDbList.addItems([object.login.value])
             
         elif mode == 1:
             for AqUser in object:
-                root.ui.liw_UsersDbList.addItems([(AqUser.login)])
+                root.ui.liw_UsersDbList.addItems([(AqUser.login.value)])
 
 
     def cleanUserList(self):

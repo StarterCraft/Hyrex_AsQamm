@@ -448,8 +448,9 @@ class AqLocalFunctions:
         for AqUser in self.unsaved:
             self.dumpData = ({ 'id': (AqUser.id), 'description': (AqUser.description),
                               'type': (AqUser.type), 'filepath': (AqUser.filepath),
-                              'login': (AqUser.login), 'password': (AqUser.password), 'avatarAddress': (AqUser.avatarAddress),
-                              'permits': (AqUser.permits), 'config': (AqUser.config.getDict()) })
+                              'login': (AqUser.login.value), 'password': (AqUser.password.value), 
+                              'avatarAddress': (AqUser.avatarAddress), 'permits': (AqUser.permits),
+                              'config': (AqUser.config.getDict()) })
 
             self.dumpList.append(self.dumpData)    
             AqUser.edited = False
