@@ -71,3 +71,8 @@ Some termins' description:
 - **Immediate commands** *are commands, which the server can receive if a **ruler**'s user will want to do something to the system immediately. For example, if you want the server to start cleaning procedures right now, you send an **immediate command** to the server and it starts the cleaning immediately. The commands can override rules untill the user asks the server to start working normally*;
 - **Server's working rules** *are programmed scenarios, which the server follows in its everyday work. For example,* `if the temperature in the greenhouse is lower than 15 degrees, turn on the heating systems` *is a **rule**. It can be overriden by the user, if he wants to. For example, if the temperature sensors become out of order and it is necessary to turn on the heating systems right now, but the server doesn't do it, you can send an **immediate command** and turn it on manually. In this case, it will be turned on untill you ask the server to get the rules back to work*.
 
+
+It is possible to manage Hyrex AsQamm from three types of software:
+- The PC client `AsQamm Dekstop`;
+- The Android app `AsQamm Android`;
+- Via an interactive screen (planned).
