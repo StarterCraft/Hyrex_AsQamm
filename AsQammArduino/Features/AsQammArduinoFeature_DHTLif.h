@@ -15,7 +15,7 @@ void DHTt(const uint8_t pin) {
         #define DHT_DDR   DDRD
         #define DHT_PIN   PIND
         #define DHT_BIT   pin  
-        int temp;
+        int count = 32;
         unsigned char i,j;
         
 
@@ -31,12 +31,24 @@ void DHTt(const uint8_t pin) {
         //============= инциализация DHT
         delayMicroseconds(50);            //задержка по условию
         if (DHT_PIN&(1<<DHT_BIT)) {       //датчик должен ответить 0
-            goto ReLoad;
+            if (count != 0) {
+                goto ReLoad;
+                count--;
+            } else {
+                Firmata.sendString("ERR;DHTt;INIT");
+                return;
+            }
         }
 
         delayMicroseconds(80);
         if (!(DHT_PIN&(1<<DHT_BIT))) {    //по истечению 80 мкс, датчик должен отпустить шину 
-            goto ReLoad;
+            if (count != 0) {
+                goto ReLoad;
+                count--;
+            } else {
+                Firmata.sendString("ERR;DHTt;BHVR");
+                return;
+            }
         }
         
 
@@ -54,7 +66,8 @@ void DHTt(const uint8_t pin) {
             }
 
 
-        if ((unsigned char)(receivedDHTData[0]+receivedDHTData[1]+receivedDHTData[2]+receivedDHTData[3])!=receivedDHTData[4]) { //checksum
+        if ((unsigned char)(receivedDHTData[0] + receivedDHTData[1] + 
+            receivedDHTData[2] + receivedDHTData[3])!=receivedDHTData[4]) { //checksum
             Firmata.sendString("ERR;DHTt;CHSM");
             return;
         }
@@ -63,9 +76,9 @@ void DHTt(const uint8_t pin) {
         if (receivedDHTData [2] & 0b10000000)  temperature*= -1;            //если отрицательная температура
         humidity = (receivedDHTData [1]*0.1) + (receivedDHTData [0]*25.6);                //нюанс расчета влажности для DHT22
         
-        char result[16], catres[8];
+        char result[32], catres[8];
         readingTime = millis();
-        strcpy(result, "OK;");
+        strcpy(result, "OK;DHTt;");
 
         dtostrf(temperature, 5, 1, catres);
         strcat(result, catres);

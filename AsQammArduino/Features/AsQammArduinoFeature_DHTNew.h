@@ -9,7 +9,7 @@ uint64_t readingTime;
 
 void DHTt(const uint8_t pin) {
     DHTNEW sensor(pin);
-    char result[16], catres[8];
+    char result[32], catres[8];
     boolean success = false;
     
     if ((millis() - readingTime) > 2000) {
@@ -18,7 +18,7 @@ void DHTt(const uint8_t pin) {
 
         switch (chk) {
         case DHTLIB_OK:
-            strcpy(result, "OK;");
+            strcpy(result, "OK;DHTt;");
             success = true;
             break;
         case DHTLIB_ERROR_CHECKSUM:
