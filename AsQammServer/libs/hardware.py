@@ -49,7 +49,7 @@ class AqAbstractHardwareUnit:
 
     class ArduinoUnit:
         '''
-        Класс Arduino-исполнителя. Имеет базовую функциональность PyFirmata,
+        Класс Arduino-исполнителя. Имеет функциональность PyFirmata,
         функциональность приёма и отправки строковых сообщений ASCII,
         функциональность работы с модулями.
         '''
@@ -233,6 +233,16 @@ class AqAbstractHardwareUnit:
 
 
 class AqAbstractHardwareModule:
+    '''
+    Класс, представляющий любой `модуль` — подчинённое устройство, которое
+    может быть под контролем Arduino-исполнителя. Все классы поддерживаемых
+    типов устройств-исполнителей являются подклассами этого класса.
+
+    Модули для Arduino-исполнителея подразделяются на `датчики` и `средства 
+    исполнения` (`executors`). 
+
+    Как и лобой испонитель, 
+    '''
     class ArduinoSensor:
         Analog = type('AnalogSensor', (object,), {})
         Digital = type('DigitalSensor', (object,), {})
