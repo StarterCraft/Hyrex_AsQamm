@@ -53,7 +53,7 @@ Firmata
 - Ⰻⱀⱅⰵⱃⰰⰽⱅⰻⰲⱀⱏⰹⰺ ⱏⰵⰽⱃⰰⱀ (ⱀⰾⰰⱀⰻⱃⱆⰵⱅⱄⱑ).
 
 
-### ENGLISH VERSION
+### EN-US
 A smart home automation system project, based on:
 Python
 Qt5
