@@ -241,7 +241,8 @@ class AqAbstractHardwareModule:
     Модули для Arduino-исполнителея подразделяются на `датчики` и `средства 
     исполнения` (`executors`). 
 
-    Как и лобой испонитель, 
+    Как и лобой исполнитель, любой модуль можно отключить от системы, для
+    чего можно использовать опцию isEnabled.
     '''
     class ArduinoSensor:
         Analog = type('AnalogSensor', (object,), {})
