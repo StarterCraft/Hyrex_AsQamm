@@ -1,8 +1,6 @@
 '''
 Модуль работы с критичекими ошибками.
 Используются наработки @Eugeny из 2013 года
-===
-Последний раз обновлялся: обновление 96, дата изменения: 20 января 2021
 '''
 
 from libs            import VERSION
@@ -37,13 +35,14 @@ class AqCrashHandler:
     ignoreVarnames  = True
 
     ignoredTypes = ['type', 'function', 'method', 'module', 'wrappertype', 'sip.wrappertype',
-                    'DockOption', 'enumtype', 'enum.EnumMeta', 'RenderFlag', 'PaintDeviceMetric',
-                    'pyqtBoundSignal', 'PyQt5.QtCore.QtMsgType', 'AqProtectedAttribute',
-                    'colorama.ansi.AnsiFore', 'colorama.ansi.AnsiStyle']
+                    'DockOption', '_io.TextIOWrapper', 'enumtype', 'enum.EnumMeta', 'RenderFlag',
+                    'PaintDeviceMetric', 'pyqtBoundSignal', 'PyQt5.QtCore.QtMsgType',
+                    'AqProtectedAttribute', 'colorama.ansi.AnsiFore', 'colorama.ansi.AnsiStyle']
 
     ignoredVarnames = ['function', 'method', 'exception', 'qt_resource_data', 'qt_resource_name', 
                        'qt_resource_struct_v1', 'qt_resource_struct_v2', 'qt_resource_struct',
-                       'PYQT_VERSION', 'QT_VERSION', 'qt_version', 'rcc_version']
+                       'PYQT_VERSION', 'QT_VERSION', 'qt_version', 'rcc_version',
+                       'password', 'tok']
 
     Report = namedtuple('Report', ['crashLoc', 'crashLocVr',
                                    'logFile', 'excCode', 'errData',
@@ -167,13 +166,13 @@ class AqCrashHandler:
         :returns: bool
         '''
         if not (varname in ('self', 'e') or varname.startswith('__')):
-            if self.ignoreVarnames:
+            if self.ignoreTypes:
                 for t in self.ignoredTypes:
                     if ((t in str(type(object))[7:-1]) or
                         (t == str(type(object))[7:-1])):
                         return False
 
-            if self.ignoreTypes:
+            if self.ignoreVarnames:
                 for vn in self.ignoredVarnames:
                     if ((vn in varname) or
                         (vn == varname)):
@@ -314,6 +313,7 @@ class AqCrashHandler:
 
         :returns: str
         '''
+
         i = int()
         localsText = f'@ кадр #{self.framesQty}:\n'
 

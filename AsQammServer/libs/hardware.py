@@ -2,22 +2,23 @@
 Модуль, в котором представлен основополагающий код для работы
 с `комплексами`, `исполнителями` и `модулями`, классы вышеперечисленных
 объектов, а также код Менеджера оборудования и Центра оборудования.
-===
-Последний раз обновлялся: предварительный патч к обновлению pre-α 115,
-дата изменения: 22 февраля 2021
 '''
 
 from time import      (sleep       as slp)
 from pyfirmata import (Arduino     as DefaultArduino,
                        util        as ArduinoUtil,
                        UNAVAILABLE, ANALOG, SERVO,
-                       PWM, INPUT, OUTPUT)
+                       PWM, INPUT, OUTPUT,
+                       START_SYSEX, END_SYSEX)
 
 from json import       (loads      as loadJson,
                         JSONDecodeError)
 
+from libs import       *
+
 from libs.functions import AqLogger
 from serial.serialutil import SerialException
+import libs.exceptions
 
 
 class AqAbstractHardwareComplex:
@@ -52,6 +53,16 @@ class AqAbstractHardwareUnit:
         Класс Arduino-исполнителя. Имеет функциональность PyFirmata,
         функциональность приёма и отправки строковых сообщений ASCII,
         функциональность работы с модулями.
+
+        Любой объект Arduino-исполнителя имеет следующие атрибуты:
+
+        :attrib 'motherPort': str
+            COM-порт, на котором распологается исполнитель и на котором
+            находится его PyFirmata-служба, если он включён
+
+        :attrib 'description': str
+            Обязательное описание исполнителя. Может быть пустым.
+            Используется для отображения в интерфейсах вершителей
         '''
         def __init__(self, comPort: str, isEnabled: bool, desc: str,
                      overrideDefaultTemplate: bool = False):
@@ -98,20 +109,22 @@ class AqAbstractHardwareUnit:
             return f'{self.driverId} Arduboard at {self.motherPort}'
         
 
-        def getId(self):
+        def getId(self) -> str:
             '''
             Каждый объект оборудования в Hyrex AsQamm имеет собственный внут-
             ренний индентификатор. У Arduino-исполнителей он формируется по
             следующей схеме:
 
-            '{COM-порт, на котором находится исполнитель}:{ID драйвера}'
+            '{x}:{y}'
+            где x = COM-порт, на котором находится исполнитель;
+                y = ID драйвера исполнителя.
 
             :returns: None
             '''
             return f'{self.motherPort}:{self.driverId}'
 
 
-        def startIterator(self):
+        def startIterator(self) -> None:
             '''
             Запустить итератор PyFirmata
             
@@ -120,7 +133,7 @@ class AqAbstractHardwareUnit:
             self.iterator.start()
 
 
-        def setPinMap(self, _map, drv):
+        def setPinMap(self, _map: dict, drv: module) -> None:
             '''
             Установить карту распиновки.
 
@@ -136,10 +149,11 @@ class AqAbstractHardwareUnit:
                 модули нужно инициализировать на этом Arduino-исполнителе
 
             :param 'drv': module
-                Модуль drivers.dependencies
+                Модуль drivers.__init__
 
             :returns: None
             '''
+            print(type(drv).__name__)
             self.pinMap = {}
             for definer in self.analogPins: self.pinMap.update({definer: None})
             self.pinMap.update({'d:13': drv.arduModules[1000](self, 'd:13', isEnabled = True,
@@ -148,7 +162,7 @@ class AqAbstractHardwareUnit:
                 self.pinMap.update({pin: drv.arduModules[module[0]](self, pin, **(module[1]))})
 
 
-        def getPinMap(self, mode = None):
+        def getPinMap(self, mode = None) -> list:
             '''
             Получить карту распиновки.
 
@@ -192,7 +206,7 @@ class AqAbstractHardwareUnit:
             return items
 
 
-        def sendString(self, string: str):
+        def sendString(self, string: str) -> None:
             '''
             Отправить ASCII-совместимую строку на Arduino (никаких 
             символов Юникода!)
@@ -205,7 +219,7 @@ class AqAbstractHardwareUnit:
             self.send_sysex(0x71, ArduinoUtil.str_to_two_byte_iter(string))
 
 
-        def send_sysex(self, sysexCmd, data = []):
+        def send_sysex(self, sysexCmd: int, data: list = []) -> None:
             '''
             Отправить сообщение SysEx (фикс метода из pyfirmata).
 
@@ -216,9 +230,9 @@ class AqAbstractHardwareUnit:
                 Массив байтов с необходимой информацией в виде
                 семибайтовых групп.
             '''
-            msg = bytearray([pyfirmata.pyfirmata.START_SYSEX, sysexCmd])
+            msg = bytearray([START_SYSEX, sysexCmd])
             msg.extend(data)
-            msg.append(pyfirmata.pyfirmata.END_SYSEX)
+            msg.append(END_SYSEX)
             self.sp.write(msg)
 
 
@@ -242,42 +256,194 @@ class AqAbstractHardwareModule:
     исполнения` (`executors`). 
 
     Как и лобой исполнитель, любой модуль можно отключить от системы, для
-    чего можно использовать опцию isEnabled.
+    чего можно использовать атрибут 'isEnabled'.
     '''
     class ArduinoSensor:
-        Analog = type('AnalogSensor', (object,), {})
-        Digital = type('DigitalSensor', (object,), {})
+        '''
+        Класс Аrduino-датчика. 
+        Они имеют два подтипа: Analog (для аналоговых) и Digital (для цифровых
+        датчиков).
 
-        def __init__(self, atBoard: AqAbstractHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool, isCalib: bool,
-                     name: str, desc: str, typeDesc: str, bkmeth):
-            self.attrl = ['description', 'isEnabled']
+        Любой объект Arduino-датчика имеет следующие атрибуты:
+
+        :attrib 'attrl': list
+            Список атрибутов, которые инициализируются из JSON-словаря в
+            'hardware.asqd'
+        
+        :attrib 'motherBoard': AqAbstractHardwareUnit.ArduinoUnit
+            Ссылка на объект Arduino-исполнителя, к которому подключён датчик
+
+        :attrib 'isCalibrateable': bool
+            Значение параметра определяется тем, может ли датчик, объект которого
+            инициализируется, быть откалиброван (True) или нет (False). Если True,
+            то должен существовать метод калибровки
+
+        :attrib 'name': str
+            Обязательное отображаемое имя датчика. Может быть пустым.
+            Используется для отображения в интерфейсах вершителей
+
+        :attrib 'description': str
+            Обязательное описание датчика. Может быть пустым.
+            Используется для отображения в интерфейсах вершителей
+        '''
+
+        Analog = typemark('AnalogSensor')       #Маркер аналогового типа
+        Digital = typemark('DigitalSensor')     #Маркер цифрового типа
+
+        attrl = ['description', 'isEnabled']
+
+        def __init__(self, atBoard: AqAbstractHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool,
+                     isCalib: bool, name: str, desc: str, typeDesc: str, bkmeth: callable,
+                     **kwargs):
+            '''
+            Инициализировать Аrduino-датчик.
+
+            :param 'atBoard': AqAbstractHardwareUnit.ArduinoUnit
+                Объект Arduino-исполнителя, к которому подключён датчик
+
+            :param 'atPin': str
+                Адрес пина Arduino-исполнителя, к которому подключён датчик
+
+            :param 'isEnabled': bool
+                Использовать ли этот датчик или нет. Если этот параметр
+                отключить, то регистрация его значений системой статистики
+                не будет выполняться, а также частично или полностью перес-
+                танут работать правила, в условиях которых фигурирует данный
+                датчик
+
+            :param 'isCalib': bool
+                Может ли датчик, объект которого инициализируется, быть отка-
+                либрован (True) или нет (False). Если True, то должен быть
+                по ключевому слову предоставлен аргумент 'clmeth', в противном
+                случае будет вызвано исключение.
+
+            :param 'name': str
+                Обязательное отображаемое имя датчика. Может быть пустым,
+                но не рекомендуется оставлять его таким.
+                Используется для отображения в интерфейсах вершителей
+
+            :param 'desc': str
+                Обязательное описание датчика. Может быть пустым.
+                Используется для отображения в интерфейсах вершителей
+
+            :param 'typeDesc': str
+                Обязательное описание ТИПА датчика. Может быть пустым.
+                Используется для отображения в интерфейсах вершителей
+
+            :param 'bkmeth': callable
+                Метод получения готового значения датчика. В определении каж-
+                дого из отдельных типов датчиков должен быть определён особый
+                метод получения значения для этого типа датчика, который дол-
+                жен быть направлен в этот агрумент. Это нужно для того, чтобы
+                компоненты, которым неизвестно имя такого метода, могли вызвать
+                его вызовом метода bakedValue
+
+            :kwparam 'clmeth': callable
+                Метод калибровки датчика. Если параметр 'isCalib' истиннен, то
+                необходимо предоставить мeтод калибровки датчика.
+                Это — параметр по ключевому слову!
+            '''
             self.motherBoard = atBoard
             self.motherPinAddress = atPin
             try: self.motherPin = self.motherBoard.get_pin(f'{self.motherPinAddress}:i')
             except AttributeError: pass
             self.isEnabled = isEnabled
-            self.isCalibrateable = isCalib
+
+            if isCalib:
+                self.isCalibrateable = isCalib
+                try: self.calibrate = kwargs['clmeth']
+                except: raise libs.exceptions.UndefinedCalibrationMethodError()
+
             self.name = name
             self.description = desc
             self.typeDescription = typeDesc
-            self.baked = bkmeth
+            self.bakedValue = bkmeth
 
 
         def __repr__(self):
             return f'{self.driverId} device at {self.motherBoard} ({self.motherPinAddress})'
 
 
-        def getId(self):
+        def getId(self) -> str:
+            '''
+            Каждый объект оборудования в Hyrex AsQamm имеет собственный внут-
+            ренний индентификатор. У Arduino-исполнителей он формируется по
+            следующей схеме:
+
+            '{x}:{y}:{z}',
+            где x = COM-порт Arduino-исполнителя, к которому подключён датчик;
+                у = Адрес пина Arduino-исполнителя, к которому подключён датчик;
+                z = ID драйвера датчика.
+
+            :returns: None
+            '''
             return f'{self.motherBoard.motherPort}:{self.motherPinAddress}:{self.driverId}'
 
 
     class ArduinoExecutor:
-        Analog = type('AnalogExecutor', (object,), {})
-        Digital = type('DigitalExecutor', (object,), {})
+        '''
+        Класс модулей исполнения для Arduino-исполнителя (например, серво-
+        привода). 
+        Они имеют два подтипа: Analog (для аналоговых) и Digital (для цифровых
+        устройств исполнения).
+
+        Любой объект таких модулей исполнения имеет следующие атрибуты:
+
+        :attrib 'attrl': list
+            Список атрибутов, которые инициализируются из JSON-словаря в
+            'hardware.asqd'
+        
+        :attrib 'motherBoard': AqAbstractHardwareUnit.ArduinoUnit
+            Ссылка на объект Arduino-исполнителя, к которому подключён
+            модуль исполнения
+
+        :attrib 'name': str
+            Обязательное отображаемое имя модуля исполнения. Может быть
+            пустым. Используется для отображения в интерфейсах вершителей
+
+        :attrib 'description': str
+            Обязательное описание модуля исполненияа. Может быть пустым.
+            Используется для отображения в интерфейсах вершителей
+        '''
+        
+        Analog = typemark('AnalogExecutor')     #Маркер аналогового типа
+        Digital = typemark('DigitalExecutor')   #Маркер цифрового типа
+        
+        attrl = ['description', 'isEnabled']
 
         def __init__(self, atBoard: AqAbstractHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool,
                      name: str, desc: str, typeDesc: str):
-            self.attrl = ['description', 'isEnabled']
+            '''
+            Инициализировать модуля исполнения для Arduino-исполнителя.
+
+            :param 'atBoard': AqAbstractHardwareUnit.ArduinoUnit
+                Объект Arduino-исполнителя, к которому подключён модуль ис-
+                полнения
+
+            :param 'atPin': str
+                Адрес пина Arduino-исполнителя, к которому подключён модуль
+                исполнения
+
+            :param 'isEnabled': bool
+                Использовать ли этот модуль исполнения или нет. Если этот 
+                параметр отключить, то на модуль невозможно будет отдаавать
+                какие-либо команды, а также частично или полностью перес-
+                танут работать правила, в действиях которых фигурирует данный
+                модуль исполнения
+
+            :param 'name': str
+                Обязательное отображаемое имя модуля исполнения. Может быть
+                пустым, но не рекомендуется оставлять его таким.
+                Используется для отображения в интерфейсах вершителей
+
+            :param 'desc': str
+                Обязательное описание модуля исполнения. Может быть пустым.
+                Используется для отображения в интерфейсах вершителей
+
+            :param 'typeDesc': str
+                Обязательное описание ТИПА модуля исполнения. Может быть пустым.
+                Используется для отображения в интерфейсах вершителей
+            '''
             self.motherBoard = atBoard
             self.motherPinAddress = atPin
             try: self.motherPin = self.motherBoard.get_pin(f'{self.motherPinAddress}:i')
@@ -288,10 +454,26 @@ class AqAbstractHardwareModule:
 
 
         def getId(self):
+            '''
+            Каждый объект оборудования в Hyrex AsQamm имеет собственный внут-
+            ренний индентификатор. У Arduino-исполнителей он формируется по
+            следующей схеме:
+
+            '{x}:{y}:{z}',
+            где x = COM-порт Arduino-исполнителя, к которому подключён датчик;
+                у = Адрес пина модуля исполнения, к которому подключён датчик;
+                z = ID драйвера модуля исполнения.
+
+            :returns: None
+            '''
             return f'{self.motherBoard.motherPort}:{self.motherPinAddress}:{self.driverId}'
 
 
 class AqArduinoHardwareModes:
+    '''
+    В этом классе содержатся определители режимов работы пинов Arduino. Класс
+    используется в работе с PyFirmata
+    '''
     Input = INPUT
     Output = OUTPUT
     Analog = ANALOG
@@ -300,7 +482,10 @@ class AqArduinoHardwareModes:
     Off = UNAVAILABLE
 
 
-import drivers
+import drivers                                  #Драйверы оборудования могут быть инициализированы
+                                                #лишь после того, как будут готовы к работе все
+                                                #классы, необходимые им для функционирования
+
 from libs.statistic import AqStatist
 from threading import Thread
 
@@ -423,11 +608,11 @@ class AqArduinoSensorMonitor(Thread):
     def run(self):
         while True:
             try:
-                if not self.statistic.isBusy: self.statistic.registerStatistic(self.assignedSensor.getId(), self.assignedSensor.baked())
+                if not self.statistic.isBusy:
+                    self.statistic.registerStatistic(self.assignedSensor.getId(), self.assignedSensor.bakedValue())
                 elif self.statistic.isBusy:
-                    while self.statistic.isBusy:
-                        slp(0.48)
-                    self.statistic.registerStatistic(self.assignedSensor.getId(), self.assignedSensor.baked())
+                    while self.statistic.isBusy: slp(0.48)
+                    self.statistic.registerStatistic(self.assignedSensor.getId(), self.assignedSensor.bakedValue())
                     
             except AssertionError:
                 slp(0.48)
