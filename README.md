@@ -60,44 +60,47 @@ Qt5
 Arduino
 Firmata
 
-General description of the system's structure:
-- **Home Automation Management software**   
--  Registered users have instant control over their smart home devices via a central server.
--  System/device rules are customizable and all data can be viewed by the user.
--  
-- **Central Server**
--  A software installed on the user's home computer will run continously to support the home automation system. 
--  It stores information on registered users, all system components, and automation rules. 
--  It takes commands from the user(s) and then sends the commands to the **executors** (Micro-controllers) according to **rules**.
--  Immediate commands can be sent via the **server** to the **executors** which can then communicate with devices attached to them. 
--  The **server** also receives data from the **executors**' sensors where it stores and formats it to be viewed later by the user.
--  
-- **Executing Devices**, or ***Executors*** 
-- Receive commands from the **server** and return data from their sensors. 
-- Example: Greenhouse Automation with an Arduino ***Executor***.
-- The Arduino can have **Modules** or I/O( input/output devices) like sensors (temperature and humity as inputs) or actuators like a (water valve, fan, or motor as an output).
-- It is also possible to use an ***Executor*** with out **Modules*. 
-- 
-- **Complexes** or **Syncronized Groups** 
-- Use high-level rulesets to communicate with all **executors** within a **Complex** simultaniously. 
-- **Executors** can be synchronized and setup in explicit zones with each other. 
-- For example, a greenhouse could be setup as a **complex*** seperate from the rest of the home's automation system.
-- 
+#### General description of the system's structure:
+#### **Home Automation Management software**   
+Registered users have instant control over their smart home devices via a central server.
+System/device rules are customizable and all data can be viewed by the user.
+  
+#### **Central Server**
+A software installed on the user's home computer will run continously to support the home automation system. 
+It stores information on registered users, all system components, and automation rules. 
+It takes commands from the user(s) and then sends the commands to the **executors** (Micro-controllers) according to **rules**.
+Immediate commands can be sent via the **server** to the **executors** which can then communicate with devices attached to them. 
+The **server** also receives data from the **executors**' sensors where it stores and formats it to be viewed later by the user.
+  
+#### **Executing Devices**, or ***Executors*** 
+Receive commands from the **server** and return data from their sensors. 
+Example: Greenhouse Automation with an Arduino ***Executor***.
+The Arduino can have **Modules** or I/O( input/output devices) like sensors (temperature and humity as inputs) or actuators like a (water valve, fan, or motor as an output).
+It is also possible to use an ***Executor*** with out **Modules*. 
+ 
+#### **Complexes** or **Syncronized Groups** 
+Use high-level rulesets to communicate with all **executors** within a **Complex** simultaniously. 
 
-**Key System Term Descriptions:**
-- **Immediate Commands** 
-- Commands that the server can receive if a **ruler**'s user wants to do something to the system immediately. 
-- For example, `if you want the server to start cleaning procedures right now, you send an **immediate command** to the server` and it starts the cleaning immediately. 
-- The commands can override rules until the user asks the server to start working normally again.
-- 
-- **Server's working rules** 
-- Programmed scenarios that the server follows in its everyday work. 
-- For example, `if the temperature in the greenhouse is lower than 15 degrees, turn on the heating system` is a **rule**. 
-- It can be overriden by the user if desired. 
-- For example, `if the temperature sensors is out of order and the server fails to turn on the heating systems`, then the user can send an **immediate command** to turn it on manually. In this case, the heater will stay on until the rule is fixed or the user manually turns it off.
+#### **Executors**
+can be synchronized and setup in explicit zones with each other. 
+For example, a greenhouse could be setup as a **complex*** seperate from the rest of the home's automation system.
+
+ 
+#### Key System Term Descriptions:
+**Immediate Commands** 
+
+Commands that the server can receive if a **ruler**'s user wants to do something to the system immediately. 
+For example, `if you want the server to start cleaning procedures right now, you send an **immediate command** to the server` and it starts the cleaning immediately. 
+The commands can override rules until the user asks the server to start working normally again.
+ 
+**Server's working rules** 
+Programmed scenarios that the server follows in its everyday work. 
+For example, `if the temperature in the greenhouse is lower than 15 degrees, turn on the heating system` is a **rule**. 
+It can be overriden by the user if desired. 
+For example, `if the temperature sensors is out of order and the server fails to turn on the heating systems`, then the user can send an **immediate command** to turn it on manually. In this case, the heater will stay on until the rule is fixed or the user manually turns it off.
 
 
 Hyrex AsQamm Home Automation System can be controlled from three types of devices:
-- The PC client, `AsQamm Dekstop`;
-- The Android app, `AsQamm Android`;
-- Via an interactive screen, (planned feature).
+The PC client, `AsQamm Dekstop`;
+The Android app, `AsQamm Android`;
+Via an interactive screen, (planned feature).
