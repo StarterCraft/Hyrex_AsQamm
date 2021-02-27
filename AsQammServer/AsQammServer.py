@@ -252,7 +252,7 @@ if __name__ == '__main__':
             if server.tok.isOk(data['tok']) and hardware:
                 return hardware.getHardwareDataSheet()
             elif not hardware:
-                return {'505': 'HARDWARE_NOT_INITIALIZED'}
+                return {'505': 'HARDWARE_OFFLINE'}
             else:
                 return {'401': 'UNAUTHORIZED'}
 
@@ -264,14 +264,12 @@ if __name__ == '__main__':
             if server.tok.isOk(data['tok']) and hardware:
                 return hardware.statisticAgent.getQueriedStats(data['query'])
             elif not hardware:
-                return {'505': 'HARDWARE_NOT_INITIALIZED'}
+                return {'505': 'HARDWARE_OFFLINE'}
             else:
                 return {'401': 'UNAUTHORIZED'}
 
-        try:
-            hardware.startMonitoring()
-        except (NameError, AttributeError):
-            pass
+        try: hardware.startMonitoring()
+        except (NameError, AttributeError): pass
 
         server.run(IP, int(portstr))
 

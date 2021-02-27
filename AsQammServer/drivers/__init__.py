@@ -22,9 +22,9 @@ from .arduexecutors.d13led     import D13LED
 #         Индексируем драйвера        #
 #######################################
 
-arduBoards      = {1071:              AqArduinoUnoR3,
+Boards      = {1071:              AqArduinoUnoR3,
                    1072:              AqSeeeduinoV4WithBaseShield}
 
-arduModules     = {1101:              GroveTemperatureSensor,
+Modules     = {1101:              GroveTemperatureSensor,
                    1102:              CapacitiveSoilMoistureSensor,
                    1000:              D13LED}
