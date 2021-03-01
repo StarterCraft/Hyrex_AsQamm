@@ -4,7 +4,7 @@
 объектов, а также код Менеджера оборудования и Центра оборудования.
 '''
 
-from time import      (sleep       as slp)
+from time import       sleep       as slp 
 from pyfirmata import (Arduino     as DefaultArduino,
                        util        as ArduinoUtil,
                        UNAVAILABLE, ANALOG, SERVO,
@@ -33,7 +33,8 @@ class AqAbstractHardwareUnit:
     '''
     Класс, представляющий любого `исполнителя` — устройства, находящегося в 
     подчинении сервера. Все классы поддерживаемых типов устройств-исполнителей
-    являются подклассами этого класса.
+    являются подклассами этого класса. Пока что, подерживаются только Arduino-
+    исполнители.
 
     `Исполнители` могут иметь подчинённых себе `модулей`, если это предусмотрено
     типом этого исполнителя. Они могут быть объединены в `комплексы` для более
@@ -89,11 +90,18 @@ class AqAbstractHardwareUnit:
             COM-порт, на котором распологается исполнитель и на котором
             находится его PyFirmata-служба, если он включён
 
-        :attrib 'description': str
+        :attrib 'instanceDescription': str
             Обязательное описание исполнителя. Может быть пустым.
             Используется для отображения в интерфейсах вершителей
+
+        :attrib 'typeDescription': str
+            Обязательное описание ТИПА исполнителя. Может быть пустым,
+            но не рекомендуется оставлять его таким. Задаётся в драйвере
+            ТИПА исполнителя.
+            Используется для отображения в интерфейсах вершителей
         '''
-        def __init__(self, comPort: str, isEnabled: bool, desc: str,
+        def __init__(self, comPort: str, isEnabled: bool,
+                     instanceName: str, desc: str,
                      overrideDefaultTemplate: bool = False):
             '''
             Инициализировать экземпляр базового класса Arduino-исполнителя.
@@ -114,8 +122,14 @@ class AqAbstractHardwareUnit:
                 отслеживание правил и отправка команд на модули вывода осущест-
                 ляться не будут
 
+            :param 'instanceName': str
+                Обязательное отображаемое имя исполнителя. Может быть пустым,
+                но не рекомендуется оставлять его таким.
+                Используется для отображения в интерфейсах вершителей
+
             :param 'desc': str
-                Обязательное описание исполнителя. Может быть пустым
+                Обязательное описание исполнителя. Может быть пустым.
+                Используется для отображения в интерфейсах вершителей
 
             :param 'overrideDefaultTemplate': bool = False
                 Этот параметр позволяет отключить инициализацию стандартного
@@ -128,7 +142,7 @@ class AqAbstractHardwareUnit:
             if isEnabled and not overrideDefaultTemplate: DefaultArduino.__init__(self, comPort)
             if isEnabled: self.iterator = ArduinoUtil.Iterator(self)
             self.isEnabled = isEnabled
-            self.description = desc
+            self.instanceDescription = desc
             self.result = float()
 
             self.add_cmd_handler(0x71, self.parseString)
@@ -186,7 +200,8 @@ class AqAbstractHardwareUnit:
             self.pinMap = {}
             for definer in self.analogPins: self.pinMap.update({definer: None})
             self.pinMap.update({'d:13': drv.arduModules[1000](self, 'd:13', isEnabled = True,
-                                                              name = 'D13Led', description = 'D13 Built-in LED')})
+                                                              instanceName = 'D13Led',
+                                                              instanceDescription = 'D13 Built-in LED')})
             for pin, module in _map.items():
                 self.pinMap.update({pin: drv.arduModules[module[0]](self, pin, **(module[1]))})
 
@@ -201,11 +216,12 @@ class AqAbstractHardwareUnit:
             а значениями являются объекты модулей, подключенных к этим пинам.
 
             Имеется 2 режима:
-                режим None: получить список словарей, где ключи — адреса пинов,
-                а значения — списки из ID драйвера модуля и словаря его настроек
+                режим None: получить список словарей в виде списка кортежей, где
+                ключи — адреса пинов, а значения — списки из ID драйвера модуля и
+                словаря его настроек
 
-                pежим object: получить список словарей, где ключи — адреса пинов,
-                а значения — объекты модулей.
+                pежим object: получить список словарей в виде списка кортежей, где
+                ключи — адреса пинов, а значения — объекты модулей.
 
             :param 'mode': type 'object' or None = None
                 Режим, который требуется.
@@ -307,22 +323,28 @@ class AqAbstractHardwareModule:
             инициализируется, быть откалиброван (True) или нет (False). Если True,
             то должен существовать метод калибровки
 
-        :attrib 'name': str
+        :attrib 'instanceName': str
             Обязательное отображаемое имя датчика. Может быть пустым.
             Используется для отображения в интерфейсах вершителей
 
-        :attrib 'description': str
+        :attrib 'instanceDescription': str
             Обязательное описание датчика. Может быть пустым.
+            Используется для отображения в интерфейсах вершителей
+
+        :attrib 'typeDescription': str
+            Обязательное описание ТИПА датчика. Может быть пустым,
+            но не рекомендуется оставлять его таким. Задаётся в драйвере
+            ТИПА исполнителя.
             Используется для отображения в интерфейсах вершителей
         '''
 
         Analog = typemark('AnalogSensor')       #Маркер аналогового типа
         Digital = typemark('DigitalSensor')     #Маркер цифрового типа
 
-        attrl = ['description', 'isEnabled']
+        attrl = ['instanceDescription', 'isEnabled']
 
         def __init__(self, atBoard: AqAbstractHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool,
-                     isCalib: bool, name: str, desc: str, typeDesc: str, bkmeth: callable,
+                     isCalib: bool, instanceName: str, desc: str, bkmeth: callable,
                      **kwargs):
             '''
             Инициализировать Аrduino-датчик.
@@ -346,17 +368,13 @@ class AqAbstractHardwareModule:
                 по ключевому слову предоставлен аргумент 'clmeth', в противном
                 случае будет вызвано исключение.
 
-            :param 'name': str
+            :param 'instanceName': str
                 Обязательное отображаемое имя датчика. Может быть пустым,
                 но не рекомендуется оставлять его таким.
                 Используется для отображения в интерфейсах вершителей
 
             :param 'desc': str
                 Обязательное описание датчика. Может быть пустым.
-                Используется для отображения в интерфейсах вершителей
-
-            :param 'typeDesc': str
-                Обязательное описание ТИПА датчика. Может быть пустым.
                 Используется для отображения в интерфейсах вершителей
 
             :param 'bkmeth': callable
@@ -383,9 +401,8 @@ class AqAbstractHardwareModule:
                 try: self.calibrate = kwargs['clmeth']
                 except: raise libs.exceptions.UndefinedCalibrationMethodError()
 
-            self.name = name
-            self.description = desc
-            self.typeDescription = typeDesc
+            self.instanceName = instanceName
+            self.instanceDescription = desc
             self.bakedValue = bkmeth
 
 
@@ -426,22 +443,28 @@ class AqAbstractHardwareModule:
             Ссылка на объект Arduino-исполнителя, к которому подключён
             модуль исполнения
 
-        :attrib 'name': str
+        :attrib 'instanceName': str
             Обязательное отображаемое имя модуля исполнения. Может быть
             пустым. Используется для отображения в интерфейсах вершителей
 
-        :attrib 'description': str
+        :attrib 'instanceDescription': str
             Обязательное описание модуля исполненияа. Может быть пустым.
+            Используется для отображения в интерфейсах вершителей
+        
+        :attrib 'typeDescription': str
+            Обязательное описание ТИПА модуля исполнения. Может быть пус-
+            тым, но не рекомендуется оставлять его таким. Задаётся в 
+            драйвере ТИПА исполнителя.
             Используется для отображения в интерфейсах вершителей
         '''
         
         Analog = typemark('AnalogExecutor')     #Маркер аналогового типа
         Digital = typemark('DigitalExecutor')   #Маркер цифрового типа
         
-        attrl = ['description', 'isEnabled']
+        attrl = ['instanceDescription', 'isEnabled']
 
         def __init__(self, atBoard: AqAbstractHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool,
-                     name: str, desc: str, typeDesc: str):
+                     instanceName: str, instanceDescription: str,):
             '''
             Инициализировать модуля исполнения для Arduino-исполнителя.
 
@@ -460,7 +483,7 @@ class AqAbstractHardwareModule:
                 танут работать правила, в действиях которых фигурирует данный
                 модуль исполнения
 
-            :param 'name': str
+            :param 'instanceName': str
                 Обязательное отображаемое имя модуля исполнения. Может быть
                 пустым, но не рекомендуется оставлять его таким.
                 Используется для отображения в интерфейсах вершителей
@@ -477,9 +500,8 @@ class AqAbstractHardwareModule:
             self.motherPinAddress = atPin
             try: self.motherPin = self.motherBoard.get_pin(f'{self.motherPinAddress}:i')
             except AttributeError: pass
-            self.name = name
-            self.description = desc
-            self.typeDescription = typeDesc
+            self.instanceName = instanceName
+            self.instanceDescription = instanceDescription
 
 
         def getId(self):
@@ -615,6 +637,12 @@ class AqHardwareSystem:
         '''
         Инициализировать и запустить мониторы (см. документацию к
         AqArduinoUnitMonitor) для каждого исполнителя.
+
+        Монитор не будет инициализирован, если параметр 'isEnabled'
+        у исполнителя не истиннен. Каждый инициализированный монитор
+        будет добавлен в список 'monitors' и запущен.
+
+        Метод не принимает агрументов.
         '''
         for unit in self.installedArduinoHardware:
            if unit.isEnabled:
@@ -627,70 +655,157 @@ class AqHardwareSystem:
 
     
     def getHardwareDataSheet(self):
-        mq = 0
-        eq = 0
-        ds = []
+        '''
+        Получить полную информацию об установленном оборудовании в
+        виде списка словарей, где каждый словарь представляет одно-
+        го исполнителя. Отключенные исполнители НЕ исключаются из
+        списка. Метод используется для отображения информации об 
+        оборудовании в вершителях. Представление идёт по следующей
+        схеме:
+
+        [
+            /*Объект исполнителя, где:
+              a —— Тип исполнителя (на данный момент — возможен только 
+                   "ArduinoUnit");
+              b —— Используется ли исполнитель (значение параметра 'isEnabled'
+                   для данного исполнителя);
+              c —— ID драйвера исполнителя (любой ID драйвера представляет из
+                   себя целое число от 1000 до 9999);
+              d —— Для Arduino-исполнителя — адрес COM-порта, на котором он 
+                   располагается;
+              e —— Обязательное описание исполнителя. Может быть пустым.
+                   Используется для отображения в интерфейсах вершителей;
+              f —— Пин-карта исполнителя в виде словаря (см. документацию к
+                   AqAbstractHardwareUnit.ArduinoUnit.setPinMap());
+              g —— Количество модулей, которые подключены к исполнителю;
+              h —— Количество модулей, которые подключены к исполнителю и ис-
+                   пользуются
+            */
+
+            {"unitType": a,
+             "isEnabled": b,
+             "driverId": c,
+             "comPort": d,
+             "instanceDescription": e,
+             "pinMap": f,
+             "modulesQty": g,
+             "enabledQty": h},
+
+             //другие определения исполнителей по той же схеме
+        ]
+        '''
+        modulesQty = 0   #Количество модулей, которые подключены к исполнителю
+        enabledQty = 0   #Количество модулей, которые подключены к исполнителю и ис-
+                         #пользуются
+        dataSheet = []
         for unit in self.installedArduinoHardware: #КОСТЫЛЬ: проверки типа устройства нет
             for pin, module in unit.getPinMap():
                 if module != None:
-                    mq += 1
-                    if (module[1])['isEnabled']:
-                        eq += 1
+                    modulesQty += 1
+                    if (module[1])['isEnabled']: enabledQty += 1
                     continue
 
-            ds.append({ 'unitType'   : 'AqArduino',
-                        'isEnabled'  : unit.isEnabled,
-                        'driverId'   : unit.driverId,
-                        'comPort'    : unit.motherPort,
-                        'description': unit.description,
-                        'pinMap'     : dict(unit.getPinMap()),
-                        'modulesQty' : mq,
-                        'enabledQty' : eq})
+            dataSheet.append({'unitType'           : 'AqArduino',
+                              'isEnabled'          : unit.isEnabled,
+                              'driverId'           : unit.driverId,
+                              'comPort'            : unit.motherPort,
+                              'instanceDescription': unit.instanceDescription,
+                              'pinMap'             : dict(unit.getPinMap()),
+                              'modulesQty'         : modulesQty,
+                              'enabledQty'         : enabledQty})
+            modulesQty = 0
 
-        return ds
+        return dataSheet
 
 
 class AqArduinoUnitMonitor(Thread):
+    '''
+    Класс `монитора` для исполнителя. `Монитор` представляет из себя
+    подвид потока; для исполнителей он выполняет лишь запуск отслежи-
+    вания значений датчиков. Некоторые вaжные атрибуты:
+
+    :attrib 'assignedBoardModules': list
+        Список содержит все модули, которые подключены к исполнителю
+
+    :attrib 'assignedBoardMonitors': list
+        Список содержит мониторы датчиков для всех таких модулей, ко-
+        торые подключены к исполнителю
+    '''
     def __init__(self, hardwareSystem: AqHardwareSystem, assignToBoard: AqAbstractHardwareUnit.ArduinoUnit):
-        Thread.__init__(self, target = self.run, args = (), name = f'{assignToBoard.getId()}:monitor')
+        '''
+        Конструктор `монитора` для исполнителя.
+
+        :param 'hardwareSystem': AqHardwareSystem
+            Ссылка на объект системы управления оборудованием. 
+
+        :param 'assignToBoard': AqAbstractHardwareUnit.ArduinoUnit
+            Ссылка на объект исполнителя, с которым работает монитор.
+        '''
+        Thread.__init__(self, target = self.run, args = (hardwareSystem, assignToBoard),
+                        name = f'{assignToBoard.getId()}:monitor')
         self.assignedBoard = assignToBoard
-        self.hardwareSystem = hardwareSystem
         self.assignedBoardModules = []
         self.assignedBoardMonitors = []
         
 
-    def run(self):
-        for pin, module in (self.assignedBoard.getPinMap(mode = object)):
+    def run(self, hardwareSystem: AqHardwareSystem, assignedBoard: AqAbstractHardwareUnit.ArduinoUnit):
+        '''
+        Рабочий метод `монитора` для исполнителя.
+
+        :param 'hardwareSystem': AqHardwareSystem
+            Ссылка на объект системы управления оборудованием. 
+
+        :param 'assignedBoard': AqAbstractHardwareUnit.ArduinoUnit
+            Ссылка на объект исполнителя, с которым работает монитор.
+        '''
+        for pin, module in (assignedBoard.getPinMap(mode = object)):
             try:
                 if module.driverId in range(1101, 1199):
                     self.assignedBoardModules.append(module)
-                else:
-                    continue
-            except AttributeError:
-                continue
+                else: continue
+            except AttributeError: continue
 
         for module in self.assignedBoardModules:
             try:
                 if module.driverId in range(1101, 1199):
-                    instance = AqArduinoSensorMonitor(self.hardwareSystem, module)
+                    instance = AqArduinoSensorMonitor(hardwareSystem, module)
                     self.assignedBoardMonitors.append(instance)
-            except AttributeError:
-                continue
+            except AttributeError: continue
 
-        if self.assignedBoard.motherPort == 'COM5': AqArduinoD13Blinker(self.hardwareSystem, (self.assignedBoard.pinMap)['d:13'], (self.assignedBoard.pinMap)['a:0']).start()
-
-        for monitor in self.assignedBoardMonitors:
-            monitor.start()
+        for monitor in self.assignedBoardMonitors: monitor.start()
 
 
 class AqArduinoSensorMonitor(Thread):
-    def __init__(self, hardwareSystem: AqHardwareSystem, assignToSensor: AqAbstractHardwareModule.ArduinoSensor):
-        Thread.__init__(self, target = self.run, args = (), name = f'{assignToSensor.getId()}:monitor', daemon = True)
-        self.statistic = hardwareSystem.statisticAgent
-        self.assignedSensor = assignToSensor
+    '''
+    Класс `монитора` для датчика. `Монитор` представляет из себя под-
+    вид потока; для датчиков он выполняет работу по регистрации значе-
+    ний с них через каждый, задаваемый для каждого отдельного датчика,
+    промежуток времени.
+    '''
+    def __init__(self, statisticAgent: AqStatist, assignToSensor: AqAbstractHardwareModule.ArduinoSensor):
+        '''
+        Конструктор `монитора` для датчика.
+
+        :param 'statisticAgent': AqStatist
+            Ссылка на объект регистратора статистики. 
+
+        :param 'assignToSensor': AqAbstractHardwareModule.ArduinoSensor
+            Ссылка на объект датчика, с которым работает монитор.
+        '''
+        Thread.__init__(self, target = self.run, args = (assignToSensor, statisticAgent),
+                        name = f'{assignToSensor.getId()}:monitor', daemon = True)
 
 
-    def run(self):
+    def run(self, assignedSensor: AqAbstractHardwareModule.ArduinoSensor, statistic: AqStatist):
+        '''
+        Рабочий метод `монитора` для датчика.
+
+        :param 'assignedSensor': AqAbstractHardwareModule.ArduinoSensor
+            Ссылка на объект датчика, с которым работает монитор.
+  
+        :param 'statistic': AqStatist
+            Ссылка на объект регистратора статистики. 
+        '''
         while True:
             try:
                 if not self.statistic.isBusy:

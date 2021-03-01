@@ -1,7 +1,9 @@
 [
+    /**/
     [1071, "COM6", {
         "isEnabled": true,
-        "description": "testing Arduino UNO R3 board",
+        "instanceName": "One and only board",
+        "instanceDescription": "testing Arduino UNO R3 board",
         "pinMap": {}
         }
     ]

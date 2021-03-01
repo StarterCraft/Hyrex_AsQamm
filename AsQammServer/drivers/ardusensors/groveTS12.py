@@ -3,10 +3,13 @@ from drivers.dependencies import *
 
 class GroveTemperatureSensor(AqAbstractHardwareModule.ArduinoSensor):
     driverId = 1101
+    typeDescription = 'Аналоговый датчик темпepaтуры Grove версии 1.2'
 
     def __init__(self, atBoard, atPin, **kwargs):
-        super().__init__(atBoard, atPin, kwargs['isEnabled'], True, kwargs['name'], kwargs['description'],
-                         'Аналоговый датчик темпepaтуры Grove версии 1.2', self.temperature)
+        super().__init__(atBoard, atPin, kwargs['isEnabled'], True, 
+                         kwargs['instanceName'],
+                         kwargs['instanceDescription'], 
+                         self.temperature)
         self.attrl.extend(['calibrationValue', 'probeFrequency'])
         self.type = AqAbstractHardwareModule.ArduinoSensor.Analog
         self.bValue = 4275
@@ -29,7 +32,8 @@ class GroveTemperatureSensor(AqAbstractHardwareModule.ArduinoSensor):
 
     def temperature(self):
         try:
-            return round((1.0 / (log(1023.0 / self.value() - 1.0) / (self.bValue) + 1 / 298.15) - self.calibrationValue), self.outputAccuracy)
+            return round((1.0 / (log(1023.0 / self.value() - 1.0) / 
+                        (self.bValue) + 1 / 298.15) - self.calibrationValue), self.outputAccuracy)
         except TypeError:
             slp(2)
             self.temperature()
