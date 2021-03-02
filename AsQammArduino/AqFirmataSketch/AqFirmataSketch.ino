@@ -813,7 +813,7 @@ void stringCallback(char * received) {
         char undefinedMethodName[16];
         strcpy(undefinedMethodName, "ERR;");
         strcat(undefinedMethodName, methodName);
-        strcat(undefinedMethodName, "MNND");
+        strcat(undefinedMethodName, ";MNND");
 
         Firmata.sendString(undefinedMethodName);
     }

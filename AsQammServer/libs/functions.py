@@ -95,42 +95,15 @@ class AqTokChecker:
         else: return False
 
 
-class AqConfig:
-    '''
-    Класс объекта для хранения настроек вершителей.
-    '''
-    configOptions = ['language', 'theme', 'popupOpacity',
-                     'loggingMode', 'logSavingMode', 
-                     'logSavingDuration', 'keyBindings']
-
-    def __init__(self, configDict: dict):
-        for option in self.configOptions: setattr(self, option, configDict[option])
-
-
-    def setup(self, configDict: dict) -> None:
-        for option in self.configOptions: setattr(self, option, configDict[option])
-
-
-    def setupByParam(self, param: str, value) -> None:
-        setattr(self, param, value)
-
-
-    def setKeyBindings(self, keyBindingsDict):
-        self.keyBindings = keyBindingsDict
-
-
-    def getDict(self):
-        return {'preset': None,
-                'language': (self.language),
-                'theme': (self.theme),
-                'popupOpacity': (self.popupOpacity),
-                'loggingMode': (self.loggingMode),
-                'logSavingMode': (self.logSavingMode),
-                'logSavingDuration': (self.logSavingDuration),
-                'keyBindings': (self.keyBindings)}
-
-
 class AqLogger:
+    '''
+    Класс канала журналирования.
+
+    Журналирование необходимо для отборажения пользователю информацию о 
+    текущих действиях сервера, сообщения о предупреждениях и об ошибках.
+
+    Канал журналирования (или `логгер`)
+    '''
     class LogLevel:
         DEBUG = logging.DEBUG
         INFO = logging.INFO
