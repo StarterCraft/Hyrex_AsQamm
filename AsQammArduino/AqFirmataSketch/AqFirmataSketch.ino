@@ -808,7 +808,15 @@ void stringCallback(char * received) {
     //командами; подключение идёт по образцу ниже:
     //  if (strcmp(methodName, {имя метода}) == 0) {имя метода}({аргумент1}, {аргумент2})
     if (strcmp(methodName, "LEDo") == 0) LEDo(atoi(argument1), atoi(argument2));
-    if (strcmp(methodName, "DHTt") == 0) DHTt(atoi(argument1));    
+    if (strcmp(methodName, "DHTt") == 0) DHTt(atoi(argument1));
+    else {
+        char undefinedMethodName[16];
+        strcpy(undefinedMethodName, "ERR;");
+        strcat(undefinedMethodName, methodName);
+        strcat(undefinedMethodName, "MNND");
+
+        Firmata.sendString(undefinedMethodName);
+    }
 }
 
 /*==============================================================================
