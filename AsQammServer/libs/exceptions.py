@@ -1,8 +1,19 @@
+class InvalidFirmataStringResponseError(Exception):
+    '''
+    Исключение вызывается, когда полученное от Arduino-
+    исполнителя строковое сообщение по какой-то причине
+    не соответствует синтаксису таких сообщений
+    '''
+    def __init__(self):
+        super().__init__('От Arduino-исполнителя получено некорректное строковое сообщение')
+
+
+
 class UndefinedCalibrationMethodError(Exception):
     '''
     Исключение вызывается, когда при инициализации Arduino-
     датчика с положительным аргументом 'isCalib' не указан
-    аргумент 'clmeth'.
+    аргумент 'clmeth'
     '''
     def __init__(self):
         super().__init__('''Не обнаружен метод калибровки 'clmeth' для Arduino-датчика с '''

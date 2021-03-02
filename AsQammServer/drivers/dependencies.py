@@ -1,5 +1,5 @@
-from libs.hardware import (AqAbstractHardwareUnit,
-                           AqAbstractHardwareModule,
+from libs.hardware import (AqHardwareUnit,
+                           AqHardwareModule,
                            AqArduinoHardwareModes)
 
 from math import       (log        as log,

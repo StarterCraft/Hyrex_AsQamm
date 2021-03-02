@@ -96,6 +96,9 @@ class AqTokChecker:
 
 
 class AqConfig:
+    '''
+    Класс объекта для хранения настроек вершителей.
+    '''
     configOptions = ['language', 'theme', 'popupOpacity',
                      'loggingMode', 'logSavingMode', 
                      'logSavingDuration', 'keyBindings']

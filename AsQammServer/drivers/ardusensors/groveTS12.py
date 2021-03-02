@@ -1,7 +1,7 @@
 from drivers.dependencies import *
 
 
-class GroveTemperatureSensor(AqAbstractHardwareModule.ArduinoSensor):
+class GroveTemperatureSensor(AqHardwareModule.ArduinoSensor):
     driverId = 1101
     typeDescription = 'Аналоговый датчик темпepaтуры Grove версии 1.2'
 
@@ -11,7 +11,7 @@ class GroveTemperatureSensor(AqAbstractHardwareModule.ArduinoSensor):
                          kwargs['instanceDescription'], 
                          self.temperature)
         self.attrl.extend(['calibrationValue', 'probeFrequency'])
-        self.type = AqAbstractHardwareModule.ArduinoSensor.Analog
+        self.type = AqHardwareModule.ArduinoSensor.Analog
         self.bValue = 4275
         self.calibrationValue = int(kwargs['calibrationValue'])
         self.outputAccuracy = int(kwargs['outputAccuracy'])

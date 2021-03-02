@@ -29,7 +29,7 @@ class AqAbstractHardwareComplex:
     pass
 
 
-class AqAbstractHardwareUnit:
+class AqHardwareUnit:
     '''
     Класс, представляющий любого `исполнителя` — устройства, находящегося в 
     подчинении сервера. Все классы поддерживаемых типов устройств-исполнителей
@@ -100,6 +100,58 @@ class AqAbstractHardwareUnit:
             ТИПА исполнителя.
             Используется для отображения в интерфейсах вершителей
         '''
+        class FirmataStringResponse:
+            '''
+            Класс для работы со строковыми сообщениями-ответами от Arduino-
+            исполнителя. Firmata посылает ответы на строковые команды в виде
+            строк, кото- рые могут быть двух видов: бeз ошибки и с ошибкой.
+
+            Схема безошибочного строкового ответа от исполнителя:
+            'OK;{a};{b}', где:
+                a —— Имя метода, который вызывался и на который исполнитель
+                     отправляет ответ;
+                b —— Результат выполнения метода. Может представлять из себя
+                     число или строку. Если результат представляет собой спи-
+                     сок, то каждый его элемент записывается через точку с 
+                     запятой.
+
+            Схема строкового сообщения об ошибке (ответа) от исполнителя:
+            'ERR;{a};{b}', где:
+                a —— Имя метода, который вызывался и на который исполнитель
+                     отправляет ответ;
+                b —— Код ошибки, зависит от вызываемого метода (для каждого 
+                     метода существуют свои коды ошибки, о них можно узнать
+                     в документации к функциональным библиотекам
+                     AsQamm Arduino).
+            '''
+
+            OKMessage = typemark('OKMessage')
+            ErrorMessage = typemark('ErrorMessage')
+
+            def __init__(self, string: str):
+                '''
+                Инициализировать обработчик строкового сообщения. Если после-
+                днее не соответствует синтаксису строковых сообщений, будет
+                вызвано исключение.
+
+                :param 'string': str
+                    Строковое сообщение от Arduino-исполнителя в виде сырой
+                    строки.
+                '''
+                if len(string.split(';')) < 2:
+                    raise libs.exceptions.InvalidFirmataStringResponseError()
+
+                self.statusCode, self.methodName = string.split(';')[0], string.split(';')[1]
+
+                if self.statusCode == 'OK': #если сообщение без ошибки
+                    self.type = self.OKMessage
+                    self.receivedInfo = string.split(';')[2:]
+
+                elif self.statusCode == 'ERR': #если сообщение об 
+                    self.type = self.ErrorMessage
+                    self.errorCode = string.split(';')[2]
+        
+
         def __init__(self, comPort: str, isEnabled: bool,
                      instanceName: str, desc: str,
                      overrideDefaultTemplate: bool = False):
@@ -196,14 +248,13 @@ class AqAbstractHardwareUnit:
 
             :returns: None
             '''
-            print(type(drv).__name__)
             self.pinMap = {}
             for definer in self.analogPins: self.pinMap.update({definer: None})
-            self.pinMap.update({'d:13': drv.arduModules[1000](self, 'd:13', isEnabled = True,
+            self.pinMap.update({'d:13': drv.Modules[1000](self, 'd:13', isEnabled = True,
                                                               instanceName = 'D13Led',
                                                               instanceDescription = 'D13 Built-in LED')})
             for pin, module in _map.items():
-                self.pinMap.update({pin: drv.arduModules[module[0]](self, pin, **(module[1]))})
+                self.pinMap.update({pin: drv.Modules[module[0]](self, pin, **(module[1]))})
 
 
         def getPinMap(self, mode = None) -> list:
@@ -256,6 +307,12 @@ class AqAbstractHardwareUnit:
             Отправить ASCII-совместимую строку на Arduino (никаких 
             символов Юникода!)
 
+            Отправка строковых команд Arduino-исполнителям производится
+            в том случае, если необходимо, чтобы исполнитель выполнл ка-
+            кую-то ФУНКЦИЮ в своём коде со своей стороны и послал ответ.
+            Например, поддержка цифровых датчиков была реализована имен-
+            но по такому принципу.
+
             :param 'string': str
                 Строка, которую необходимо отправить
 
@@ -289,9 +346,10 @@ class AqAbstractHardwareUnit:
             :returns: None
             '''
             received = ArduinoUtil.two_byte_iter_to_str(args)
+            print(f'{self.comPort}: {received}')
 
 
-class AqAbstractHardwareModule:
+class AqHardwareModule:
     '''
     Класс, представляющий любой `модуль` — подчинённое устройство, которое
     может быть под контролем Arduino-исполнителя. Все классы поддерживаемых
@@ -315,7 +373,7 @@ class AqAbstractHardwareModule:
             Список атрибутов, которые инициализируются из JSON-словаря в
             'hardware.asqd'
         
-        :attrib 'motherBoard': AqAbstractHardwareUnit.ArduinoUnit
+        :attrib 'motherBoard': AqHardwareUnit.ArduinoUnit
             Ссылка на объект Arduino-исполнителя, к которому подключён датчик
 
         :attrib 'isCalibrateable': bool
@@ -343,13 +401,13 @@ class AqAbstractHardwareModule:
 
         attrl = ['instanceDescription', 'isEnabled']
 
-        def __init__(self, atBoard: AqAbstractHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool,
+        def __init__(self, atBoard: AqHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool,
                      isCalib: bool, instanceName: str, desc: str, bkmeth: callable,
                      **kwargs):
             '''
             Инициализировать Аrduino-датчик.
 
-            :param 'atBoard': AqAbstractHardwareUnit.ArduinoUnit
+            :param 'atBoard': AqHardwareUnit.ArduinoUnit
                 Объект Arduino-исполнителя, к которому подключён датчик
 
             :param 'atPin': str
@@ -439,7 +497,7 @@ class AqAbstractHardwareModule:
             Список атрибутов, которые инициализируются из JSON-словаря в
             'hardware.asqd'
         
-        :attrib 'motherBoard': AqAbstractHardwareUnit.ArduinoUnit
+        :attrib 'motherBoard': AqHardwareUnit.ArduinoUnit
             Ссылка на объект Arduino-исполнителя, к которому подключён
             модуль исполнения
 
@@ -463,12 +521,12 @@ class AqAbstractHardwareModule:
         
         attrl = ['instanceDescription', 'isEnabled']
 
-        def __init__(self, atBoard: AqAbstractHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool,
+        def __init__(self, atBoard: AqHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool,
                      instanceName: str, instanceDescription: str,):
             '''
             Инициализировать модуля исполнения для Arduino-исполнителя.
 
-            :param 'atBoard': AqAbstractHardwareUnit.ArduinoUnit
+            :param 'atBoard': AqHardwareUnit.ArduinoUnit
                 Объект Arduino-исполнителя, к которому подключён модуль ис-
                 полнения
 
@@ -676,7 +734,7 @@ class AqHardwareSystem:
               e —— Обязательное описание исполнителя. Может быть пустым.
                    Используется для отображения в интерфейсах вершителей;
               f —— Пин-карта исполнителя в виде словаря (см. документацию к
-                   AqAbstractHardwareUnit.ArduinoUnit.setPinMap());
+                   AqHardwareUnit.ArduinoUnit.setPinMap());
               g —— Количество модулей, которые подключены к исполнителю;
               h —— Количество модулей, которые подключены к исполнителю и ис-
                    пользуются
@@ -724,52 +782,42 @@ class AqArduinoUnitMonitor(Thread):
     подвид потока; для исполнителей он выполняет лишь запуск отслежи-
     вания значений датчиков. Некоторые вaжные атрибуты:
 
-    :attrib 'assignedBoardModules': list
-        Список содержит все модули, которые подключены к исполнителю
-
     :attrib 'assignedBoardMonitors': list
         Список содержит мониторы датчиков для всех таких модулей, ко-
         торые подключены к исполнителю
     '''
-    def __init__(self, hardwareSystem: AqHardwareSystem, assignToBoard: AqAbstractHardwareUnit.ArduinoUnit):
+    def __init__(self, hardwareSystem: AqHardwareSystem, assignToBoard: AqHardwareUnit.ArduinoUnit):
         '''
         Конструктор `монитора` для исполнителя.
 
         :param 'hardwareSystem': AqHardwareSystem
             Ссылка на объект системы управления оборудованием. 
 
-        :param 'assignToBoard': AqAbstractHardwareUnit.ArduinoUnit
+        :param 'assignToBoard': AqHardwareUnit.ArduinoUnit
             Ссылка на объект исполнителя, с которым работает монитор.
         '''
-        Thread.__init__(self, target = self.run, args = (hardwareSystem, assignToBoard),
+        Thread.__init__(self, target = self._run, args = [hardwareSystem, assignToBoard],
                         name = f'{assignToBoard.getId()}:monitor')
         self.assignedBoard = assignToBoard
-        self.assignedBoardModules = []
         self.assignedBoardMonitors = []
         
 
-    def run(self, hardwareSystem: AqHardwareSystem, assignedBoard: AqAbstractHardwareUnit.ArduinoUnit):
+    def _run(self, hardwareSystem: AqHardwareSystem, assignedBoard: AqHardwareUnit.ArduinoUnit):
         '''
         Рабочий метод `монитора` для исполнителя.
 
         :param 'hardwareSystem': AqHardwareSystem
             Ссылка на объект системы управления оборудованием. 
 
-        :param 'assignedBoard': AqAbstractHardwareUnit.ArduinoUnit
+        :param 'assignedBoard': AqHardwareUnit.ArduinoUnit
             Ссылка на объект исполнителя, с которым работает монитор.
         '''
-        for pin, module in (assignedBoard.getPinMap(mode = object)):
+        for module in dict(assignedBoard.getPinMap(mode = object)).values():
             try:
-                if module.driverId in range(1101, 1199):
-                    self.assignedBoardModules.append(module)
-                else: continue
-            except AttributeError: continue
-
-        for module in self.assignedBoardModules:
-            try:
-                if module.driverId in range(1101, 1199):
-                    instance = AqArduinoSensorMonitor(hardwareSystem, module)
+                if type(module) == AqHardwareModule.ArduinoSensor:
+                    instance = AqArduinoSensorMonitor(hardwareSystem.statisticAgent, module)
                     self.assignedBoardMonitors.append(instance)
+                else: continue
             except AttributeError: continue
 
         for monitor in self.assignedBoardMonitors: monitor.start()
@@ -782,25 +830,25 @@ class AqArduinoSensorMonitor(Thread):
     ний с них через каждый, задаваемый для каждого отдельного датчика,
     промежуток времени.
     '''
-    def __init__(self, statisticAgent: AqStatist, assignToSensor: AqAbstractHardwareModule.ArduinoSensor):
+    def __init__(self, statisticAgent: AqStatist, assignToSensor: AqHardwareModule.ArduinoSensor):
         '''
         Конструктор `монитора` для датчика.
 
         :param 'statisticAgent': AqStatist
             Ссылка на объект регистратора статистики. 
 
-        :param 'assignToSensor': AqAbstractHardwareModule.ArduinoSensor
+        :param 'assignToSensor': AqHardwareModule.ArduinoSensor
             Ссылка на объект датчика, с которым работает монитор.
         '''
-        Thread.__init__(self, target = self.run, args = (assignToSensor, statisticAgent),
+        Thread.__init__(self, target = self._run, args = [assignToSensor, statisticAgent],
                         name = f'{assignToSensor.getId()}:monitor', daemon = True)
 
 
-    def run(self, assignedSensor: AqAbstractHardwareModule.ArduinoSensor, statistic: AqStatist):
+    def _run(self, assignedSensor: AqHardwareModule.ArduinoSensor, statistic: AqStatist):
         '''
         Рабочий метод `монитора` для датчика.
 
-        :param 'assignedSensor': AqAbstractHardwareModule.ArduinoSensor
+        :param 'assignedSensor': AqHardwareModule.ArduinoSensor
             Ссылка на объект датчика, с которым работает монитор.
   
         :param 'statistic': AqStatist
