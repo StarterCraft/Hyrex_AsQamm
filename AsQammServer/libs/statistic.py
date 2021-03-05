@@ -1,5 +1,7 @@
-import zipfile, glob, json, pandas, time, os
+import os, time, glob, json, zipfile, pandas
+
 from libs.functions import AqLogger
+import libs.exceptions 
 
 
 def evalMonths(str):
@@ -29,13 +31,7 @@ def reverseHours(integer):
 
 
 class AqStatist:
-    class DiscorrectQueryException(Exception):
-        pass
-
-    class DuplicateQueryArgumentsException(Exception):
-        pass
-
-
+    
     def __init__(self):
         #КОСТЫЛЬ: Упрощённое хранение статистики без использования архивов
         self.currentCsvFile = f'statistic/{time.strftime("%d%b%Y")}.asqd'
@@ -55,7 +51,7 @@ class AqStatist:
 
         try:
             with open(self.currentCsvFile, 'r+', encoding = 'utf-8', newline = '') as csvFile:
-                try: jsonString = json.loads((pandas.read_csv(csvFile)).to_json(orient = 'records'))
+                try: jsonString = json.loads((pandas.read_csv(csvFile)).to_json(orient = 'records'))[-16:]
                 except (json.JSONDecodeError, pandas.errors.EmptyDataError): jsonString = []
                 
         except FileNotFoundError:
@@ -92,7 +88,7 @@ class AqStatist:
         del timer, endtimer
 
 
-    def getQueriedStats(self, query: str):
+    def getStatsByTimeQuery(self, query: str):
         Query = []
         Stats = []
         capables = []
