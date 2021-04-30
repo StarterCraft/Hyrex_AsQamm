@@ -1,48 +1,118 @@
+'''
+Модуль работы со статистикой значений с датчиков.
+'''
+
 import os, time, glob, json, zipfile, pandas
 
 from libs.functions import AqLogger
 import libs.exceptions 
 
 
-def evalMonths(str):
+def evalMonths(monthName: str) -> int:
+    '''
+    Преобразовать трёхбуквенное название месяца (например, 'Jan') в номер
+    этого месяца (например, 1)
+
+    :param 'monthName': str
+        Трёхбуквенное название месяца (например, 'Jan')
+
+    :returns: int
+        Номер месяца (например, 1)
+    '''
     monthsStrings = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     monthsInts = [int for int in range(1, 13)]
-    return int(monthsInts[(monthsStrings.index(str))])
+    return monthsInts[(monthsStrings.index(monthName))]
 
 
-def reverseMonths(integer):
+def reverseMonths(monthNo: int) -> int:
+    '''
+    Преобразовать отрицательный номер месяца (от -11 до 0) в положительный
+    номер месяца (от 1 до 12)
+
+    :param 'monthNо': int
+        Отрицательный номер месяца
+
+    :returns: int
+        Корректный номер месяца
+    '''
     positiveMonths = [int for int in range(1, 13)]
     negativeMonths = [int for int in range(-11, 1)]
-    return int(positiveMonths[negativeMonths.index(integer)])
+    return positiveMonths[negativeMonths.index(integer)]
 
 
-def reverseDays(integer):
+def reverseDays(monthNo: int) -> int:
+    '''
+    Преобразовать отрицательный номер дня (от -32 до 0) в положительный
+    номер дня (от 1 до 31)
+
+    :param 'monthNо': int
+        Отрицательный номер дня
+
+    :returns: int
+        Корректный номер дня
+    '''
     positiveDays = [int for int in range(1, 32)]
     if ((int(time.strftime('%m')) - 1) == 2):
         negativeDays = [int for int in range(-29, 1)]
     else: negativeDays = [int for int in range (-32, 1)]
-    return int(positiveDays[negativeDays.index(integer)])
+    return positiveDays[negativeDays.index(integer)]
 
 
 def reverseHours(integer):
-    positiveHours = [int for int in range(1, 24)]
+    '''
+    Преобразовать отрицательный номер часа (от -23 до 0) в положительный
+    номер часа (от 0 до 23)
+
+    :param 'monthNо': int
+        Отрицательный номер часа
+
+    :returns: int
+        Корректный номер часа
+    '''
+    positiveHours = [int for int in range(0, 24)]
     negativeHours = [int for int in range(-23, 0)]
     return int(positiveHours[negativeHours.index(integer)])
 
 
 class AqStatist:
-    
+    '''
+    Класс для работы со статистикой значений датчиков (статистический
+    агент).
+    Позволяет записывать значение в CSV-файл статистики и получать 
+    статистику различными способами.
+
+    Статистика хранится в папке '{папка расположения AsQamm}/statistic'
+    в виде СSV-таблиц. Это позволяет эффективно расходовать место на диске.
+
+    Мониторы датчиков через каждый заданный период времени регистрируют
+    их значение в архиве через этот класс.
+    '''
     def __init__(self):
+        '''
+        Инициализировать статистический агент; коструктор не принимают
+        аргументов
+        '''
         #КОСТЫЛЬ: Упрощённое хранение статистики без использования архивов
         self.currentCsvFile = f'statistic/{time.strftime("%d%b%Y")}.asqd'
         self.logger = AqLogger('Server>Statist')
         self.isBusy = bool(False)
 
 
-    def registerStatistic(self, sensorIdToRegister: str, valueToRegister):
+    def registerStatistic(self, sensorIdToRegister: str, valueToRegister) -> None:
+        '''
+        Записать значение датчика в файл статистики.
+
+        :param 'sensorIdToRegister': str
+            Индентификатор датчика, значение которого записывают. Больше
+            информации о индентификаторах датчиков можно узнать в докумен-
+            тации к AqArduinoSensor.getId()
+
+        :param 'valueToRegister':
+            Значение датчика, которое нужно записать
+        '''
         assert valueToRegister
         self.isBusy = True
-        timer = time.perf_counter()
+        timer = time.perf_counter_ns() / 1000000
 
         if f'statistic/{time.strftime("%d%b%Y")}.asqd' != self.currentCsvFile:
             self.currentCsvFile = f'statistic/{time.strftime("%d%b%Y")}.asqd'
@@ -51,7 +121,7 @@ class AqStatist:
 
         try:
             with open(self.currentCsvFile, 'r+', encoding = 'utf-8', newline = '') as csvFile:
-                try: jsonString = json.loads((pandas.read_csv(csvFile)).to_json(orient = 'records'))[-16:]
+                try: jsonString = json.loads((pandas.read_csv(csvFile)).to_json(orient = 'records'))
                 except (json.JSONDecodeError, pandas.errors.EmptyDataError): jsonString = []
                 
         except FileNotFoundError:
@@ -59,7 +129,7 @@ class AqStatist:
                 jsonString = []
 
         with open(self.currentCsvFile, 'w+', encoding = 'utf-8', newline = '') as csvFile:
-            for dictionary in jsonString:
+            for dictionary in jsonString[-16:]:
                 try:
                     if   dictionary['time'] == f'{time.strftime("%H:%M")}' and (dictionary[sensorIdToRegister] != valueToRegister or 
                                                                                 dictionary[sensorIdToRegister] == valueToRegister):
@@ -82,17 +152,37 @@ class AqStatist:
 
             csvFile.write((pandas.read_json(json.dumps(jsonString), orient = 'records')).to_csv(index = False))
 
+        endtimer = time.perf_counter_ns() / 1000000
+        self.logger.debug(f'Статистический агент сообщил, что регистрация значения заняла {endtimer} миллисекунд.')
         self.isBusy = False
-        endtimer = time.perf_counter()
-        self.logger.debug(f'Статистический агент сообщил, что регистрация значения заняла {endtimer / 1000} секунд.')
         del timer, endtimer
 
 
-    def getStatsByTimeQuery(self, query: str):
-        Query = []
-        Stats = []
-        capables = []
-        lockedArgs = []
+    def getStatsByTimeQuery(self, query: str) -> list:
+        '''
+        Получить статистику по выборке времени в виде списка словарей
+        по следующему образцу:
+
+        [
+            /*Каждый словарь представляет собой набор значений датчиков
+              для конкретного времени:
+              a —— Время в формате "HH:MM";
+              b —— Индентификатор датчика, значение которого записано;
+              c —— Значение датчика
+            */
+            {
+                "time": a,
+                b: c,
+                
+                //Другие пары "ID датчика": значение
+            }
+        ]
+
+        :param 'query': str
+            Выборка с определённым синтаксисом. Шпаргалка
+            по этому методу в виде изображения — 'Docs_getStatsByTimeQuery.png'
+        '''
+        Query, Stats, capables, lockedArgs = [], [], [], []
 
 
         #Если выборка состоит из 1 аргумента и не имеет уточнения оборудования
@@ -235,7 +325,8 @@ class AqStatist:
 
 
             elif (Query[1])[2:] in lockedArgs:
-                raise DuplicateQueryArgumentsException('Двойное упоминание одинаковых аргументов в строке выборки')
+                raise libs.exceptions.DuplicateQueryArgumentsException()
+
 
         #Если выборка состоит из одного аргумента и определения оборудования
         elif query[3:5] not in '1234567890' and query[5:6] not in 'HDMY' and not query.endswith('()'):

@@ -64,19 +64,19 @@ class AqServer:
             threading.Thread(target = self.publish, args = [_port]).start()
   
         try:
-            uvicorn.run(self.api, host = ip, port = _port)
+            uvicorn.run(self.api, host = ip, port = _port, log_level = 'debug')
         except ValueError:
             if ip.replace(' ', '').lower() == 'localhost':
                 uvicorn.run(self.api, host = socket.gethostbyname(socket.gethostname()), port = _port)
 
 
     def publish(self, _port: int):
-        with open('data/config/~!ngrokconfig!~.asqd', 'r') as configFile:
+        with open('data/config/~!config!~.asqd', 'r') as configFile:
             configData = (json.loads(self.crypto.decryptContent(configFile.read())))
-            subprocess.Popen(f'{configData["executable"]} authtoken {configData["authtoken"]}',
+            subprocess.Popen(f'{configData["ngrok"]["executable"]} authtoken {configData["authtoken"]}',
                                 creationflags = subprocess.CREATE_NEW_CONSOLE)
 
-            subprocess.Popen(f'{configData["executable"]} http {_port}',
+            subprocess.Popen(f'{configData["ngrok"]["executable"]} http {_port}',
                                 creationflags = subprocess.CREATE_NEW_CONSOLE)
                 
 
@@ -84,63 +84,61 @@ if __name__ == '__main__':
     try:
         hardware = None
         runningMode = None
+        IP = ''
+        portstr = ''
+        addArgs = []
 
         # Определим, запускаемся ли из оболочки Python или из exe
         if sysArgs[0].endswith('.py'):
             runningMode = 'PYTHONENV'
         else:
             runningMode = 'EXE'
+            sysArgs.insert(0, '')
 
 
-        if len(sysArgs) < 2:
-            print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите IP-адрес для запуска: ', end = '')
-            IP = input()
+        if ('-c' or '--customsettings') in sysArgs:
+            try:
+                IP = sysArgs[2]
+                portstr = sysArgs[3]
+                addArgs = sysArgs[4:]
 
-            print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите порт сервера для запуска: ', end = '')
-            portstr = input()
+            except IndexError:
+                if not IP:
+                    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите IP-адрес для запуска: ', end = '')
+                    IP = input()
+
+                if not portstr:
+                    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите порт сервера для запуска: ', end = '')
+                    portstr = input()
         
-            print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Нажмите {Fore.CYAN}ENTER{Style.RESET_ALL}'
-                  f' для запуска сервера в обычном режиме или используйте аргументы:\n'
-                  f'                 | "{Fore.CYAN}-h{Style.RESET_ALL}" или "{Fore.CYAN}--nohardware{Style.RESET_ALL}" '
-                  f'для запуска сервера в режиме совместимости без оборудования;\n'
-                  f'                 | "{Fore.CYAN}-n{Style.RESET_ALL}" или "{Fore.CYAN}--ngrok{Style.RESET_ALL}" '
-                  f'для вывода сервера в Интернет через ngrok')
-            addArgs = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}PROMPT{Style.RESET_ALL}]: ').split(' ')
-
-
-        elif len(sysArgs) < 3:
-            IP = sysArgs[1]
-
-            print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите порт сервера для запуска: ', end = '')
-            portstr = input()
-
-            print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Нажмите {Fore.CYAN}ENTER{Style.RESET_ALL}'
-                  f' для запуска сервера в обычном режиме или используйте аргументы:\n'
-                  f'                 | "{Fore.CYAN}-h{Style.RESET_ALL}" или "{Fore.CYAN}--nohardware{Style.RESET_ALL}" '
-                  f'для запуска сервера в режиме совместимости без оборудования;\n'
-                  f'                 | "{Fore.CYAN}-n{Style.RESET_ALL}" или "{Fore.CYAN}--ngrok{Style.RESET_ALL}" '
-                  f'для вывода сервера в Интернет через ngrok')
-            addArgs = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}PROMPT{Style.RESET_ALL}]: ').split(' ')
+                if not addArgs:
+                    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Нажмите {Fore.CYAN}ENTER{Style.RESET_ALL}'
+                          f' для запуска сервера в обычном режиме или используйте аргументы:\n'
+                          f'                 | "{Fore.CYAN}-h{Style.RESET_ALL}" или "{Fore.CYAN}hardware-offline{Style.RESET_ALL}" '
+                          f'для запуска сервера в режиме совместимости без оборудования;\n'
+                          f'                 | "{Fore.CYAN}-n{Style.RESET_ALL}" или "{Fore.CYAN}--ngrok{Style.RESET_ALL}" '
+                          f'для вывода сервера в Интернет через ngrok')
+                    addArgs = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}PROMPT{Style.RESET_ALL}]: ').split(' ')
 
 
         else:
-            IP = sysArgs[1]
-            portstr = sysArgs[2]
-            addArgs = sysArgs[3:]
+            with open('data/config/~!config!~.asqd', 'r') as configFile:
+                configData = (json.loads(AqCrypto.decryptContent(configFile.read())))
+                IP = configData['serverDefault']['ip']
+                portstr = configData['serverDefault']['port']
+                addArgs = sysArgs[0:]
+
 
         server = AqServer()
         userCore = AqUserSystem()
 
-        if (('-h' or '--hardware-offline') not in addArgs):
+        if ('-h' or '--hardware-offline') not in addArgs:
             hardware = AqHardwareSystem()
             assert hardware.isOk, 'Аварийное завершение работы'
 
-        if not hardware:
-            server.serverLogger.info('Сервер будет запущен без инициализации обоpудования')
+        if not hardware: server.serverLogger.info('Сервер будет запущен без инициализации обоpудования')
 
-
-        if ('-n' or '--ngrok') in addArgs: 
-            server.publishViaNgrok = True
+        if ('-n' or '--ngrok') in addArgs: server.publishViaNgrok = True
 
 
         @server.api.get('/getUserdata', description = 'Получить словарь данных пользователей')

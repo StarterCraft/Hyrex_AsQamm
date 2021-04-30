@@ -100,7 +100,7 @@ class AqUserSystem():
                     dataFile.write(fileString)
                     logins.append(dict['login'])
 
-        self.userSystemLogger.debug(f'Внесены изменения в аккаунты пользователей {logins}')
+        self.userSystemLogger.debug(f'Внесены изменения в аккаунты пользователей {", ".join(logins)}')
         self.loadUserData()
 
 
@@ -140,7 +140,7 @@ class AqUserSystem():
             continue
 
         self.loadUserData()
-        self.userSystemLogger.debug(f'Удалены аккаунты пользователей {logins}')
+        self.userSystemLogger.debug(f'Удалены аккаунты пользователей {", ".join(logins)}')
 
 
     def getFilenameForNewUser(self):

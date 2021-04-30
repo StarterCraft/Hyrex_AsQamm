@@ -36,7 +36,7 @@ class GroveTemperatureSensor(AqHardwareModule.ArduinoSensor):
                         (self.bValue) + 1 / 298.15) - self.calibrationValue), self.outputAccuracy)
         except TypeError:
             slp(2)
-            self.temperature()
+            return self.temperature()
 
 
     def calibrate(self, calibrationValue: int):

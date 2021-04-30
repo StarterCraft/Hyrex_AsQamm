@@ -23,8 +23,8 @@ from .arduexecutors.d13led     import D13LED
 #######################################
 
 Boards      = {1071:              AqArduinoUnoR3,
-                   1072:              AqSeeeduinoV4WithBaseShield}
+               1072:              AqSeeeduinoV4WithBaseShield}
 
 Modules     = {1101:              GroveTemperatureSensor,
-                   1102:              CapacitiveSoilMoistureSensor,
-                   1000:              D13LED}
+               1102:              CapacitiveSoilMoistureSensor,
+               1000:              D13LED}

@@ -1,6 +1,5 @@
 from libs              import AqProtectedAttribute
 from libs.config       import AqConfigSystem
-from libs.logging      import AqLogger
 from PyQt5.QtWidgets   import QMessageBox, QFileDialog
 
 
@@ -58,8 +57,8 @@ class AqUsersSystem:
             self.usersCore.userSystemLogger.debug('Система пользователей перешла в состояние: (Вход в систему не произведён)')
 
             self.usersCore.currentUser.setAsCurrent(False)
-            self.usersCore.userSystemLogger.info(f'У активного пользователя {str(self.usersCore.currentUser.login)} установлен параметр активности: '
-                                       f'{str(self.usersCore.currentUser.current)}')
+            self.usersCore.userSystemLogger.info(f'У активного пользователя {str(self.usersCore.currentUser.login)} установлен '
+                                                 f'параметр активности: {str(self.usersCore.currentUser.current)}')
             self.usersCore.currentUser = None
                 
             self.root.ui.liw_UsersDbList.clear()
@@ -80,7 +79,7 @@ class AqUsersSystem:
         self.loggedIn = bool(False)
         self.users = []
         self.sysFileNames = ["data/system/~!guest!~.asqd"]
-        self.userSystemLogger = AqLogger('UserSystem')
+        self.userSystemLogger = libs.functions.AqLogger('UserSystem')
         self.possibleFileNames = []
         self.availableFileNames = []
 
@@ -90,8 +89,11 @@ class AqUsersSystem:
             return self.currentUser
 
 
-    def setCurrentUser(self, AqUser):
-        self.currentUser = AqUser
+    def setCurrentUser(self, root, user: AqUser):
+        self.currentUser = user
+        root.ui.lbl_CurrentUserUsername.setText(user.login.value)
+        root.ui.lbl_CurrentUserDescription.setText(user.description)
+        root.ui.gfv_CurrentUserAvatar.setPixmap(user.avatar)
         
 
     def lockApp(self, root, usersCore):
@@ -218,7 +220,7 @@ class AqUsersSystem:
                 if self.currentUser.login == (item['login']): #Если логин текущего пользователя совпадает с загруженным
                     usersCore.instance = AqUser(usersCore, root, int(item['id']), (item['description']), (item['type']), (item['filepath']),  
                                       (item['avatarAddress']), (item['login']), (item['password']), (item['permits']), (item['config']))
-                    usersCore.setCurrentUser(usersCore.instance)
+                    usersCore.setCurrentUser(root, usersCore.instance)
                     usersCore.instance.edited = False
                     self.userSystemLogger.debug('Загружен пользователь ' + str(usersCore.instance.login))
 
@@ -287,7 +289,7 @@ class AqUsersSystem:
         if boolean:
             libs.functions.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_1)
             self.selector[0].setAsCurrent(True)
-            self.setCurrentUser(self.selector[0])
+            self.setCurrentUser(root, self.selector[0])
             self.selector[0].edited = False
             self.loggedIn = True
 
@@ -341,8 +343,9 @@ class AqUsersSystem:
                                                                         root.userEditDlgUi.filedialog.selectedFiles()[0])) )
 
                 root.userEditDlgUi.tlb_Browse.clicked.connect( lambda:  root.userEditDlgUi.filedialog.show() )
-                root.userEditDlgUi.lnI_EuAvatarAddr.textChanged.connect( lambda: root.userEditDlgUi.gfv_EuAvatarPrev.setPixmap(QPixmap(QImage(str(
-                                                                    root.userEditDlgUi.lnI_EuAvatarAddr.text())))) )
+                root.userEditDlgUi.lnI_EuAvatarAddr.textChanged.connect(
+                    lambda: root.userEditDlgUi.gfv_EuAvatarPrev.setPixmap(
+                        PyQt5.QtGui.QPixmap(PyQt5.QtGui.QImage(root.userEditDlgUi.lnI_EuAvatarAddr.text()))) )
 
                 root.userEditDlgUi.ckb_UserPermit_HomeRooms.setChecked(userToEdit.getPermits('pxHomeRooms'))
                 root.userEditDlgUi.ckb_UserPermit_HomeAsAdmin.setChecked(userToEdit.getPermits('pxHomeAsAdmin'))
@@ -358,19 +361,20 @@ class AqUsersSystem:
                                        
                 hmta = self.crypto.getHmta()
                 server.post('updateUserRg', json, int, [0, hmta.hex()])
-                root.userEditDlg.accepted.connect ( lambda: userToEdit.setup(usersCore, root, (self.crypto.getCut(root.userSelfEditDlgUi.lnI_EuPassword.text(), hmta)),
-                                                                        (root.userEditDlgUi.lnI_EuDesc.text()), (root.userEditDlgUi.lnI_EuAvatarAddr.text()),
-                                                                        { 'homeRooms': (root.userEditDlgUi.ckb_UserPermit_HomeRooms.isChecked()),
-                                                                          'homeAsAdmin': (root.userEditDlgUi.ckb_UserPermit_HomeAsAdmin.isChecked()),
-                                                                          'defenseBasic': (root.userEditDlgUi.ckb_UserPermit_DefnScr.isChecked()),
-                                                                          'defenseDbEdit': (root.userEditDlgUi.ckb_UserPermit_DefnDbEdit.isChecked()),
-                                                                          'defenseAsAdmin': (root.userEditDlgUi.ckb_UserPermit_DefnAsAdmin.isChecked()),
-                                                                          'plants': (root.userEditDlgUi.ckb_UserPermit_PtsScr.isChecked()),
-                                                                          'plantsAsAdmin': (root.userEditDlgUi.ckb_UserPermit_PtsScr.isChecked()),
-                                                                          'hardware': (root.userEditDlgUi.ckb_UserPermit_PtsAsAdmin.isChecked()),
-                                                                          'hardwareAsAdmin': (root.userEditDlgUi.ckb_UserPermit_HardwareScr.isChecked()),
-                                                                          'configure': (root.userEditDlgUi.ckb_UserPermit_CfgScr.isChecked()),
-                                                                          'configureAsAdmin': (root.userEditDlgUi.ckb_UserPermit_CfgAsAdmin.isChecked()) } ))
+                root.userEditDlg.accepted.connect(
+                    lambda: userToEdit.setup(usersCore, root, (self.crypto.getCut(root.userSelfEditDlgUi.lnI_EuPassword.text(), hmta)),
+                            (root.userEditDlgUi.lnI_EuDesc.text()), (root.userEditDlgUi.lnI_EuAvatarAddr.text()),
+                            { 'homeRooms': (root.userEditDlgUi.ckb_UserPermit_HomeRooms.isChecked()),
+                              'homeAsAdmin': (root.userEditDlgUi.ckb_UserPermit_HomeAsAdmin.isChecked()),
+                              'defenseBasic': (root.userEditDlgUi.ckb_UserPermit_DefnScr.isChecked()),
+                              'defenseDbEdit': (root.userEditDlgUi.ckb_UserPermit_DefnDbEdit.isChecked()),
+                              'defenseAsAdmin': (root.userEditDlgUi.ckb_UserPermit_DefnAsAdmin.isChecked()),
+                              'plants': (root.userEditDlgUi.ckb_UserPermit_PtsScr.isChecked()),
+                              'plantsAsAdmin': (root.userEditDlgUi.ckb_UserPermit_PtsScr.isChecked()),
+                              'hardware': (root.userEditDlgUi.ckb_UserPermit_PtsAsAdmin.isChecked()),
+                              'hardwareAsAdmin': (root.userEditDlgUi.ckb_UserPermit_HardwareScr.isChecked()),
+                              'configure': (root.userEditDlgUi.ckb_UserPermit_CfgScr.isChecked()),
+                              'configureAsAdmin': (root.userEditDlgUi.ckb_UserPermit_CfgAsAdmin.isChecked())}))
 
                 root.userEditDlg.show()
                 self.userSystemLogger.debug(f'Диалог редактирования пользователя {userToEdit.login} открыт')
@@ -395,11 +399,14 @@ class AqUsersSystem:
                                                                     root.userSelfEditDlgUi.filedialog.selectedFiles()[0])) )
 
             root.userSelfEditDlgUi.tlb_Browse.clicked.connect( lambda:  root.userSelfEditDlgUi.filedialog.show() )
-            root.userSelfEditDlgUi.lnI_EuAvatarAddr.textChanged.connect( lambda: root.userSelfEditDlgUi.gfv_EuAvatarPrev.setPixmap(QPixmap(QImage(str(
-                                                                root.userSelfEditDlgUi.lnI_EuAvatarAddr.text())))) )
+            root.userSelfEditDlgUi.lnI_EuAvatarAddr.textChanged.connect(
+                lambda: root.userSelfEditDlgUi.gfv_EuAvatarPrev.setPixmap(
+                    PyQt5.QtGui.QPixmap(PyQt5.QtGui.QImage(root.userSelfEditDlgUi.lnI_EuAvatarAddr.text()))) )
             
-            root.userSelfEditDlg.accepted.connect( lambda: userToEdit.setup(usersCore, root, self.crypto.getCut(root.userSelfEditDlgUi.lnI_EuPassword.text(), bytes.fromhex(randomChoice(server.get('getUserRg', json))),
-                                                                           (root.userSelfEditDlgUi.lnI_EuDesc.text()), (root.userSelfEditDlgUi.lnI_EuAvatarAddr.text()), (userToEdit.permits))))
+            root.userSelfEditDlg.accepted.connect(
+                lambda: userToEdit.setup(usersCore, root, 
+                                         self.crypto.getCut(root.userSelfEditDlgUi.lnI_EuPassword.text(), bytes.fromhex(randomChoice(server.get('getUserRg', json)))),
+                                         (root.userSelfEditDlgUi.lnI_EuDesc.text()), (root.userSelfEditDlgUi.lnI_EuAvatarAddr.text()), (userToEdit.permits)))
 
             root.userSelfEditDlg.show()
 
@@ -417,11 +424,11 @@ class AqUsersSystem:
                     self.msg = QMessageBox.critical(root, 'Действие невозможно', 'Вы не можете удалить системного пользователя!')
                 elif (userToDelete.current):
                     self.msg = QMessageBox.critical(root, 'Действие невозможно', 'Вы не можете удалить аккаунт пользователя, '
-                                                                                 'через который выполнен вход!')
-
+                        'через который выполнен вход!')
                 else:
                     userToDelete.toDelete = True
-                    self.msg = QMessageBox.information(root, 'Подтверждение операции', f'Для завершения удаления пользователя {userToDelete.login} нажмите "Применить".')
+                    self.msg = QMessageBox.information(root, 'Подтверждение операции', 
+                        f'Для завершения удаления пользователя {userToDelete.login} нажмите "Применить".')
 
             elif self.msg == QMessageBox.No:
                 return
@@ -433,22 +440,17 @@ class AqUsersSystem:
     def generateIdForNewUser(self):
         self.aivalableUserIds = list()
         for i in range(0, 99):
-            if (i >= 0) and (i < 10):
-                continue
-            else:
-                self.aivalableUserIds.append(i)
+            if (i >= 0) and (i < 10): continue
+            else: self.aivalableUserIds.append(i)
 
         for User in self.users:
-            try:
-                self.aivalableUserIds.remove(int(User.id))
-            except ValueError:
-                continue
+            try: self.aivalableUserIds.remove(int(User.id))
+            except ValueError: continue
 
         return int(randomChoice(self.aivalableUserIds))
 
 
     def callUserCreationDlg(self, root, server, usersCore):
-
             self.userSystemLogger.debug('Инициирован вызов диалога создания нового пользователя')
             root.userCreationDlgUi.lbl_CnuID.setText(str(self.generateIdForNewUser()))
             root.userCreationDlgUi.lnI_CnuLogin.setText('')
@@ -462,35 +464,36 @@ class AqUsersSystem:
                                                                 root.userCreationDlgUi.filedialog.selectedFiles()[0])) )
 
             root.userCreationDlgUi.tlb_Browse.clicked.connect( lambda:  root.userCreationDlgUi.filedialog.show() )
-            root.userCreationDlgUi.lnI_CnuAvatarAddr.textChanged.connect ( lambda: root.userCreationDlgUi.gfv_CnuAvatarPrev.setPixmap(
-                                                                               QPixmap(QImage(root.userCreationDlgUi.lnI_CnuAvatarAddr.text()))) )
+            root.userCreationDlgUi.lnI_CnuAvatarAddr.textChanged.connect(
+                lambda: root.userCreationDlgUi.gfv_CnuAvatarPrev.setPixmap(
+                    PyQt5.QtGui.QPixmap(PyQt5.QtGui.QImage(root.userCreationDlgUi.lnI_CnuAvatarAddr.text()))) )
 
             hmta = self.crypto.getHmta()
             print(hmta.hex())
             server.post('updateUserRg', json, int, [0, hmta.hex()])
 
-            root.userCreationDlg.accepted.connect( lambda:  AqUser(usersCore, root, (root.userCreationDlgUi.lbl_CnuID.text()), 
-                                                                  (root.userCreationDlgUi.lnI_CnuDesc.text()), 1, (server.get('getNewUserFilename', str)), 
-                                                                  (root.userCreationDlgUi.lnI_CnuAvatarAddr.text()), (root.userCreationDlgUi.lnI_CnuLogin.text()),
-                                                                  (self.crypto.getCut(root.userCreationDlgUi.lnI_CnuPassword.text(), hmta)),
-                                                                  {'homeRooms' : root.userCreationDlgUi.ckb_UserPermit_HomeRooms.isChecked(),
-                                                                   'homeAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_HomeAsAdmin.isChecked(),
-                                                                   'defenseBasic' : root.userCreationDlgUi.ckb_UserPermit_DefnScr.isChecked(),
-                                                                   'defenseDbEdit' : root.userCreationDlgUi.ckb_UserPermit_DefnDbEdit.isChecked(),
-                                                                   'defenseAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_DefnAsAdmin.isChecked(),
-                                                                   'plants' : root.userCreationDlgUi.ckb_UserPermit_PtsScr.isChecked(),
-                                                                   'plantsAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_PtsAsAdmin.isChecked(),
-                                                                   'hardware' : root.userCreationDlgUi.ckb_UserPermit_HardwareScr.isChecked(), 
-                                                                   'hardwareAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_HardwareAsAdmin.isChecked(),
-                                                                   'configure' : root.userCreationDlgUi.ckb_UserPermit_CfgScr.isChecked(),
-                                                                   'configureAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_CfgAsAdmin.isChecked()},
-                                                                  {'preset': 'default'}) )
+            root.userCreationDlg.accepted.connect(
+                lambda:  AqUser(usersCore, root, (root.userCreationDlgUi.lbl_CnuID.text()), 
+                               (root.userCreationDlgUi.lnI_CnuDesc.text()), 1, (server.get('getNewUserFilename', str)), 
+                               (root.userCreationDlgUi.lnI_CnuAvatarAddr.text()), (root.userCreationDlgUi.lnI_CnuLogin.text()),
+                               (self.crypto.getCut(root.userCreationDlgUi.lnI_CnuPassword.text(), hmta)),
+                               {'homeRooms' : root.userCreationDlgUi.ckb_UserPermit_HomeRooms.isChecked(),
+                                'homeAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_HomeAsAdmin.isChecked(),
+                                'defenseBasic' : root.userCreationDlgUi.ckb_UserPermit_DefnScr.isChecked(),
+                                'defenseDbEdit' : root.userCreationDlgUi.ckb_UserPermit_DefnDbEdit.isChecked(),
+                                'defenseAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_DefnAsAdmin.isChecked(),
+                                'plants' : root.userCreationDlgUi.ckb_UserPermit_PtsScr.isChecked(),
+                                'plantsAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_PtsAsAdmin.isChecked(),
+                                'hardware' : root.userCreationDlgUi.ckb_UserPermit_HardwareScr.isChecked(), 
+                                'hardwareAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_HardwareAsAdmin.isChecked(),
+                                'configure' : root.userCreationDlgUi.ckb_UserPermit_CfgScr.isChecked(),
+                                'configureAsAdmin' : root.userCreationDlgUi.ckb_UserPermit_CfgAsAdmin.isChecked()},
+                                {'preset': 'default'}) )
 
             root.userCreationDlg.show()
 
 
     def getInstance(self, root, flag):
-
         if flag:
             self.selector = [AqUser for AqUser in self.users if (AqUser.current)]
             return self.selector[0]
@@ -504,7 +507,7 @@ class AqUsersSystem:
     def updateListWidget(self, root, usersCore):
         try:
             self.selector = [AqUser for AqUser in self.users if ((root.ui.liw_UsersDbList.selectedItems()[0].text()) == AqUser.login)]
-            root.ui.lbl_SelectedUserUsername.setText(self.selector[0].login)
+            root.ui.lbl_SelectedUserUsername.setText(self.selector[0].login.value)
             root.ui.lbl_SelectedUserDescription.setText(self.selector[0].description)
             root.ui.gfv_SelectedUserAvatar.setPixmap(self.selector[0].avatar)
         except IndexError:
@@ -527,16 +530,14 @@ class AqUsersSystem:
 from libs.config import AqConfig
 
 
-class AqUser(AqUsersSystem):
-    
-    def __init__(self, usersCore, root, Id, Desc, Type, Filepath, AvAddr, Login, Password, Permits, ConfigDict):
-       
+class AqUser(AqUsersSystem):    
+    def __init__(self, usersCore, root, Id, Desc, Type, Filepath, AvAddr, Login, Password, Permits, ConfigDict):       
         self.id = Id
         self.type = Type
         self.filepath = Filepath
         self.description = Desc
         self.avatarAddress = AvAddr
-        self.avatar = PyQt5.QtGui.QPixmap((PyQt5.QtGui.QImage(fr'{self.avatarAddress}')))
+        self.avatar = PyQt5.QtGui.QPixmap(PyQt5.QtGui.QImage(fr'{self.avatarAddress}'))
         self.login = AqProtectedAttribute(Login)
         self.password = AqProtectedAttribute(Password)
         self.permits = AqProtectedAttribute(Permits)
@@ -559,15 +560,17 @@ class AqUser(AqUsersSystem):
         self.edited = True
         self.description = Desc
         self.avatarAddress = NewAvAddr
-        self.avatar = PyQt5.QtGui.QPixmap((PyQt5.QtGui.QImage(fr'{self.avatarAddress}')))
+        self.avatar = PyQt5.QtGui.QPixmap(PyQt5.QtGui.QImage(fr'{self.avatarAddress}'))
         self.password = AqProtectedAttribute(Password)
         self.permits = AqProtectedAttribute(Permits)
 
         if self.current:
             root.ui.gfv_CurrentUserAvatar.setPixmap(self.avatar)
             root.ui.gfv_SelectedUserAvatar.setPixmap(self.avatar)
+            root.ui.lbl_SelectedUserDescription.setText(self.description)
         else:
             root.ui.gfv_SelectedUserAvatar.setPixmap(self.avatar)
+            root.ui.lbl_SelectedUserDescription.setText(self.description)
 
 
     def setAsCurrent(self, bool):

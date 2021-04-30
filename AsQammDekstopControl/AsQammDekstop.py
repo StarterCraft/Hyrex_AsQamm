@@ -11,9 +11,9 @@ from uibld.applyChangesDlg import Ui_Dlg_ApplyChanges
 
 from uibld           import *
 from libs.resources  import *
-from libs.logging    import *
 from libs.config     import *
 from libs.server     import *
+from libs.functions  import AqLogger, sessionLogFilename
 
 import sys, os, base64
 
@@ -165,7 +165,7 @@ if __name__ == '__main__':
         root.ui.btn_OpenLogFolder.clicked.connect( lambda: root.rootLogger.openLogFolder() )
         root.ui.cbb_Theme.currentTextChanged.connect( lambda: AqUIFunctions.loadSpecifiedTheme(root, (AqUIFunctions.getSelectedThemeId(root.ui.cbb_Theme))) )
     
-        root.rootLogger.info('Привязка кнопок в интерфейсе приложения завершена успешно')
+        root.rootLogger.debug('Привязка кнопок в интерфейсе приложения завершена успешно')
 
         usersCore.lockApp(root, usersCore)
         root.mainloop(app)

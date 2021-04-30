@@ -18,7 +18,7 @@ from libs import       *
 
 from libs.functions import AqLogger
 from serial.serialutil import SerialException
-import libs.exceptions
+import libs.exceptions, pandas
 
 
 class AqAbstractHardwareComplex:
@@ -346,7 +346,6 @@ class AqHardwareUnit:
             :returns: None
             '''
             received = ArduinoUtil.two_byte_iter_to_str(args)
-            print(f'{self.comPort}: {received}')
 
 
 class AqHardwareModule:

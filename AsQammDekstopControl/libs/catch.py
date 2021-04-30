@@ -37,14 +37,14 @@ class AqCrashHandler:
     ignoreTypes = True
     ignoreVarnames  = True
 
-    ignoredTypes = ['type', 'function', 'method', 'module', 'wrappertype', 'sip.wrappertype',
-                    'DockOption', 'enumtype', 'enum.EnumMeta', 'RenderFlag', 'PaintDeviceMetric',
-                    'pyqtBoundSignal', 'PyQt5.QtCore.QtMsgType', 'AqProtectedAttribute',
-                    'colorama.ansi.AnsiFore', 'colorama.ansi.AnsiStyle']
+    ignoredTypes = ['app', 'qapp', 'type', 'function', 'method', 'module', 'wrappertype', 
+                    'sip.wrappertype', 'DockOption', 'enumtype', 'enum.EnumMeta', 'RenderFlag',
+                    'PaintDeviceMetric', 'pyqtBoundSignal', 'PyQt5.QtCore.QtMsgType', 
+                    'AqProtectedAttribute', 'colorama.ansi.AnsiFore', 'colorama.ansi.AnsiStyle']
 
     ignoredVarnames = ['function', 'method', 'exception', 'qt_resource_data', 'qt_resource_name', 
                        'qt_resource_struct_v1', 'qt_resource_struct_v2', 'qt_resource_struct',
-                       'PYQT_VERSION', 'QT_VERSION', 'qt_version', 'rcc_version']
+                       'PYQT_VERSION', 'QT_VERSION', 'QWIDGETSIZE_MAX', 'qt_version', 'rcc_version']
 
     Report = namedtuple('Report', ['crashLoc', 'crashLocVr',
                                    'logFile', 'excCode', 'errData',
@@ -229,11 +229,18 @@ class AqCrashHandler:
         else:
             excInfo = sys.exc_info()
             tb = excInfo[2]
-
+        
+        cou = 0
         while tb:
-            frame = tb.tb_frame
-            traceback.append(self.collectFrame(frame))
-            tb = tb.tb_next
+            if not cou:
+                cou += 1
+                tb = tb.tb_next
+                continue
+            else:
+                frame = tb.tb_frame
+                traceback.append(self.collectFrame(frame))
+                cou += 1
+                tb = tb.tb_next
 
         for excType, excCode in self.codes.items():
             if exception.__class__.__name__ == excType:
