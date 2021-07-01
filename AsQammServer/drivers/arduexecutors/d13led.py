@@ -4,7 +4,7 @@ class D13LED(AqHardwareModule.ArduinoExecutor):
     typeDescription = 'Светодиод на пине 13'
     driverId = 1000
 
-    def __init__(self, atBoard: AqHardwareUnit.ArduinoUnit, atPin: str, **kwargs):
+    def __init__(self, atBoard: AqHardwareDevice.ArduinoDevice, atPin: str, **kwargs):
         super().__init__(atBoard, atPin, kwargs['isEnabled'], 
                          kwargs['instanceName'], 
                          kwargs['instanceDescription'])

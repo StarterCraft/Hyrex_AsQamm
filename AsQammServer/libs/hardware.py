@@ -1,7 +1,8 @@
 '''
 Модуль, в котором представлен основополагающий код для работы
-с `комплексами`, `исполнителями` и `модулями`, классы вышеперечисленных
-объектов, а также код Менеджера оборудования и Центра оборудования.
+с `комплексами`, `исполнителями` (или, упрощённо, `устройствами`) и 
+`модулями`, классы вышеперечисленных объектов, а также код Системы
+оборудования.
 '''
 
 from time import       sleep       as slp 
@@ -16,7 +17,7 @@ from json import       (loads      as loadJson,
 
 from libs import       *
 
-from libs.functions import AqLogger
+from libs.utils import AqLogger
 from serial.serialutil import SerialException
 import libs.exceptions, pandas
 
@@ -29,12 +30,13 @@ class AqAbstractHardwareComplex:
     pass
 
 
-class AqHardwareUnit:
+class AqHardwareDevice:
     '''
-    Класс, представляющий любого `исполнителя` — устройства, находящегося в 
-    подчинении сервера. Все классы поддерживаемых типов устройств-исполнителей
-    являются подклассами этого класса. Пока что, подерживаются только Arduino-
-    исполнители.
+    Класс, представляющий любого `исполнителя` (или, упрощённо, `устройство`)
+    — устройство, находящееся в подчинении сервера. Все классы поддерживаемых
+    типов устройств-исполнителей являются подклассами этого класса.
+
+    `Исполнители` и `устройства` есть одно и то же, если не указано иное!
 
     `Исполнители` могут иметь подчинённых себе `модулей`, если это предусмотрено
     типом этого исполнителя. Они могут быть объединены в `комплексы` для более
@@ -78,7 +80,7 @@ class AqHardwareUnit:
     '''
     isEnabled = bool()
 
-    class ArduinoUnit:
+    class ArduinoDevice:
         '''
         Класс Arduino-исполнителя. Имеет функциональность PyFirmata,
         функциональность приёма и отправки строковых сообщений ASCII,
@@ -351,13 +353,14 @@ class AqHardwareUnit:
 class AqHardwareModule:
     '''
     Класс, представляющий любой `модуль` — подчинённое устройство, которое
-    может быть под контролем Arduino-исполнителя. Все классы поддерживаемых
-    типов устройств-исполнителей являются подклассами этого класса.
+    может быть под контролем Arduino-исполнителя, но при этом не подчиняется
+    серверу напрямую. Все классы поддерживаемых типов устройств-исполнителей
+    являются подклассами этого класса.
 
-    Модули для Arduino-исполнителея подразделяются на `датчики` и `средства 
+    Модули для Arduino-исполнителя подразделяются на `датчики` и `средства 
     исполнения` (`executors`). 
 
-    Как и лобой исполнитель, любой модуль можно отключить от системы, для
+    Как и лобого исполнителя, любой модуль можно отключить от системы, для
     чего можно использовать атрибут 'isEnabled'.
     '''
     class ArduinoSensor:
@@ -372,7 +375,7 @@ class AqHardwareModule:
             Список атрибутов, которые инициализируются из JSON-словаря в
             'hardware.asqd'
         
-        :attrib 'motherBoard': AqHardwareUnit.ArduinoUnit
+        :attrib 'motherBoard': AqHardwareDevice.ArduinoDevice
             Ссылка на объект Arduino-исполнителя, к которому подключён датчик
 
         :attrib 'isCalibrateable': bool
@@ -400,13 +403,13 @@ class AqHardwareModule:
 
         attrl = ['instanceDescription', 'isEnabled']
 
-        def __init__(self, atBoard: AqHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool,
+        def __init__(self, atBoard: AqHardwareDevice.ArduinoDevice, atPin: str, isEnabled: bool,
                      isCalib: bool, instanceName: str, desc: str, bkmeth: callable,
                      **kwargs):
             '''
             Инициализировать Аrduino-датчик.
 
-            :param 'atBoard': AqHardwareUnit.ArduinoUnit
+            :param 'atBoard': AqHardwareDevice.ArduinoDevice
                 Объект Arduino-исполнителя, к которому подключён датчик
 
             :param 'atPin': str
@@ -496,7 +499,7 @@ class AqHardwareModule:
             Список атрибутов, которые инициализируются из JSON-словаря в
             'hardware.asqd'
         
-        :attrib 'motherBoard': AqHardwareUnit.ArduinoUnit
+        :attrib 'motherBoard': AqHardwareDevice.ArduinoDevice
             Ссылка на объект Arduino-исполнителя, к которому подключён
             модуль исполнения
 
@@ -520,12 +523,12 @@ class AqHardwareModule:
         
         attrl = ['instanceDescription', 'isEnabled']
 
-        def __init__(self, atBoard: AqHardwareUnit.ArduinoUnit, atPin: str, isEnabled: bool,
+        def __init__(self, atBoard: AqHardwareDevice.ArduinoDevice, atPin: str, isEnabled: bool,
                      instanceName: str, instanceDescription: str,):
             '''
             Инициализировать модуля исполнения для Arduino-исполнителя.
 
-            :param 'atBoard': AqHardwareUnit.ArduinoUnit
+            :param 'atBoard': AqHardwareDevice.ArduinoDevice
                 Объект Arduino-исполнителя, к которому подключён модуль ис-
                 полнения
 
@@ -621,7 +624,7 @@ class AqHardwareSystem:
 
     :attrib 'monitors': list
         Этот список заполняется при вызове метода startMonitoring(), содержит
-        объекты мониторов (см. документацию к AqArduinoUnitMonitor) для каждо-
+        объекты мониторов (см. документацию к AqArduinoDeviceMonitor) для каждо-
         го исполнителя. Если при инициализации какого-либо из мониторов произой-
         дёт ошибка, то он не будет включён в этот список
     '''
@@ -671,7 +674,7 @@ class AqHardwareSystem:
                        self.logger.info(f'Устройство типа {hardwareObject[0]} на портy {hardwareObject[1]} подключено.')
                    except SerialException:
                        self.logger.error(f'Не удалось инициализировать Arduino-устройство типа {hardwareObject[0]} на портy '
-                                         f'{hardwareObject[1]} из-за ошибки 0104: не удалось найти запрашиваемое устройство')
+                                         f'{hardwareObject[1]} из-за ошибки 511: не удалось найти запрашиваемое устройство')
                        continue
                                        
 
@@ -680,20 +683,19 @@ class AqHardwareSystem:
                                    'синтаксические ошибки')
 
         if len(self.installedArduinoHardware) == 0:
-            self.logger.critical(f'Не удалось инициализировать Arduino-устройство, используя информацию из файла "~!hardware!~.asqd". '
-                                 'Пожалуйста, убедитесь, что файл не повреждён и не пуст, что все модули подключены и находятся'
-                                 'в рабочем состоянии. Для решения данной проблемы попробуйте переустановить AsQammServer, при'
-                                 'переустановке внимательно следите за правильностью вводимой информации об оборудовании.')
+            self.logger.critical(f'Не удалось инициализировать Arduino-устройства, используя информацию из файла "~!hardware!~.asqd". '
+                                 'Пожалуйста, убедитесь, что файл не повреждён и не пуст, что все устройства подключены и находятся'
+                                 'в рабочем состоянии. Для решения данной проблемы попробуйте переустановить AsQammServer, при '
+                                 'переустановке внимательно следите за правильностью вводимой информации об оборудовании')
             self.isOk = False
             self.logger.critical(f'Аварийное завершение работы')
-        else:
-            self.isOk = True
+        else: self.isOk = True
 
 
-    def startMonitoring(self):
+    def startMonitoring(self) -> None:
         '''
         Инициализировать и запустить мониторы (см. документацию к
-        AqArduinoUnitMonitor) для каждого исполнителя.
+        AqArduinoDeviceMonitor) для каждого исполнителя.
 
         Монитор не будет инициализирован, если параметр 'isEnabled'
         у исполнителя не истиннен. Каждый инициализированный монитор
@@ -703,7 +705,7 @@ class AqHardwareSystem:
         '''
         for unit in self.installedArduinoHardware:
            if unit.isEnabled:
-               instance = AqArduinoUnitMonitor(self, unit)
+               instance = AqArduinoDeviceMonitor(self, unit)
                self.monitors.append(instance)
 
         for monitor in self.monitors:
@@ -711,7 +713,7 @@ class AqHardwareSystem:
             monitor.start()
 
     
-    def getHardwareDataSheet(self):
+    def getHardwareDataSheet(self) -> list:
         '''
         Получить полную информацию об установленном оборудовании в
         виде списка словарей, где каждый словарь представляет одно-
@@ -723,7 +725,7 @@ class AqHardwareSystem:
         [
             /*Объект исполнителя, где:
               a —— Тип исполнителя (на данный момент — возможен только 
-                   "ArduinoUnit");
+                   "ArduinoDevice");
               b —— Используется ли исполнитель (значение параметра 'isEnabled'
                    для данного исполнителя);
               c —— ID драйвера исполнителя (любой ID драйвера представляет из
@@ -733,7 +735,7 @@ class AqHardwareSystem:
               e —— Обязательное описание исполнителя. Может быть пустым.
                    Используется для отображения в интерфейсах вершителей;
               f —— Пин-карта исполнителя в виде словаря (см. документацию к
-                   AqHardwareUnit.ArduinoUnit.setPinMap());
+                   AqHardwareDevice.ArduinoDevice.setPinMap());
               g —— Количество модулей, которые подключены к исполнителю;
               h —— Количество модулей, которые подключены к исполнителю и ис-
                    пользуются
@@ -775,7 +777,7 @@ class AqHardwareSystem:
         return dataSheet
 
 
-class AqArduinoUnitMonitor(Thread):
+class AqArduinoDeviceMonitor(Thread):
     '''
     Класс `монитора` для исполнителя. `Монитор` представляет из себя
     подвид потока; для исполнителей он выполняет лишь запуск отслежи-
@@ -785,14 +787,14 @@ class AqArduinoUnitMonitor(Thread):
         Список содержит мониторы датчиков для всех таких модулей, ко-
         торые подключены к исполнителю
     '''
-    def __init__(self, hardwareSystem: AqHardwareSystem, assignToBoard: AqHardwareUnit.ArduinoUnit):
+    def __init__(self, hardwareSystem: AqHardwareSystem, assignToBoard: AqHardwareDevice.ArduinoDevice):
         '''
         Конструктор `монитора` для исполнителя.
 
         :param 'hardwareSystem': AqHardwareSystem
             Ссылка на объект системы управления оборудованием. 
 
-        :param 'assignToBoard': AqHardwareUnit.ArduinoUnit
+        :param 'assignToBoard': AqHardwareDevice.ArduinoDevice
             Ссылка на объект исполнителя, с которым работает монитор.
         '''
         Thread.__init__(self, target = self._run, args = [hardwareSystem, assignToBoard],
@@ -801,14 +803,14 @@ class AqArduinoUnitMonitor(Thread):
         self.assignedBoardMonitors = []
         
 
-    def _run(self, hardwareSystem: AqHardwareSystem, assignedBoard: AqHardwareUnit.ArduinoUnit):
+    def _run(self, hardwareSystem: AqHardwareSystem, assignedBoard: AqHardwareDevice.ArduinoDevice):
         '''
         Рабочий метод `монитора` для исполнителя.
 
         :param 'hardwareSystem': AqHardwareSystem
             Ссылка на объект системы управления оборудованием. 
 
-        :param 'assignedBoard': AqHardwareUnit.ArduinoUnit
+        :param 'assignedBoard': AqHardwareDevice.ArduinoDevice
             Ссылка на объект исполнителя, с которым работает монитор.
         '''
         for module in dict(assignedBoard.getPinMap(mode = object)).values():
@@ -857,7 +859,7 @@ class AqArduinoSensorMonitor(Thread):
             try:
                 if not self.statistic.isBusy:
                     self.statistic.registerStatistic(self.assignedSensor.getId(), self.assignedSensor.bakedValue())
-                elif self.statistic.isBusy:
+                else:
                     while self.statistic.isBusy: slp(0.48)
                     self.statistic.registerStatistic(self.assignedSensor.getId(), self.assignedSensor.bakedValue())
                     

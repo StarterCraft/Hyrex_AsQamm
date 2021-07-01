@@ -1,12 +1,13 @@
 from PyQt5 import QtCore, QtGui
-from libs.functions import AqLogger
+from libs.utils import AqLogger
+from libs.exceptions import ServerResponseException
 import json
 
 class AqHardwareSystem:
     def __init__(self, root, server):
-        self.hardware = server.get('getHardwareData', json)
-        if self.hardware == {'505':'HARDWARE_OFFLINE'}:
-            self.hardware = {}
+        try: self.hardware = server.get('getHardwareData', json)
+        except ServerResponseException as exception: 
+            if exception.data[1] == 501: self.hardware = []
         self.logger = AqLogger('Hardware')
         self.mainTableModel = QtGui.QStandardItemModel(0, 6)
         

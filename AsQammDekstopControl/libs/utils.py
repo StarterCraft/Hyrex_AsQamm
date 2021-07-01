@@ -1,4 +1,3 @@
-from libs.config                       import AqConfigSystem
 from PyQt5                             import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore                      import *
 from PyQt5.QtGui                       import *
@@ -159,26 +158,26 @@ class AqUIFunctions:
 
 
     @staticmethod
-    def selectSkin(id, root):
+    def selectPage(id, root):
         if id == 1:
             root.ui.stack.setCurrentWidget(root.ui.page_1)
-            root.ui.lbl_SkinName.setText('Наш дом')
+            root.ui.lbl_PageName.setText('Наш дом')
 
         elif id == 2:
             root.ui.stack.setCurrentWidget(root.ui.page_2)
-            root.ui.lbl_SkinName.setText('Защита')
+            root.ui.lbl_PageName.setText('Защита')
 
         elif id == 3:
             root.ui.stack.setCurrentWidget(root.ui.page_3)
-            root.ui.lbl_SkinName.setText('Растения')
+            root.ui.lbl_PageName.setText('Растения')
 
         elif id == 4:
             root.ui.stack.setCurrentWidget(root.ui.page_4)
-            root.ui.lbl_SkinName.setText('Оборудование')
+            root.ui.lbl_PageName.setText('Устройства')
 
         elif id == 5:
             root.ui.stack.setCurrentWidget(root.ui.page_5)
-            root.ui.lbl_SkinName.setText('Конфигурация')
+            root.ui.lbl_PageName.setText('Конфигурация')
 
             
     @staticmethod
@@ -283,7 +282,7 @@ class AqUIFunctions:
                 root.ui.btn_page5.setStyleSheet(styleSheets['configScreenMainMenuButton'])
 
                 root.ui.frame_top.setStyleSheet(styleSheets['topBarFrame'])
-                root.ui.lbl_SkinName.setStyleSheet(styleSheets['topBarTexts'])
+                root.ui.lbl_PageName.setStyleSheet(styleSheets['topBarTexts'])
                 root.ui.lbl_ReadOnly1.setStyleSheet(styleSheets['topBarTexts'])
                 root.ui.lbl_ReadOnly2.setStyleSheet(styleSheets['topBarTexts'])
                 root.ui.lbl_HardwareAll.setStyleSheet(styleSheets['topBarTexts'])
@@ -384,29 +383,61 @@ class AqThread(QThread):
 
 
 class AqCrypto:
+    '''
+    Статический класс для работы с криптографией.
+    '''
+
     @staticmethod
-    def decryptContent(s):
-        return (base64.b64decode(s.encode('utf-8'))).decode('utf-8')
+    def decryptContent(string: str) -> str:
+        '''
+        Преобразовать зашифрованную Base-64 строку в обыкновенную
+        строку.
+
+        :param 'string': str
+            Зашифрованная Base-64 строка
+
+        :returns: str
+            Расшифрованная из Base-64 cтрока
+        '''
+        return (base64.b64decode(string.encode('utf-8'))).decode('utf-8')
 
     
     @staticmethod
-    def encryptContent(s):
-        return (base64.b64encode(s.encode('utf-8'))).decode('utf-8')
+    def encryptContent(string: str) -> str:
+        '''
+        Преобразовать обыкновенную строку в зашифрованную строку
+        Base-64.
+
+        :param 'string': str
+            Обыкновенная cтрока для зашифровки
+
+        :returns: str
+            Зашифрованная Base-64 строка
+        '''
+        return (base64.b64encode(string.encode('utf-8'))).decode('utf-8')
 
     
     @staticmethod
-    def rawContent(s):
-        return str(r'{0}'.format(s))
+    def rawContent(string: str) -> str:
+        '''
+        Неиспользуемый метод
+        '''
+        return str(r'{0}'.format(string))
 
     
     @staticmethod
-    def getHmta():
+    def getHmta() -> bytes:
+        '''
+        Получить случайные 32 байта и вернуть их.
+
+        :returns: bytes
+        '''
         return os.urandom(32)
 
     
     @staticmethod
-    def getCut(_str, bytes):
-        return (hashlib.pbkdf2_hmac('sha256', _str.encode('utf-8'), bytes, 256256).hex())
+    def getCut(string: str, byteSet: bytes) -> str:
+        return (hashlib.pbkdf2_hmac('sha256', string.encode('utf-8'), byteSet, 256256).hex())
 
 
 sessionLogFilename = f'logs/{(time.strftime("""%d.%m.%Y_%H%M%S""", time.localtime()))}_AsQammLog.log'
@@ -522,40 +553,13 @@ class AqLogger:
         self.filenames = list()
 
         self.Logger = logging.getLogger(name)
+        self.formatString = ''
         self.getFilename()
         
         self.Logger.setLevel(self.logLevel._level)
 
-        if self.useColorama <= 1 and self.logLevel == self.DEBUG:
-            formatter = logging.Formatter('{%(asctime)s} [%(name)s:%(levelname)s] [%(filename)s <%(lineno)s>: '
-                                          '%(module)s.%(funcName)s]: %(message)s')
-        elif self.useColorama <= 1 and self.logLevel >= self.INFO:
-            formatter = logging.Formatter('{%(asctime)s} [%(name)s:%(levelname)s] [%(module)s.%(funcName)s]: '
-                                          '%(message)s')
-
-        elif self.useColorama == 2 and self.logLevel == self.DEBUG:
-            formatString = (Fore.CYAN   + ' {%(asctime)s} [' + Style.RESET_ALL +
-                            Fore.GREEN  +   '%(name)s'       + Style.RESET_ALL + ':'   +
-                            Fore.YELLOW +   '%(levelname)s'  + Style.RESET_ALL + '] [' +
-                            Fore.BLUE   +   '%(filename)s'   + Style.RESET_ALL + ' <'  +
-                            Fore.WHITE  +   '%(lineno)s'     + Style.RESET_ALL + '>: ' +
-                            Fore.BLUE   +   '%(module)s'     + Style.RESET_ALL + '.'   +
-                                            '%(funcName)s]: %(message)s')
-
-            formatter = logging.Formatter(formatString)
-        elif self.useColorama == 2 and self.logLevel >= self.INFO:
-            formatString = (Fore.CYAN   + ' {%(asctime)s} [' + Style.RESET_ALL +
-                            Fore.GREEN  +   '%(name)s'       + Style.RESET_ALL + ':'   +
-                            Fore.YELLOW +   '%(levelname)s'  + Style.RESET_ALL + '] [' +
-                            Fore.BLUE   +   '%(module)s'     + Style.RESET_ALL + '.'   +
-                                            '%(funcName)s]: %(message)s')
-
-            formatter = logging.Formatter(formatString)
-
-        handler = logging.FileHandler(rf'{self.filenames[0]}', 'a+', 'utf-8')
-        handler.setFormatter(formatter)
-
-        self.Logger.addHandler(handler)
+        self.handler = logging.FileHandler(rf'{self.filenames[0]}', 'a+', 'utf-8')
+        self.Logger.addHandler(self.handler)
 
 
     def setLogLevel(self, logLevel: LogLevel):
@@ -581,6 +585,15 @@ class AqLogger:
 
 
     def getFilename(self):
+        '''
+        Сгенерировать имя файла для сохранения лога и сохранить его в список
+        'self.filenames'. Метод вызывается при инициализации канала журнали-
+        рования, но при этом для сохранения логов всегда используется файл с
+        именем, которое было получено при инициализации ПЕРВОГО по счёту
+        канала.
+
+        :returns: None
+        '''
         self.filenames.append(f'logs/{(time.strftime("""%d.%m.%Y_%H%M%S""", time.localtime()))}_AsQammLog.log')
 
 
@@ -593,6 +606,36 @@ class AqLogger:
 
         :returns: None
         '''
+        callerInfo = self.Logger.findCaller()
+        fileName = callerInfo[0]
+        lineNo = str(callerInfo[1])
+        moduleName = ('UNKNOWN' if callerInfo[0] == '(unknown file)' else callerInfo[0][:callerInfo[0].index('.')])
+        funcName = callerInfo[2]
+
+        if self.useColorama <= 1 and self.logLevel == self.DEBUG:
+            self.formatString = ('{%(asctime)s} [%(name)s:%(levelname)s] '
+                                 f'[{fileName} <{lineNo}>: {moduleName}.{funcName}]: '
+                                 '%(message)s')
+        elif self.useColorama <= 1 and self.logLevel >= self.INFO:
+            self.formatString = '{%(asctime)s} [%(name)s:%(levelname)s] %(message)s'
+
+        elif self.useColorama == 2 and self.logLevel == self.DEBUG:
+            self.formatString = (str(Fore.CYAN)   +  '{%(asctime)s} [' + str(Style.RESET_ALL) +
+                                 str(Fore.GREEN)  +   '%(name)s'       + str(Style.RESET_ALL) + ':'   +
+                                 str(Fore.YELLOW) +   '%(levelname)s'  + str(Style.RESET_ALL) + '] [' +
+                                 str(Fore.BLUE)   +   fileName         + str(Style.RESET_ALL) + ' <'  +
+                                 str(Fore.WHITE)  +   lineNo           + str(Style.RESET_ALL) + '>: ' +
+                                 str(Fore.BLUE)   +   moduleName       + str(Style.RESET_ALL) + '.'   +
+                                                      funcName         + ': %(message)s')
+
+        elif self.useColorama == 2 and self.logLevel >= self.INFO:
+            self.formatString = (str(Fore.CYAN)   +  '{%(asctime)s} [' + str(Style.RESET_ALL) +
+                                 str(Fore.GREEN)  +   '%(name)s'       + str(Style.RESET_ALL) + ':'   +
+                                 str(Fore.YELLOW) +   '%(levelname)s'  + str(Style.RESET_ALL) + '] [' +
+                                 str(Fore.BLUE)   +   moduleName       + str(Style.RESET_ALL) + '.'   + 
+                                                      funcName + ': %(message)s')
+        self.handler.setFormatter(logging.Formatter(self.formatString))
+
         self.Logger.debug(message)
         if self.logLevel == self.DEBUG and not self.printDsb:
             print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.YELLOW}DEBUG{Style.RESET_ALL}]: {message}')
@@ -607,6 +650,36 @@ class AqLogger:
 
         :returns: None
         '''
+        callerInfo = self.Logger.findCaller()
+        fileName = callerInfo[0]
+        lineNo = str(callerInfo[1])
+        moduleName = ('UNKNOWN' if callerInfo[0] == '(unknown file)' else callerInfo[0][:callerInfo[0].index('.')])
+        funcName = callerInfo[2]
+
+        if self.useColorama <= 1 and self.logLevel == self.DEBUG:
+            self.formatString = ('{%(asctime)s} [%(name)s:%(levelname)s] '
+                                 f'[{fileName} <{lineNo}>: {moduleName}.{funcName}]: '
+                                 '%(message)s')
+        elif self.useColorama <= 1 and self.logLevel >= self.INFO:
+            self.formatString = '{%(asctime)s} [%(name)s:%(levelname)s] %(message)s'
+
+        elif self.useColorama == 2 and self.logLevel == self.DEBUG:
+            self.formatString = (str(Fore.CYAN)   +  '{%(asctime)s} [' + str(Style.RESET_ALL) +
+                                 str(Fore.GREEN)  +   '%(name)s'       + str(Style.RESET_ALL) + ':'   +
+                                 str(Fore.YELLOW) +   '%(levelname)s'  + str(Style.RESET_ALL) + '] [' +
+                                 str(Fore.BLUE)   +   fileName         + str(Style.RESET_ALL) + ' <'  +
+                                 str(Fore.WHITE)  +   lineNo           + str(Style.RESET_ALL) + '>: ' +
+                                 str(Fore.BLUE)   +   moduleName       + str(Style.RESET_ALL) + '.'   +
+                                                      funcName         + ': %(message)s')
+
+        elif self.useColorama == 2 and self.logLevel >= self.INFO:
+            self.formatString = (str(Fore.CYAN)   +  '{%(asctime)s} [' + str(Style.RESET_ALL) +
+                                 str(Fore.GREEN)  +   '%(name)s'       + str(Style.RESET_ALL) + ':'   +
+                                 str(Fore.YELLOW) +   '%(levelname)s'  + str(Style.RESET_ALL) + '] [' +
+                                 str(Fore.BLUE)   +   moduleName       + str(Style.RESET_ALL) + '.'   + 
+                                                      funcName + ': %(message)s')
+        self.handler.setFormatter(logging.Formatter(self.formatString))
+
         self.Logger.info(message)
         if self.logLevel <= self.INFO and not self.printDsb:
             print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.YELLOW}INFO{Style.RESET_ALL}]: {message}')
@@ -621,6 +694,36 @@ class AqLogger:
 
         :returns: None
         '''
+        callerInfo = self.Logger.findCaller()
+        fileName = callerInfo[0]
+        lineNo = str(callerInfo[1])
+        moduleName = ('UNKNOWN' if callerInfo[0] == '(unknown file)' else callerInfo[0][:callerInfo[0].index('.')])
+        funcName = callerInfo[2]
+
+        if self.useColorama <= 1 and self.logLevel == self.DEBUG:
+            self.formatString = ('{%(asctime)s} [%(name)s:%(levelname)s] '
+                                 f'[{fileName} <{lineNo}>: {moduleName}.{funcName}]: '
+                                 '%(message)s')
+        elif self.useColorama <= 1 and self.logLevel >= self.INFO:
+            self.formatString = '{%(asctime)s} [%(name)s:%(levelname)s] %(message)s'
+
+        elif self.useColorama == 2 and self.logLevel == self.DEBUG:
+            self.formatString = (str(Fore.CYAN)   +  '{%(asctime)s} [' + str(Style.RESET_ALL) +
+                                 str(Fore.GREEN)  +   '%(name)s'       + str(Style.RESET_ALL) + ':'   +
+                                 str(Fore.YELLOW) +   '%(levelname)s'  + str(Style.RESET_ALL) + '] [' +
+                                 str(Fore.BLUE)   +   fileName         + str(Style.RESET_ALL) + ' <'  +
+                                 str(Fore.WHITE)  +   lineNo           + str(Style.RESET_ALL) + '>: ' +
+                                 str(Fore.BLUE)   +   moduleName       + str(Style.RESET_ALL) + '.'   +
+                                                      funcName         + ': %(message)s')
+
+        elif self.useColorama == 2 and self.logLevel >= self.INFO:
+            self.formatString = (str(Fore.CYAN)   +  '{%(asctime)s} [' + str(Style.RESET_ALL) +
+                                 str(Fore.GREEN)  +   '%(name)s'       + str(Style.RESET_ALL) + ':'   +
+                                 str(Fore.YELLOW) +   '%(levelname)s'  + str(Style.RESET_ALL) + '] [' +
+                                 str(Fore.BLUE)   +   moduleName       + str(Style.RESET_ALL) + '.'   + 
+                                                      funcName + ': %(message)s')
+        self.handler.setFormatter(logging.Formatter(self.formatString))
+
         self.Logger.warning(message)
         if self.logLevel <= self.WARNING and not self.printDsb:
             print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.YELLOW}WARN{Style.RESET_ALL}]: {message}')
@@ -635,6 +738,36 @@ class AqLogger:
 
         :returns: None
         '''
+        callerInfo = self.Logger.findCaller()
+        fileName = callerInfo[0]
+        lineNo = str(callerInfo[1])
+        moduleName = ('UNKNOWN' if callerInfo[0] == '(unknown file)' else callerInfo[0][:callerInfo[0].index('.')])
+        funcName = callerInfo[2]
+
+        if self.useColorama <= 1 and self.logLevel == self.DEBUG:
+            self.formatString = ('{%(asctime)s} [%(name)s:%(levelname)s] '
+                                 f'[{fileName} <{lineNo}>: {moduleName}.{funcName}]: '
+                                 '%(message)s')
+        elif self.useColorama <= 1 and self.logLevel >= self.INFO:
+            self.formatString = '{%(asctime)s} [%(name)s:%(levelname)s] %(message)s'
+
+        elif self.useColorama == 2 and self.logLevel == self.DEBUG:
+            self.formatString = (str(Fore.CYAN)   +  '{%(asctime)s} [' + str(Style.RESET_ALL) +
+                                 str(Fore.GREEN)  +   '%(name)s'       + str(Style.RESET_ALL) + ':'   +
+                                 str(Fore.YELLOW) +   '%(levelname)s'  + str(Style.RESET_ALL) + '] [' +
+                                 str(Fore.BLUE)   +   fileName         + str(Style.RESET_ALL) + ' <'  +
+                                 str(Fore.WHITE)  +   lineNo           + str(Style.RESET_ALL) + '>: ' +
+                                 str(Fore.BLUE)   +   moduleName       + str(Style.RESET_ALL) + '.'   +
+                                                      funcName         + ': %(message)s')
+
+        elif self.useColorama == 2 and self.logLevel >= self.INFO:
+            self.formatString = (str(Fore.CYAN)   +  '{%(asctime)s} [' + str(Style.RESET_ALL) +
+                                 str(Fore.GREEN)  +   '%(name)s'       + str(Style.RESET_ALL) + ':'   +
+                                 str(Fore.YELLOW) +   '%(levelname)s'  + str(Style.RESET_ALL) + '] [' +
+                                 str(Fore.BLUE)   +   moduleName       + str(Style.RESET_ALL) + '.'   + 
+                                                      funcName + ': %(message)s')
+        self.handler.setFormatter(logging.Formatter(self.formatString))
+
         self.Logger.error(message)
         if self.logLevel <= self.ERROR and not self.printDsb:
             print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.YELLOW}ERROR{Style.RESET_ALL}]: {message}')
@@ -649,10 +782,39 @@ class AqLogger:
 
         :returns: None
         '''
+        callerInfo = self.Logger.findCaller()
+        fileName = callerInfo[0]
+        lineNo = str(callerInfo[1])
+        moduleName = ('UNKNOWN' if callerInfo[0] == '(unknown file)' else callerInfo[0][:callerInfo[0].index('.')])
+        funcName = callerInfo[2]
+
+        if self.useColorama <= 1 and self.logLevel == self.DEBUG:
+            self.formatString = ('{%(asctime)s} [%(name)s:%(levelname)s] '
+                                 f'[{fileName} <{lineNo}>: {moduleName}.{funcName}]: '
+                                 '%(message)s')
+        elif self.useColorama <= 1 and self.logLevel >= self.INFO:
+            self.formatString = '{%(asctime)s} [%(name)s:%(levelname)s] %(message)s'
+
+        elif self.useColorama == 2 and self.logLevel == self.DEBUG:
+            self.formatString = (str(Fore.CYAN)   +  '{%(asctime)s} [' + str(Style.RESET_ALL) +
+                                 str(Fore.GREEN)  +   '%(name)s'       + str(Style.RESET_ALL) + ':'   +
+                                 str(Fore.YELLOW) +   '%(levelname)s'  + str(Style.RESET_ALL) + '] [' +
+                                 str(Fore.BLUE)   +   fileName         + str(Style.RESET_ALL) + ' <'  +
+                                 str(Fore.WHITE)  +   lineNo           + str(Style.RESET_ALL) + '>: ' +
+                                 str(Fore.BLUE)   +   moduleName       + str(Style.RESET_ALL) + '.'   +
+                                                      funcName         + ': %(message)s')
+
+        elif self.useColorama == 2 and self.logLevel >= self.INFO:
+            self.formatString = (str(Fore.CYAN)   +  '{%(asctime)s} [' + str(Style.RESET_ALL) +
+                                 str(Fore.GREEN)  +   '%(name)s'       + str(Style.RESET_ALL) + ':'   +
+                                 str(Fore.YELLOW) +   '%(levelname)s'  + str(Style.RESET_ALL) + '] [' +
+                                 str(Fore.BLUE)   +   moduleName       + str(Style.RESET_ALL) + '.'   + 
+                                                      funcName + ': %(message)s')
+        self.handler.setFormatter(logging.Formatter(self.formatString))
+        
         self.Logger.critical(message)
         if self.logLevel <= self.CRITICAL and not self.printDsb:
             print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.YELLOW}CRITICAL{Style.RESET_ALL}]: {message}')
-
 
     def exception(self, _exception: Exception):
         '''
@@ -669,6 +831,7 @@ class AqLogger:
                                 exc_info = _exception)
 
 
+    @staticmethod
     def openLogFolder():
         '''
         Открыть папку с файлами журналов.
@@ -757,11 +920,183 @@ class AqLocalFunctions:
         QMessageBox.information(root, 'Сохранение завершено', f'Сохранено {self.checker} пользователей!')
 
 
-class AqCrashHandler:
-    def __init__(self):
-        self.pathToExecutable = 'crashHandler.exe'
+class AqConfigSystem:
+    @staticmethod
+    def loadDefaultConfig(root):
+        jsonString = str()
+
+        with open('data/config/~!default!~.asqd', 'r', encoding = 'utf-8') as configFile:
+            jsonString = configFile.read()
+            jsonString = json.loads(jsonString)
+            defaultConfig = AqConfig(jsonString)
+            return defaultConfig
 
 
-    def handle(self, exception: Exception, sessionLogFileAddr: str):
-        failureType = str()
-        return subprocess.Popen(f'{self.pathToExecutable} {failureType} {sessionLogFileAddr}')
+    @staticmethod
+    def loadDefaultConfigDict():
+        return {'preset': 'default'}
+
+
+    @staticmethod
+    def loadServerConfig():
+        with open('data/config/~!serverdata!~.asqd') as configFile:
+            fileString = configFile.read()
+            jsonString = json.loads(fileString)
+
+
+    @staticmethod
+    def saveConfig(root, usersCore, themeString: str):
+        currentUser = usersCore.getCurrentUser()
+
+        currentUser.config.setupByParam('language', root.ui.cbb_Language.currentIndex())
+        currentUser.config.setupByParam('theme', themeString)
+        currentUser.config.setupByParam('popupOpacity', root.ui.sld_WindowsOpacitySct.value())
+        currentUser.config.setupByParam('loggingMode', root.ui.ckb_ToggleLogs.isChecked())
+        currentUser.config.setupByParam('logSavingMode', root.ui.ckb_ToggleLogsArch.isChecked())
+        currentUser.config.setupByParam('logSavingDuration', root.ui.cbb_LogsArchMode.currentIndex())
+
+        currentUser.config.setKeyBindings({'homeScreen': ((root.ui.keySequenceEdit.keySequence()).toString()),
+		                                        'defenseScreen': ((root.ui.keySequenceEdit_2.keySequence()).toString()),
+		                                        'plantsScreen': ((root.ui.keySequenceEdit_3.keySequence()).toString()),
+		                                        'hardwareScreen': ((root.ui.keySequenceEdit_4.keySequence()).toString()),
+		                                        'configScreen': ((root.ui.keySequenceEdit_5.keySequence()).toString()),
+		
+		                                        'changeInterfaceMode': ((root.ui.keySequenceEdit_6.keySequence()).toString()),
+		                                        'applyChanges': ((root.ui.keySequenceEdit_7.keySequence()).toString()),
+		                                        'saveChanges': ((root.ui.keySequenceEdit_8.keySequence()).toString()),
+		                		                'loadChanges': ((root.ui.keySequenceEdit_9.keySequence()).toString()) })
+        currentUser.edited = True
+        del currentUser
+
+
+    @staticmethod
+    def saveDefaultConfig(root, usersCore, themeString):
+        currentUser = usersCore.getCurrentUser()
+
+        if (currentUser.getPermits('pxConfigAsAdmin')):
+            with open('data/config/~!default!~.asqd', 'w', encoding = 'utf-8') as configFile:
+                jsonString = json.dumps(({ 'preset': None, 
+                                           'language': (root.ui.cbb_Language.currentIndex()),
+                                           'theme': themeString,
+                                           'popupOpacity': (root.ui.sld_WindowsOpacitySct.value()),
+                                           'loggingMode': (root.ui.ckb_ToggleLogs.isChecked()),
+                                           'logSavingMode': (root.ui.ckb_ToggleLogsArch.isChecked()),
+                                           'logSavingDuration': (root.ui.cbb_LogsArchMode.currentIndex()),
+                                           'keyBindings': {
+                                               'homeScreen': ((root.ui.keySequenceEdit.keySequence()).toString()),
+		                                       'defenseScreen': ((root.ui.keySequenceEdit_2.keySequence()).toString()),
+		                                       'plantsScreen': ((root.ui.keySequenceEdit_3.keySequence()).toString()),
+		                                       'hardwareScreen': ((root.ui.keySequenceEdit_4.keySequence()).toString()),
+		                                       'configScreen': ((root.ui.keySequenceEdit_5.keySequence()).toString()),
+		
+		                                       'changeInterfaceMode': ((root.ui.keySequenceEdit_6.keySequence()).toString()),
+		                                       'applyChanges': ((root.ui.keySequenceEdit_7.keySequence()).toString()),
+		                                       'saveChanges': ((root.ui.keySequenceEdit_8.keySequence()).toString()),
+		                		               'loadChanges': ((root.ui.keySequenceEdit_9.keySequence()).toString()) 
+                                         }}), indent = 8)
+                configFile.seek(0)
+                configFile.write(jsonString)
+
+        else:
+            QMessageBox.critical(root, 'Действие запрещено', 'Вы не имеете права на осуществление этого действия')
+
+
+    @staticmethod
+    def applyConfig(root, usersCore):
+        currentUser = usersCore.getCurrentUser()
+
+        root.ui.cbb_Language.setCurrentIndex((currentUser.config.language))
+
+        text = str()
+        for i in glob.glob('ui/themesheets/*.asqd'):
+            with open(i, 'r', encoding = 'utf-8') as themeSheet:
+                jsonString = json.loads(themeSheet.read())
+                if i[15:-5] == currentUser.config.theme:
+                    root.ui.cbb_Theme.setCurrentText(jsonString['themeDesc'])
+                else:
+                    continue
+
+        root.ui.sld_WindowsOpacitySct.setValue((currentUser.config.popupOpacity))
+        root.ui.ckb_ToggleLogs.setChecked((currentUser.config.loggingMode))
+        root.ui.ckb_ToggleLogsArch.setChecked((currentUser.config.logSavingMode))
+        root.ui.cbb_LogsArchMode.setCurrentIndex((currentUser.config.logSavingDuration))
+        
+        root.ui.keySequenceEdit.setKeySequence((QKeySequence.fromString(str(currentUser.config.keyBindings['homeScreen']))))
+        root.ui.keySequenceEdit_2.setKeySequence((QKeySequence.fromString(str(currentUser.config.keyBindings['defenseScreen']))))
+        root.ui.keySequenceEdit_3.setKeySequence((QKeySequence.fromString(str(currentUser.config.keyBindings['plantsScreen']))))
+        root.ui.keySequenceEdit_4.setKeySequence((QKeySequence.fromString(str(currentUser.config.keyBindings['hardwareScreen']))))
+        root.ui.keySequenceEdit_5.setKeySequence((QKeySequence.fromString(str(currentUser.config.keyBindings['configScreen']))))
+        root.ui.keySequenceEdit_6.setKeySequence((QKeySequence.fromString(str(currentUser.config.keyBindings['changeInterfaceMode']))))
+        root.ui.keySequenceEdit_7.setKeySequence((QKeySequence.fromString(str(currentUser.config.keyBindings['applyChanges']))))
+        root.ui.keySequenceEdit_8.setKeySequence((QKeySequence.fromString(str(currentUser.config.keyBindings['saveChanges']))))
+        root.ui.keySequenceEdit_9.setKeySequence((QKeySequence.fromString(str(currentUser.config.keyBindings['loadChanges']))))
+
+        for popup in root.popups:
+            popup.setWindowOpacity((currentUser.config.popupOpacity))
+
+        root.ui.btn_page1.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['homeScreen']))))
+        root.ui.btn_page2.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['defenseScreen']))))
+        root.ui.btn_page3.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['plantsScreen']))))
+        root.ui.btn_page4.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['hardwareScreen']))))
+        root.ui.btn_page5.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['configScreen']))))
+        root.ui.btn_InterfaceMode.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['changeInterfaceMode']))))
+        root.ui.btn_Apply.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['applyChanges']))))
+        root.ui.btn_Save.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['saveChanges']))))
+        root.ui.btn_Load.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['loadChanges']))))
+
+        del currentUser
+
+
+class AqConfig:
+    def __init__(self, configDict):
+        self.language = configDict['language']
+        self.theme = configDict['theme']
+        self.popupOpacity = configDict['popupOpacity']
+
+        self.loggingMode = configDict['loggingMode']
+        self.logSavingMode = configDict['logSavingMode']
+        self.logSavingDuration = configDict['logSavingDuration']
+
+        self.keyBindings = configDict['keyBindings']
+
+
+    def setup(self, configDict):
+        self.language = configDict['language']
+        self.theme = configDict['theme']
+        self.popupOpacity = configDict['popupOpacity']
+
+        self.loggingMode = configDict['loggingMode']
+        self.logSavingMode = configDict['logSavingMode']
+        self.logSavingDuration = configDict['logSavingDuration']
+
+
+    def setupByParam(self, param, value):
+        
+        if param == 'language':
+            self.language = value
+        elif param == 'theme':
+            self.theme = value
+        elif param == 'popupOpacity':
+            self.popupOpacity = value
+
+        elif param == 'loggingMode':
+            self.loggingMode = value
+        elif param == 'logSavingMode':
+            self.logSavingMode = value
+        elif param == 'logSavingDuration':
+            self.logSavingDuration = value
+
+
+    def setKeyBindings(self, keyBindingsDict):
+        self.keyBindings = keyBindingsDict
+
+
+    def getDict(self):
+        return {'preset': None,
+                'language': (self.language),
+                'theme': (self.theme),
+                'popupOpacity': (self.popupOpacity),
+                'loggingMode': (self.loggingMode),
+                'logSavingMode': (self.logSavingMode),
+                'logSavingDuration': (self.logSavingDuration),
+                'keyBindings': (self.keyBindings)}

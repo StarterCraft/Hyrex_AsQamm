@@ -43,3 +43,6 @@ class DuplicateQueryArgumentsException(Exception):
     def __init__(self):
         super().__init__('При попытке получить статистику по выборке времени была получена '
                          'выборка с повторяющимися аргументами времени')
+
+
+

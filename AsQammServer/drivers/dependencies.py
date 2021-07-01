@@ -1,4 +1,4 @@
-from libs.hardware import (AqHardwareUnit,
+from libs.hardware import (AqHardwareDevice,
                            AqHardwareModule,
                            AqArduinoHardwareModes)
 

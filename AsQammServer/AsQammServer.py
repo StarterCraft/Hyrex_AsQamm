@@ -1,13 +1,12 @@
-import uvicorn, socket, subprocess, threading
+import uvicorn, socket, subprocess, threading, click
 
 from typing             import Optional
 from pydantic           import BaseModel
 from fastapi            import FastAPI, Request
 from random             import uniform
-from sys                import (argv as sysArgs,
-                                exit as exit)
+from sys                import argv, exit
 
-from libs.functions     import *
+from libs.utils         import *
 from libs.users         import *
 from libs.hardware      import *
 from PyQt5.QtWidgets    import QApplication
@@ -30,47 +29,41 @@ class AqServer:
         self.mkffd()
 
 
-    def mkdirs(self):
+    def mkdirs(self) -> None:
         neededDirs = ['/logs', '/crashReports', '/data', '/data/personal', '/data/config', '/data/system']
         self.serverLogger.debug('Проверка директорий окружения')
         rootdir = os.getcwd()
 
         for i in neededDirs:
-            try:
-                os.makedirs(str(rootdir + i))
-            except FileExistsError:
-                continue
+            try: os.makedirs(str(rootdir + i))
+            except FileExistsError: continue
 
 
-    def mkreg(self):
+    def mkreg(self) -> None:
         try:
             with open('data/system/~!ffreg!~.asqd', 'x') as dataFile:
                 dataFile.write(self.crypto.encryptContent('[]'))
-        except FileExistsError:
-            pass
+        except FileExistsError: pass
 
 
-    def mkffd(self):
+    def mkffd(self) -> None:
         try:
-            with open('data/ffd32.bin', 'xb') as dataFile:
-                dataFile.write('[]')
-        except FileExistsError:
-            pass
+            with open('data/ffd32.bin', 'xb') as dataFile: dataFile.write('[]')
+        except FileExistsError: pass
 
 
-    def run(self, ip: str, _port: int):
+    def run(self, ip: str, _port: int) -> None:
         if self.publishViaNgrok:
             self.serverLogger.info('Запуск сессии Ngrok...')
             threading.Thread(target = self.publish, args = [_port]).start()
   
-        try:
-            uvicorn.run(self.api, host = ip, port = _port, log_level = 'debug')
+        try: uvicorn.run(self.api, host = ip, port = _port, log_level = 'debug')
         except ValueError:
             if ip.replace(' ', '').lower() == 'localhost':
                 uvicorn.run(self.api, host = socket.gethostbyname(socket.gethostname()), port = _port)
 
 
-    def publish(self, _port: int):
+    def publish(self, _port: int) -> None:
         with open('data/config/~!config!~.asqd', 'r') as configFile:
             configData = (json.loads(self.crypto.decryptContent(configFile.read())))
             subprocess.Popen(f'{configData["ngrok"]["executable"]} authtoken {configData["authtoken"]}',
@@ -78,29 +71,92 @@ class AqServer:
 
             subprocess.Popen(f'{configData["ngrok"]["executable"]} http {_port}',
                                 creationflags = subprocess.CREATE_NEW_CONSOLE)
-                
+
+
+    def standardResponse(self, content) -> dict:
+        '''
+        Сгенерировать словарь с информацией, которую необходимо отправить
+        клиенту после успешного выполнения запроса. Аргумент к этому
+        методу может быть любым JSON-представляемым объектом, он и будет
+        переслан клиенту.
+
+        :param 'content': JSON-serializable
+            Информация, которая должна быть передана клиенту
+
+        :returns: dict
+            Словарь для отправки в качестве ответа на запрос.
+        '''        
+        return {'responseCode': 200, 'content': content}
+
+
+    def errorResponse(self, errorCode: int) -> dict:
+        '''
+        Сгенерировать словарь с кодом ошибки и её сообщением для последующей
+        отправки клиенту. Используется для замены выдачи стандартной ошибки
+        HTML `Internal Server Error` в случае, если при выполнении какого-то
+        метода, вызванного клиентом, было поймано исключение.
+        
+        :attrib 'errors': dict
+            Словарь, в котором содержатся коды возможных ошибок и их описания.
+
+            {
+                /*Словарь, где:
+                  a —— код ошибки;
+                  b —— описание ошибки
+                */
+
+                a: b,
+                //другие определения ошибок по той же схеме
+            }
+
+        :param 'errorCode': int
+            Код ошибки, для которой необходимо сформировать словарь с 
+            описанием ошибки. Должен соответствовать допустимым кодам ошибок
+            в словаре 'errors'
+
+        :returns: dict
+            Словарь для отправки в качестве ответа на запрос. Смотрите струк-
+            туру ниже для дополнительной информации:
+
+            {
+                 /*Словарь, где:
+                   a —— код ошибки;
+                   b —— описание ошибки
+                 */
+
+                 "code": a,
+                 "errorDescription": b
+            }
+        '''
+        errors = {400: 'Bad request',
+                  401: 'Unauthorized request',
+                  501: 'Hardware not initialized'}
+        
+        return {'responseCode': errorCode,
+                'error': errors[errorCode]}
+
 
 if __name__ == '__main__':
     try:
-        hardware = None
+        hardwareCore = None
         runningMode = None
         IP = ''
         portstr = ''
         addArgs = []
 
         # Определим, запускаемся ли из оболочки Python или из exe
-        if sysArgs[0].endswith('.py'):
+        if argv[0].endswith('.py'):
             runningMode = 'PYTHONENV'
         else:
             runningMode = 'EXE'
-            sysArgs.insert(0, '')
+            argv.insert(0, '')
 
 
-        if ('-c' or '--customsettings') in sysArgs:
+        if ('-c', '--customsettings', '-h', '--help', '-?') in argv:
             try:
-                IP = sysArgs[2]
-                portstr = sysArgs[3]
-                addArgs = sysArgs[4:]
+                IP = argv[2]
+                portstr = argv[3]
+                addArgs = argv[4:]
 
             except IndexError:
                 if not IP:
@@ -114,7 +170,7 @@ if __name__ == '__main__':
                 if not addArgs:
                     print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Нажмите {Fore.CYAN}ENTER{Style.RESET_ALL}'
                           f' для запуска сервера в обычном режиме или используйте аргументы:\n'
-                          f'                 | "{Fore.CYAN}-h{Style.RESET_ALL}" или "{Fore.CYAN}hardware-offline{Style.RESET_ALL}" '
+                          f'                 | "{Fore.CYAN}-h{Style.RESET_ALL}" или "{Fore.CYAN}--hardware-offline{Style.RESET_ALL}" '
                           f'для запуска сервера в режиме совместимости без оборудования;\n'
                           f'                 | "{Fore.CYAN}-n{Style.RESET_ALL}" или "{Fore.CYAN}--ngrok{Style.RESET_ALL}" '
                           f'для вывода сервера в Интернет через ngrok')
@@ -126,147 +182,111 @@ if __name__ == '__main__':
                 configData = (json.loads(AqCrypto.decryptContent(configFile.read())))
                 IP = configData['serverDefault']['ip']
                 portstr = configData['serverDefault']['port']
-                addArgs = sysArgs[0:]
+                addArgs = argv[0:]
 
 
         server = AqServer()
-        userCore = AqUserSystem()
+        usersCore = AqUserSystem()
 
         if ('-h' or '--hardware-offline') not in addArgs:
-            hardware = AqHardwareSystem()
-            assert hardware.isOk, 'Аварийное завершение работы'
+            hardwareCore = AqHardwareSystem()
+            assert hardwareCore.isOk
 
-        if not hardware: server.serverLogger.info('Сервер будет запущен без инициализации обоpудования')
-
+        if not hardwareCore: server.serverLogger.info('Сервер будет запущен без инициализации обоpудования')
         if ('-n' or '--ngrok') in addArgs: server.publishViaNgrok = True
 
 
         @server.api.get('/getUserdata', description = 'Получить словарь данных пользователей')
-        def getUserdata(data: dict, request: Request):
+        def getUserdata(content: dict, request: Request):
             global server
 
             try:
-                if server.tok.isOk(data['tok']):
-                    return userCore.getUserData()
-                elif not server.tok.isOk(data['tok']):
-                    return {'401': 'UNAUTHORIZED'}
-            except KeyError:
-                return {'401': 'UNAUTHORIZED'}
-            except AttributeError:
-                return {'401': 'UNAUTHORIZED'}
-            except ValueError:
-                return {'401': 'UNAUTHORIZED'}
+                if server.tok.isOk(content['tok']): 
+                    return server.standardResponse(usersCore.getUserData())
+                else: return server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
 
 
         @server.api.get('/getUserRg', description = 'Получить внешний регистр')
-        def getUserRg(data: dict, request: Request):
+        def getUserRg(content: dict, request: Request):
             global server
 
             try:
-                if server.tok.isOk(data['tok']):
-                    return userCore.getUserRegistry()
-                elif not server.tok.isOk(data['tok']):
-                    return {'401': 'UNAUTHORIZED'}
-            except KeyError:
-                return {'401': 'UNAUTHORIZED'}
-            except AttributeError:
-                return {'401': 'UNAUTHORIZED'}
-            except ValueError:
-                return {'401': 'UNAUTHORIZED'}
+                if server.tok.isOk(content['tok']):
+                    return server.standardResponse(usersCore.getUserRegistry())
+                else: server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
 
 
         @server.api.get('/getNewUserFilename', description = 'Получить новое случайное имя файла для нового аккаунта пользователя')
-        def getNewUserFilename(data: dict, request: Request):
+        def getNewUserFilename(content: dict, request: Request):
             global server
 
             try:
-                if server.tok.isOk(data['tok']):
-                    return userCore.getFilenameForNewUser()
-                elif not server.tok.isOk(data['tok']):
-                    return {'401': 'UNAUTHORIZED'}
-            except KeyError:
-                return {'401': 'UNAUTHORIZED'}
-            except AttributeError:
-                return {'401': 'UNAUTHORIZED'}
-            except ValueError:
-                return {'401': 'UNAUTHORIZED'}
+                if server.tok.isOk(content['tok']):
+                    return server.standardResponse(usersCore.getFilenameForNewUser())
+                else: server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
 
 
         @server.api.post('/updateUserdata', description = 'Обновить словарь данных пользователей')
-        def updateUserdata(object: dict, request: Request):
+        def updateUserdata(content: dict, request: Request):
             global server
 
             try:
-                if server.tok.isOk(object['tok']):
-                    userCore.updateUserData(object['data'])
-                else:
-                    return {'401': 'UNAUTHORIZED'}
-            except KeyError:
-                return {'401': 'UNAUTHORIZED'}
-            except AttributeError:
-                return {'401': 'UNAUTHORIZED'}
-            except ValueError:
-                return {'401': 'UNAUTHORIZED'}
+                if server.tok.isOk(content['tok']):
+                    usersCore.updateUserData(content['content'])
+                else: server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
 
 
         @server.api.post('/updateUserRg', description = 'Обновить внешний регистр')
-        def updateUserRg(object: dict, request: Request):
+        def updateUserRg(content: dict, request: Request):
             global server
 
             try:
-                if server.tok.isOk(object['tok']):
-                    userCore.updateUserRegistry((object['data'])[1], (object['data'])[0])
-                else:
-                    return {'401': 'UNAUTHORIZED'}
-            except KeyError:
-                return {'401': 'UNAUTHORIZED'}
-            except AttributeError:
-                return {'401': 'UNAUTHORIZED'}
-            except ValueError:
-                return {'401': 'UNAUTHORIZED'}
+                if server.tok.isOk(content['tok']):
+                    usersCore.updateUserRegistry((content['content'])[1], (content['content'])[0])
+                else: server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
 
 
         @server.api.delete('/delUserAcc', description = 'Удалить аккаунт пользователя (пользователей)')
-        def delUserAcc(object: dict, request: Request):
+        def delUserAcc(content: dict, request: Request):
             global server
 
             try:
-                if server.tok.isOk(object['tok']):
-                    userCore.deleteUserAccount(object['data'])
-                else:
-                    return {'401': 'UNAUTHORIZED'}
-            except KeyError:
-                return {'401': 'UNAUTHORIZED'}
-            except AttributeError:
-                return {'401': 'UNAUTHORIZED'}
-            except ValueError:
-                return {'401': 'UNAUTHORIZED'}
+                if server.tok.isOk(content['tok']):
+                    usersCore.deleteUserAccount(content['content'])
+                else: server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
 
 
         @server.api.get('/getHardwareData', description = 'Получить информацию о подключённом оборудовании, если таковое присутствует')
-        def getHardwareData(data: dict, request: Request):
-            global server
-        
-            if server.tok.isOk(data['tok']) and hardware:
-                return hardware.getHardwareDataSheet()
-            elif not hardware:
-                return {'505': 'HARDWARE_OFFLINE'}
-            else:
-                return {'401': 'UNAUTHORIZED'}
+        def getHardwareData(content: dict, request: Request):
+            global server, hardwareCore
+            
+            try:
+                if server.tok.isOk(content['tok']) and hardwareCore:
+                    return server.standardResponse(hardwareCore.getHardwareDataSheet())
+                elif not hardwareCore: return server.errorResponse(501)
+                else: server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
 
 
         @server.api.get('/getLatestStats', description = 'Получить статистику за x времени')
-        def getQueriedStats(data: dict, request: Request):
-            global server
+        def getQueriedStats(content: dict, request: Request):
+            global server, hardwareCore
 
-            if server.tok.isOk(data['tok']) and hardware:
-                return hardware.statisticAgent.getQueriedStats(data['query'])
-            elif not hardware:
-                return {'505': 'HARDWARE_OFFLINE'}
-            else:
-                return {'401': 'UNAUTHORIZED'}
+            try:
+                if server.tok.isOk(content['tok']) and hardwareCore:
+                    return server.standardResponse(hardwareCore.statisticAgent.getStatsByTimeQuery(content['query']))
+                elif not hardwareCore: return server.errorResponse(501)
+                else: server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
 
-        try: hardware.startMonitoring()
+
+        try: hardwareCore.startMonitoring()
         except (NameError, AttributeError): pass
 
         server.run(IP, int(portstr))

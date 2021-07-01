@@ -1,5 +1,6 @@
-from libs.functions import AqCrypto, AqLogger
-from random import choice as randomChoice, shuffle as randomShuffle
+from libs.utils import AqCrypto, AqLogger
+from random     import choice, shuffle
+
 import os, json, base64, glob
 
 
@@ -7,7 +8,7 @@ class AqUserSystem():
     def __init__(self):
         self.crypto = AqCrypto()
         self.users = []
-        self.userSystemLogger = AqLogger('Server>UserSystem')
+        self.userSystemLogger = AqLogger('UserSystem')
         self.possibleFileNames = []
         self.availableFileNames = []
         self.loadUserData() #Сразу после инициализации системы пользователей загружаем их
@@ -32,16 +33,12 @@ class AqUserSystem():
                 gotName = glob.glob(str(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8')))))
 
                 if flag:
-                    if gotName == []:
-                        continue
-                    else:
-                        exportList.append(r'{0}'.format(gotName[0]))
+                    if gotName == []: continue
+                    else: exportList.append(r'{0}'.format(gotName[0]))
 
                 else:
-                    if gotName != []:
-                        continue
-                    else:
-                        exportList.append(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8'))))
+                    if gotName != []: continue
+                    else: exportList.append(r'data/personal/~!{0}!~.asqd'.format(str(item.decode('utf-8'))))
 
 
 
@@ -57,15 +54,19 @@ class AqUserSystem():
 
         for item in self.availableFileNames: #Для каждого из фалов выполним открытие и выгрузим данные
             with open(r'%s' % item, 'r') as dataFile:
-
                 fileString = dataFile.readline()
                 jsonString = self.crypto.decryptContent(fileString)
                 jsonString = json.loads(jsonString)
 
-                self.users.append({'id': (int(jsonString['id'])), 'description': (jsonString['description']),
-                                  'type': (jsonString['type']), 'filepath': (item), 'login': (jsonString['login']),
-                                  'password': (jsonString['password']), 'avatarAddress': (jsonString['avatarAddress']),
-                                  'permits': (jsonString['permits']), 'config': (jsonString['config'])})
+                self.users.append({'id': int(jsonString['id']), 
+                                   'description': jsonString['description'],
+                                   'type': jsonString['type'],
+                                   'filepath': item,
+                                   'login': jsonString['login'],
+                                   'password': jsonString['password'],
+                                   'avatarAddress': jsonString['avatarAddress'],
+                                   'permits': jsonString['permits'], 
+                                   'config': jsonString['config']})
 
 
     def getUserData(self):
@@ -79,7 +80,6 @@ class AqUserSystem():
             fileString = dataFile.readline()
             jsonString = self.crypto.decryptContent(fileString)
             jsonString = json.loads(jsonString)
-
             return jsonString
 
 
@@ -107,13 +107,12 @@ class AqUserSystem():
     def updateUserRegistry(self, data: list or str, mode: int):
         #Позволяет обновить регистр пользователей двумя способами: дополнением или перезаписью
         if mode == 0: #Режим дополнения регистра
-            print('append mode')
             with open('data/system/~!ffreg!~.asqd', 'r') as dataFile:
                 rg = json.loads(self.crypto.decryptContent(dataFile.read()))
 
             with open('data/system/~!ffreg!~.asqd', 'w+') as dataFile:
                 rg.append(data)
-                randomShuffle(rg)
+                shuffle(rg)
                 fileString = json.dumps(rg)
                 fileString = self.crypto.encryptContent(fileString)
                 dataFile.write(fileString)
@@ -146,4 +145,4 @@ class AqUserSystem():
     def getFilenameForNewUser(self):
         self.emptyFileNames = []
         self.seekForFiles(self.possibleFileNames, self.emptyFileNames, False)
-        return str(randomChoice(self.emptyFileNames))
+        return str(choice(self.emptyFileNames))

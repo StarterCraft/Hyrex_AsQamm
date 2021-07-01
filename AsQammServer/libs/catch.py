@@ -239,7 +239,11 @@ class AqCrashHandler:
                 break
         else: exceptionCode = self.codes['Other']
 
-        if hasattr(exception, 'data'): _exceptionData.extend(getattr(exception, 'data'))
+        if hasattr(exception, 'data'): 
+            try:
+                for item in getattr(exception, "data"):
+                    _exceptionData.append(f'"{item}"')
+            except TypeError: _exceptionData.extend(f'"{getattr(exception, "data")}"')
         for item in exceptionData: _exceptionData.append(f'"{item}"')
 
         return self.Report(
