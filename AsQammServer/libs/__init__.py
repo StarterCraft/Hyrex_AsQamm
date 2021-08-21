@@ -1,8 +1,10 @@
-VERSION = 'pre-α 114'
-VERSIONTUPLE = ('pre-α', '114')
+VERSION = 'pre-α 115'
+VERSIONTUPLE = ('pre-α', '115')
 
 from types import (FunctionType as callable,
                    ModuleType   as module)
+
+clickSettings = {'help_option_name': ['-?', '-h', '--help']}
 
 
 def typemark(name: str, bases: list = []):

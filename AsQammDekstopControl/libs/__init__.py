@@ -1,5 +1,5 @@
-VERSION = 'pre-α 114'
-VERSIONTUPLE = ('pre-α', '114')
+VERSION = 'pre-α 115'
+VERSIONTUPLE = ('pre-α', '115')
 
 
 class AqProtectedAttribute:

@@ -6,6 +6,7 @@ from fastapi            import FastAPI, Request
 from random             import uniform
 from sys                import argv, exit
 
+from libs               import clickSettings
 from libs.utils         import *
 from libs.users         import *
 from libs.hardware      import *
@@ -13,7 +14,24 @@ from PyQt5.QtWidgets    import QApplication
 
 
 class AqServer:
+    '''
+    Класс ядра сервера.
+
+    :attrib 'api': FastAPI
+        Объект для работы с библиотекой FastAPI. Он осуществляет приём
+        входящих запросов и вызывает функции, привязанные к ним
+
+    :attrib 'tok': AqTokChecker
+        Агент проверки токена
+
+    :attrib 'publishViaNgrok': bool
+        Если этот атрибут истинен, то при запуске сервера будет произве-
+        дена попытка вывести его в Интернет с помощью NGRok
+    '''
     def __init__(self):
+        '''
+        Конструктор ядра сервера, не принимает никаких аргументов
+        '''
         self.api = FastAPI()
         self.serverLogger = AqLogger('Core')
         self.crypto = AqCrypto()
@@ -29,7 +47,26 @@ class AqServer:
         self.mkffd()
 
 
+    @staticmethod
+    @click.command('', context_settings = clickSettings, help = 'Запустить AsQamm Server')
+    @click.option('-c', '--custom')
+    def start() -> tuple:
+        '''
+        Метод, принимающщий аргументы (опции) от Click-a при запуске програм-
+        мы. Информация о них представлена ниже:
+        :returns: tuple
+            Аргументы запуска программы в виде кортежа
+        '''
+
+
+
     def mkdirs(self) -> None:
+        '''
+        Метод, создающий необходимые для работы прогpаммы папки в случае их
+        отсутствия. Не принимает никаких аргументов.
+
+        :returns: None
+        '''
         neededDirs = ['/logs', '/crashReports', '/data', '/data/personal', '/data/config', '/data/system']
         self.serverLogger.debug('Проверка директорий окружения')
         rootdir = os.getcwd()
@@ -40,21 +77,35 @@ class AqServer:
 
 
     def mkreg(self) -> None:
+        '''
+        Метод, создающий пустой файл для хранения регистра пользователей,
+        если он не существует, не принимает никаких аргументов.
+
+        :returns: None
+        '''
         try:
             with open('data/system/~!ffreg!~.asqd', 'x') as dataFile:
                 dataFile.write(self.crypto.encryptContent('[]'))
         except FileExistsError: pass
 
 
-    def mkffd(self) -> None:
-        try:
-            with open('data/ffd32.bin', 'xb') as dataFile: dataFile.write('[]')
-        except FileExistsError: pass
-
-
     def run(self, ip: str, _port: int) -> None:
+        '''
+        Метод запуска сервера, который активирует сервер на заданном па-
+        раметрами IP и порту. Если атрибут 'publishViaNgrok' истинен, то
+        при запуске будет произведена попытка вывести сервер в Интернет с
+        помощью NGRok (см. метод 'publish') в отдельном потоке.
+
+        :param 'ip': str
+            IP-адрес для инициализации сервера
+
+        :param '_port': int
+            № порта для инициализации сервера
+
+        :returns: None
+        '''
         if self.publishViaNgrok:
-            self.serverLogger.info('Запуск сессии Ngrok...')
+            self.serverLogger.info('Запуск сессии NGRok...')
             threading.Thread(target = self.publish, args = [_port]).start()
   
         try: uvicorn.run(self.api, host = ip, port = _port, log_level = 'debug')
@@ -64,13 +115,27 @@ class AqServer:
 
 
     def publish(self, _port: int) -> None:
+        '''
+        Метод инициализации службы NGRok для вывода сервера в Интернет с
+        её помощью. Для этого подгружаются параметры конфигурации из файла
+        'data/config/~!config!~.asqd', где должно быть указано местоположе-
+        ние исполняемого файла NGRok и токен аккаунта этой службы. Эта ин-
+        формация записывается пользователем пр установке сервера или с по-
+        мощью команды 'config ngrok {ПАРАМЕТР} {ЗНАЧЕНИЕ}'. Метод выполня-
+        ется в отдельном потоке, инициализируемом в методе 'run'.
+
+        :param '_port': int
+            № порта, на котором инициализирован сервер
+
+        :returns: None
+        '''
         with open('data/config/~!config!~.asqd', 'r') as configFile:
-            configData = (json.loads(self.crypto.decryptContent(configFile.read())))
+            configData = json.loads(self.crypto.decryptContent(configFile.read()))
             subprocess.Popen(f'{configData["ngrok"]["executable"]} authtoken {configData["authtoken"]}',
-                                creationflags = subprocess.CREATE_NEW_CONSOLE)
+                creationflags = subprocess.CREATE_NEW_CONSOLE)
 
             subprocess.Popen(f'{configData["ngrok"]["executable"]} http {_port}',
-                                creationflags = subprocess.CREATE_NEW_CONSOLE)
+                creationflags = subprocess.CREATE_NEW_CONSOLE)
 
 
     def standardResponse(self, content) -> dict:
