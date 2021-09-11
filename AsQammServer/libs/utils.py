@@ -257,7 +257,7 @@ class AqLogger:
 
         :returns: None
         '''
-        callerInfo = self.Logger.findCaller()
+        callerInfo = self.Logger.findCaller(stacklevel = 1)
         fileName = callerInfo[0]
         lineNo = str(callerInfo[1])
         moduleName = ('UNKNOWN' if callerInfo[0] == '(unknown file)' else callerInfo[0][:callerInfo[0].index('.')])
@@ -287,7 +287,7 @@ class AqLogger:
                                                       funcName + ': %(message)s')
         self.handler.setFormatter(logging.Formatter(self.formatString))
 
-        self.Logger.debug(message)
+        self.Logger.debug(message, stacklevel = 7)
         if self.logLevel == self.DEBUG and not self.printDsb:
             print(f'[{Fore.GREEN}{self.name}{Style.RESET_ALL}@{Fore.YELLOW}DEBUG{Style.RESET_ALL}]: {message}')
         

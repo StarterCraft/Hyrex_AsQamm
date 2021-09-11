@@ -1,14 +1,17 @@
+import drivers
 from drivers.dependencies import *
+ArduinoDevice = drivers.getDeviceClass('arduino', 'ArduinoDevice')
+ArduinoSensor = drivers.getDeviceClass('arduino', 'ArduinoSensor')
 
 
-class CapacitiveSoilMoistureSensor(AqHardwareModule.ArduinoSensor):
-    driverId = 1102
+class CapacitiveSoilMoistureSensor(ArduinoSensor):
+    driverId = 'ACSM'
 
-    def __init__(self, atBoard: AqHardwareDevice.ArduinoDevice, atPin: str, **kwargs):
+    def __init__(self, atBoard: ArduinoDevice, atPin: str, **kwargs):
         super().__init__(atBoard, atPin, kwargs['isEnabled'], True, kwargs['name'], kwargs['description'],
                         'Аналоговый ёмкостный датчик влажности почвы версии 1.0', self.moisture)
         self.attrl.extend(['calibrationValue', 'probeFrequency'])
-        self.type = AqHardwareModule.ArduinoSensor.Analog
+        self.type = ArduinoSensor.Analog
 
         self.topCalibrationValue = int(kwargs['topCalibrationValue'])
         self.lowCalibrationValue = int(kwargs['lowCalibrationValue'])

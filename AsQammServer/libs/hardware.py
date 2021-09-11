@@ -5,24 +5,29 @@
 оборудования.
 '''
 
-from time import       sleep       as slp 
-from pyfirmata import (Arduino     as DefaultArduino,
-                       util        as ArduinoUtil,
-                       UNAVAILABLE, ANALOG, SERVO,
-                       PWM, INPUT, OUTPUT,
-                       START_SYSEX, END_SYSEX)
-
+from time import       sleep       as sleep 
 from json import       (loads      as loadJson,
                         JSONDecodeError)
 
 from libs import       *
-
+from enum import       *
 from libs.utils import AqLogger
 from serial.serialutil import SerialException
-import libs.exceptions, pandas
+import sys, libs.exceptions, pandas, glob, importlib, typing
 
 
-class AqAbstractHardwareComplex:
+class AqHardwareConnectionType(Enum):
+    '''
+    Класс перечисления возможных способов подключения к какому-то исполнителю.
+    '''
+    WireSerial = 1
+    WireFirmata = 2
+    WirelessWiFi = 3
+    WirelessBluetooth = 4
+    WirelessMobile = 5
+
+
+class AqHardwareComplex:
     '''
     Класс `комплекса` - высокоуровневого объединения нескольких исполнителей.
     Пока не разработан.
@@ -34,40 +39,43 @@ class AqHardwareDevice:
     '''
     Класс, представляющий любого `исполнителя` (или, упрощённо, `устройство`)
     — устройство, находящееся в подчинении сервера. Все классы поддерживаемых
-    типов устройств-исполнителей являются подклассами этого класса.
-
+    типов устройств-исполнителей являются потомками этого класса.
     `Исполнители` и `устройства` есть одно и то же, если не указано иное!
-
-    `Исполнители` могут иметь подчинённых себе `модулей`, если это предусмотрено
-    типом этого исполнителя. Они могут быть объединены в `комплексы` для более
+    `Устройства` могут иметь подчинённых себе других `устройств`, если это пре-
+    дусмотрено типом устройства. Они могут быть объединены в `комплексы` для более
     глубокого взаимодействия друг с другом.
 
     Информация о них находится в hardware.asqd в виде JSON-списка по схеме ниже.
-    Там хранятся базовые настройки исполнителя, а также информация обо всех под-
-    чинённых ему модулях и их настройках:
+    Там хранятся базовые настройки устройства, а также информация обо всех под-
+    чинённых ему устройствах и их настройках:
 
     [
-        /*Объект исполнителя, где:
-          a —— ID драйвера исполнителя (любой ID драйвера представляет из себя
-               целое число от 1000 до 9999);
-          b —— Для Arduino-исполнителя — COM-порт, на котором он распологается;
+        /*Объект устройства, где:
+          a —— ID драйвера устройства (любой ID драйвера представляет из себя
+               строку длиной 4 символа, состоящую из символов латиницы и цифр
+               от 0 до 9);
+          b —— адрес (его форма зависит от типа исполнителя), на котором он
+               располагается;
           c —— Настройки исполнителя в виде "имя параметра: значение";
-          d —— Для Arduino-исполнителя — адрес пина, на котором располагается
-               модуль;
-          e —— ID драйвера модуля;
-          f —— Настройки модуля в виде "имя параметра: значение"
+          d —— какой-либо определитель способа подключения к подчинённому ис-
+               полнителю (например, для Arduino-исполнителя — адрес пина, на
+               котором располагается подчинённый исполнитель);
+          e —— ID драйвера подчинённого исполнителя;
+          f —— Настройки подчинённого исполнителя в виде 
+               "имя параметра: значение"
         */
 
         [a, b, {
             c,
             "pinMap": {
-                //В параметре pinMap хранится информация о модулях,
-                //привязанных к исполнителю
+                //В параметре pinMap хранится информация о подчинённых испол-
+                //нителях, привязанных к исполнителю, если они им поддержива-
+                //ются
                 d: [e, {
                     f
                     },
 
-                //другие определения модулей по той же схеме
+                //другие определения подчинённых исполнителей по той же схеме
                 }
             }        
         ],
@@ -75,522 +83,120 @@ class AqHardwareDevice:
         //другие определения исполнителей по той же схеме
     ]
 
-    Абсолютно любого исполнителя можно отключить от системы, для этого существует
-    атрибут 'isEnabled'.
+    :attrib 'isEnabled': bool
+        Атрибут, определяющий, используется ли исполнитель в системе
+
+    :attrib 'isControllable': bool
+        Атрибут, определяющий, контролируется ли исполнитель сервером напрямую
+        (True) или он контролируется своим материнским исполнителем (False)
+
+    :attrib 'isFertile': bool
+        Атрибут, определяющий, способен ли исполнитель иметь других исполните-
+        лей в подчинении
+
+    :attrib 'parent': AqHardwareDevice
+        Если исполнитель является подчинённым, то в этом атрибуте будет нахо-
+        диться ссылка на объект материнского исполнителя, иначе — None
+        
+    :attrib 'platform': str
+        Индентификатор протокола
+
+    :attrib 'deviceId': str
+        Индентификатор исполнителя. Генерируется при его инициализации, пред-
+        ставляет из себя строку длиной 4 символа, состоящую из символов лати-
+        ницы и цифр от 0 до 9
+
+    :attrib 'deviceAddress': str
+        Адрес (его форма зависит от типа исполнителя), на котором он располага-
+        ется
+
+    :attrib 'driverId': str
+        Индентификатор драйвера исполнителя, представляет из себя строку дли-
+        ной 4 символа, состоящую из символов латиницы и цифр от 0 до 9. Задаётся
+        в определении драйвера исполнителя
+
+    :attrib 'typeDisplayName': str
+        Необязательное отоботображаемое имя исполнителя. По умолчанию — имя класса
+        исполнителя. Используется для отображения в интерфейсах вершителей
+        
+    :attrib 'typeDescription': str
+        Обязательное описание типа исполнителя. Может быть пустым, но не рекомен-
+        дуется оставлять его таким. Задаётся в драйвере исполнителя. Используется
+        для отображения в интерфейсах вершителей
+    
+    :attrib 'instanceName': str
+        Обязательное отображаемое имя конкретного исполнителя. Может быть пустым.
+        Используется для отображения в интерфейсах вершителей
+
+    :attrib 'instanceDescription': str
+        Обязательное описание конкретного исполнителя. Может быть пустым.
+        Используется для отображения в интерфейсах вершителей
     '''
-    isEnabled = bool()
-
-    class ArduinoDevice:
+    class ConnectionType(Enum):
         '''
-        Класс Arduino-исполнителя. Имеет функциональность PyFirmata,
-        функциональность приёма и отправки строковых сообщений ASCII,
-        функциональность работы с модулями.
-
-        Любой объект Arduino-исполнителя имеет следующие атрибуты:
-
-        :attrib 'motherPort': str
-            COM-порт, на котором распологается исполнитель и на котором
-            находится его PyFirmata-служба, если он включён
-
-        :attrib 'instanceDescription': str
-            Обязательное описание исполнителя. Может быть пустым.
-            Используется для отображения в интерфейсах вершителей
-
-        :attrib 'typeDescription': str
-            Обязательное описание ТИПА исполнителя. Может быть пустым,
-            но не рекомендуется оставлять его таким. Задаётся в драйвере
-            ТИПА исполнителя.
-            Используется для отображения в интерфейсах вершителей
+        Класс перечисления возможных способов подключения к какому-то исполнителю.
         '''
-        class FirmataStringResponse:
-            '''
-            Класс для работы со строковыми сообщениями-ответами от Arduino-
-            исполнителя. Firmata посылает ответы на строковые команды в виде
-            строк, кото- рые могут быть двух видов: бeз ошибки и с ошибкой.
-
-            Схема безошибочного строкового ответа от исполнителя:
-            'OK;{a};{b}', где:
-                a —— Имя метода, который вызывался и на который исполнитель
-                     отправляет ответ;
-                b —— Результат выполнения метода. Может представлять из себя
-                     число или строку. Если результат представляет собой спи-
-                     сок, то каждый его элемент записывается через точку с 
-                     запятой.
-
-            Схема строкового сообщения об ошибке (ответа) от исполнителя:
-            'ERR;{a};{b}', где:
-                a —— Имя метода, который вызывался и на который исполнитель
-                     отправляет ответ;
-                b —— Код ошибки, зависит от вызываемого метода (для каждого 
-                     метода существуют свои коды ошибки, о них можно узнать
-                     в документации к функциональным библиотекам
-                     AsQamm Arduino).
-            '''
-
-            OKMessage = typemark('OKMessage')
-            ErrorMessage = typemark('ErrorMessage')
-
-            def __init__(self, string: str):
-                '''
-                Инициализировать обработчик строкового сообщения. Если после-
-                днее не соответствует синтаксису строковых сообщений, будет
-                вызвано исключение.
-
-                :param 'string': str
-                    Строковое сообщение от Arduino-исполнителя в виде сырой
-                    строки.
-                '''
-                if len(string.split(';')) < 2:
-                    raise libs.exceptions.InvalidFirmataStringResponseError()
-
-                self.statusCode, self.methodName = string.split(';')[0], string.split(';')[1]
-
-                if self.statusCode == 'OK': #если сообщение без ошибки
-                    self.type = self.OKMessage
-                    self.receivedInfo = string.split(';')[2:]
-
-                elif self.statusCode == 'ERR': #если сообщение об 
-                    self.type = self.ErrorMessage
-                    self.errorCode = string.split(';')[2]
-        
-
-        def __init__(self, comPort: str, isEnabled: bool,
-                     instanceName: str, desc: str,
-                     overrideDefaultTemplate: bool = False):
-            '''
-            Инициализировать экземпляр базового класса Arduino-исполнителя.
-            Такие исполнители работают на базе протокола Firmata, сервер
-            использует библиотеку PyFirmata для коммутации с ними.
-            PyFirmata.Arduino инициализируется по умолчанию здесь, но эту
-            возможность можно отключить лля того, чтобы не использовать
-            стандартный внутренний шаблон PyFirmata (не рyirmata.Arduino)
-
-            :param 'comPort': str
-                COM-порт, на котором необходимо запустить службу PyFirmata
-                для этого исполнителя
-
-            :param 'isEnabled': bool
-                Использовать ли это устройство или нет. Если задан False, то
-                итератор PyFirmata не будет запущен (его можно запустить с 
-                помощью метода startIterator()), регистрация данных с датчиков,
-                отслеживание правил и отправка команд на модули вывода осущест-
-                ляться не будут
-
-            :param 'instanceName': str
-                Обязательное отображаемое имя исполнителя. Может быть пустым,
-                но не рекомендуется оставлять его таким.
-                Используется для отображения в интерфейсах вершителей
-
-            :param 'desc': str
-                Обязательное описание исполнителя. Может быть пустым.
-                Используется для отображения в интерфейсах вершителей
-
-            :param 'overrideDefaultTemplate': bool = False
-                Этот параметр позволяет отключить инициализацию стандартного
-                pyfirmata.Arduino. Если True, то стандартный внутренний шаблон
-                PyFirmata не будет инициализирован, и будет необходимо дополни-
-                тельно инициализировать другой объект pyfirmata.Board
-            '''
-
-            self.motherPort = comPort
-            if isEnabled and not overrideDefaultTemplate: DefaultArduino.__init__(self, comPort)
-            if isEnabled: self.iterator = ArduinoUtil.Iterator(self)
-            self.isEnabled = isEnabled
-            self.instanceDescription = desc
-            self.result = float()
-
-            self.add_cmd_handler(0x71, self.parseString)
+        WireSerial = 1
+        WireFirmata = 2
+        WirelessWiFi = 3
+        WirelessBluetooth = 4
+        WirelessMobile = 5
 
 
-        def __repr__(self):
-            return f'{self.driverId} Arduboard at {self.motherPort}'
-        
-
-        def getId(self) -> str:
-            '''
-            Каждый объект оборудования в Hyrex AsQamm имеет собственный внут-
-            ренний индентификатор. У Arduino-исполнителей он формируется по
-            следующей схеме:
-
-            '{x}:{y}'
-            где x = COM-порт, на котором находится исполнитель;
-                y = ID драйвера исполнителя.
-
-            :returns: None
-            '''
-            return f'{self.motherPort}:{self.driverId}'
+    isEnabled, isControllable, isFertile = bool(), bool(), bool()
+    parent = None
+    platform, deviceId, deviceAddress, driverId = str(), str(), str(), str()
+    typeDisplayName, typeDescription, instanceName, instanceDescription = str(), str(), str(), str()
 
 
-        def startIterator(self) -> None:
-            '''
-            Запустить итератор PyFirmata
-            
-            :returns: None
-            '''
-            self.iterator.start()
-
-
-        def setPinMap(self, _map: dict, drv: module) -> None:
-            '''
-            Установить карту распиновки.
-
-            Карта распиновки — словарь, ключами которого являются адреса пинов
-            Arduino в нижеследующей форме:
-            '{тип пинá (d для цифровых пинов, а для анáлоговых)}:{номер пина}',
-            а значениями являются объекты модулей, подключенных к этим пинам.
-
-            Метод используется при инициализации оборудования из файла hardware.asqd
-
-            :param '_map': mapObject
-                JSON-объект, который хранится в hardware.asqd и определяет, какие
-                модули нужно инициализировать на этом Arduino-исполнителе
-
-            :param 'drv': module
-                Модуль drivers.__init__
-
-            :returns: None
-            '''
-            self.pinMap = {}
-            for definer in self.analogPins: self.pinMap.update({definer: None})
-            self.pinMap.update({'d:13': drv.Modules[1000](self, 'd:13', isEnabled = True,
-                                                              instanceName = 'D13Led',
-                                                              instanceDescription = 'D13 Built-in LED')})
-            for pin, module in _map.items():
-                self.pinMap.update({pin: drv.Modules[module[0]](self, pin, **(module[1]))})
-
-
-        def getPinMap(self, mode = None) -> list:
-            '''
-            Получить карту распиновки.
-
-            Карта распиновки — словарь, ключами которого являются адреса пинов
-            Arduino в нижеследующей форме:
-            '{тип пинá (d для цифровых пинов, а для анáлоговых)}:{номер пина}',
-            а значениями являются объекты модулей, подключенных к этим пинам.
-
-            Имеется 2 режима:
-                режим None: получить список словарей в виде списка кортежей, где
-                ключи — адреса пинов, а значения — списки из ID драйвера модуля и
-                словаря его настроек
-
-                pежим object: получить список словарей в виде списка кортежей, где
-                ключи — адреса пинов, а значения — объекты модулей.
-
-            :param 'mode': type 'object' or None = None
-                Режим, который требуется.
-
-            :returns: None
-            '''
-            if mode == None:
-                items = []
-                moduleDict = {}
-                for pin, module in self.pinMap.items():
-                    if not module: continue
-                    elif module.driverId == 1000: continue
-                    else:
-                        for attrib in module.attrl:
-                            moduleDict.update({attrib: getattr(module, attrib)})
-                        items.append(tuple([pin, [module.driverId, moduleDict]]))
-                        continue
-
-            if mode == object:
-                items = []
-                for pin, module in self.pinMap.items():
-                    if not module: continue
-                    else:
-                        items.append(tuple([pin, module]))
-                        continue
-
-            return items
-
-
-        def sendString(self, string: str) -> None:
-            '''
-            Отправить ASCII-совместимую строку на Arduino (никаких 
-            символов Юникода!)
-
-            Отправка строковых команд Arduino-исполнителям производится
-            в том случае, если необходимо, чтобы исполнитель выполнл ка-
-            кую-то ФУНКЦИЮ в своём коде со своей стороны и послал ответ.
-            Например, поддержка цифровых датчиков была реализована имен-
-            но по такому принципу.
-
-            :param 'string': str
-                Строка, которую необходимо отправить
-
-            :returns: None
-            '''
-            self.send_sysex(0x71, ArduinoUtil.str_to_two_byte_iter(string))
-
-
-        def send_sysex(self, sysexCmd: int, data: list = []) -> None:
-            '''
-            Отправить сообщение SysEx (фикс метода из pyfirmata).
-
-            :param 'sysexCmd': byte
-                Байт с командой SysEx
-
-            :param 'data': bytearray
-                Массив байтов с необходимой информацией в виде
-                семибайтовых групп.
-            '''
-            msg = bytearray([START_SYSEX, sysexCmd])
-            msg.extend(data)
-            msg.append(END_SYSEX)
-            self.sp.write(msg)
-
-
-        def parseString(self, *args, **kwargs):
-            '''
-            Обработать полученную от Arduino-исполнителя строку.
-            Вызывается автоматически при получении строкового сообщения.
-
-            :returns: None
-            '''
-            received = ArduinoUtil.two_byte_iter_to_str(args)
-
-
-class AqHardwareModule:
-    '''
-    Класс, представляющий любой `модуль` — подчинённое устройство, которое
-    может быть под контролем Arduino-исполнителя, но при этом не подчиняется
-    серверу напрямую. Все классы поддерживаемых типов устройств-исполнителей
-    являются подклассами этого класса.
-
-    Модули для Arduino-исполнителя подразделяются на `датчики` и `средства 
-    исполнения` (`executors`). 
-
-    Как и лобого исполнителя, любой модуль можно отключить от системы, для
-    чего можно использовать атрибут 'isEnabled'.
-    '''
-    class ArduinoSensor:
+    def __init__(self, isEnabled: bool, id: str, platform: str, address: str, parent = None,
+            isFertile: bool = False, instanceName: str = '', instanceDescription: str = ''):
         '''
-        Класс Аrduino-датчика. 
-        Они имеют два подтипа: Analog (для аналоговых) и Digital (для цифровых
-        датчиков).
+        Инициализировать объект абстрактного исполнителя. Этот конструктор пре-
+        имущественно используется в драйверах исполнителей.
 
-        Любой объект Arduino-датчика имеет следующие атрибуты:
+        :param 'isEnabled': bool
+            Используется ли этот исполнитель в системе или нет.
 
-        :attrib 'attrl': list
-            Список атрибутов, которые инициализируются из JSON-словаря в
-            'hardware.asqd'
-        
-        :attrib 'motherBoard': AqHardwareDevice.ArduinoDevice
-            Ссылка на объект Arduino-исполнителя, к которому подключён датчик
+        :param 'platform': str
+            Индентификатор протокола
 
-        :attrib 'isCalibrateable': bool
-            Значение параметра определяется тем, может ли датчик, объект которого
-            инициализируется, быть откалиброван (True) или нет (False). Если True,
-            то должен существовать метод калибровки
+        :param 'address': str
+            Адрес (его форма зависит от типа исполнителя), на котором он распо-
+            лагается
 
-        :attrib 'instanceName': str
-            Обязательное отображаемое имя датчика. Может быть пустым.
+        :kwparam 'parent': AqHardwareDevice = None
+            Если исполнитель является подчинённым, то — объект материнского испол-
+            нителя
+
+        :kwparam 'isFertile': bool = True
+            Способен ли исполнитель иметь других исполнителей в подчинении
+    
+        :kwparam 'instanceName': str = ''
+            Отображаемое имя конкретного исполнителя. Может быть пустым.
             Используется для отображения в интерфейсах вершителей
 
-        :attrib 'instanceDescription': str
-            Обязательное описание датчика. Может быть пустым.
-            Используется для отображения в интерфейсах вершителей
-
-        :attrib 'typeDescription': str
-            Обязательное описание ТИПА датчика. Может быть пустым,
-            но не рекомендуется оставлять его таким. Задаётся в драйвере
-            ТИПА исполнителя.
+        :kwparam 'instanceDescription': str = ''
+            Описание конкретного исполнителя. Может быть пустым.
             Используется для отображения в интерфейсах вершителей
         '''
-
-        Analog = typemark('AnalogSensor')       #Маркер аналогового типа
-        Digital = typemark('DigitalSensor')     #Маркер цифрового типа
-
-        attrl = ['instanceDescription', 'isEnabled']
-
-        def __init__(self, atBoard: AqHardwareDevice.ArduinoDevice, atPin: str, isEnabled: bool,
-                     isCalib: bool, instanceName: str, desc: str, bkmeth: callable,
-                     **kwargs):
-            '''
-            Инициализировать Аrduino-датчик.
-
-            :param 'atBoard': AqHardwareDevice.ArduinoDevice
-                Объект Arduino-исполнителя, к которому подключён датчик
-
-            :param 'atPin': str
-                Адрес пина Arduino-исполнителя, к которому подключён датчик
-
-            :param 'isEnabled': bool
-                Использовать ли этот датчик или нет. Если этот параметр
-                отключить, то регистрация его значений системой статистики
-                не будет выполняться, а также частично или полностью перес-
-                танут работать правила, в условиях которых фигурирует данный
-                датчик
-
-            :param 'isCalib': bool
-                Может ли датчик, объект которого инициализируется, быть отка-
-                либрован (True) или нет (False). Если True, то должен быть
-                по ключевому слову предоставлен аргумент 'clmeth', в противном
-                случае будет вызвано исключение.
-
-            :param 'instanceName': str
-                Обязательное отображаемое имя датчика. Может быть пустым,
-                но не рекомендуется оставлять его таким.
-                Используется для отображения в интерфейсах вершителей
-
-            :param 'desc': str
-                Обязательное описание датчика. Может быть пустым.
-                Используется для отображения в интерфейсах вершителей
-
-            :param 'bkmeth': callable
-                Метод получения готового значения датчика. В определении каж-
-                дого из отдельных типов датчиков должен быть определён особый
-                метод получения значения для этого типа датчика, который дол-
-                жен быть направлен в этот агрумент. Это нужно для того, чтобы
-                компоненты, которым неизвестно имя такого метода, могли вызвать
-                его вызовом метода bakedValue
-
-            :kwparam 'clmeth': callable
-                Метод калибровки датчика. Если параметр 'isCalib' истиннен, то
-                необходимо предоставить мeтод калибровки датчика.
-                Это — параметр по ключевому слову!
-            '''
-            self.motherBoard = atBoard
-            self.motherPinAddress = atPin
-            try: self.motherPin = self.motherBoard.get_pin(f'{self.motherPinAddress}:i')
-            except AttributeError: pass
-            self.isEnabled = isEnabled
-
-            if isCalib:
-                self.isCalibrateable = isCalib
-                try: self.calibrate = kwargs['clmeth']
-                except: raise libs.exceptions.UndefinedCalibrationMethodError()
-
-            self.instanceName = instanceName
-            self.instanceDescription = desc
-            self.bakedValue = bkmeth
+        self.parent, self.isEnabled, self.isFertile = parent, isEnabled, isFertile
+        self.platform, self.deviceId, self.deviceAddress = platform, id, address
+        self.isControllable = not self.parent
+        if self.isFertile: self.children = []
 
 
-        def __repr__(self):
-            return f'{self.driverId} device at {self.motherBoard} ({self.motherPinAddress})'
-
-
-        def getId(self) -> str:
-            '''
-            Каждый объект оборудования в Hyrex AsQamm имеет собственный внут-
-            ренний индентификатор. У Arduino-исполнителей он формируется по
-            следующей схеме:
-
-            '{x}:{y}:{z}',
-            где x = COM-порт Arduino-исполнителя, к которому подключён датчик;
-                у = Адрес пина Arduino-исполнителя, к которому подключён датчик;
-                z = ID драйвера датчика.
-
-            :returns: None
-            '''
-            return f'{self.motherBoard.motherPort}:{self.motherPinAddress}:{self.driverId}'
-
-
-    class ArduinoExecutor:
+    def getChildren(self) -> list:
         '''
-        Класс модулей исполнения для Arduino-исполнителя (например, серво-
-        привода). 
-        Они имеют два подтипа: Analog (для аналоговых) и Digital (для цифровых
-        устройств исполнения).
+        Получить список подчинённых исполнителей данного исполнителя. Метод
+        не принимает никаких аргументов.
 
-        Любой объект таких модулей исполнения имеет следующие атрибуты:
-
-        :attrib 'attrl': list
-            Список атрибутов, которые инициализируются из JSON-словаря в
-            'hardware.asqd'
-        
-        :attrib 'motherBoard': AqHardwareDevice.ArduinoDevice
-            Ссылка на объект Arduino-исполнителя, к которому подключён
-            модуль исполнения
-
-        :attrib 'instanceName': str
-            Обязательное отображаемое имя модуля исполнения. Может быть
-            пустым. Используется для отображения в интерфейсах вершителей
-
-        :attrib 'instanceDescription': str
-            Обязательное описание модуля исполненияа. Может быть пустым.
-            Используется для отображения в интерфейсах вершителей
-        
-        :attrib 'typeDescription': str
-            Обязательное описание ТИПА модуля исполнения. Может быть пус-
-            тым, но не рекомендуется оставлять его таким. Задаётся в 
-            драйвере ТИПА исполнителя.
-            Используется для отображения в интерфейсах вершителей
+        :returns: list<AqHardwareDevice>
         '''
-        
-        Analog = typemark('AnalogExecutor')     #Маркер аналогового типа
-        Digital = typemark('DigitalExecutor')   #Маркер цифрового типа
-        
-        attrl = ['instanceDescription', 'isEnabled']
+        if not self.isFertile: 
+            raise NotImplementedError('Этот исполнитель не может иметь других исполнителей в подчинении')
 
-        def __init__(self, atBoard: AqHardwareDevice.ArduinoDevice, atPin: str, isEnabled: bool,
-                     instanceName: str, instanceDescription: str,):
-            '''
-            Инициализировать модуля исполнения для Arduino-исполнителя.
-
-            :param 'atBoard': AqHardwareDevice.ArduinoDevice
-                Объект Arduino-исполнителя, к которому подключён модуль ис-
-                полнения
-
-            :param 'atPin': str
-                Адрес пина Arduino-исполнителя, к которому подключён модуль
-                исполнения
-
-            :param 'isEnabled': bool
-                Использовать ли этот модуль исполнения или нет. Если этот 
-                параметр отключить, то на модуль невозможно будет отдаавать
-                какие-либо команды, а также частично или полностью перес-
-                танут работать правила, в действиях которых фигурирует данный
-                модуль исполнения
-
-            :param 'instanceName': str
-                Обязательное отображаемое имя модуля исполнения. Может быть
-                пустым, но не рекомендуется оставлять его таким.
-                Используется для отображения в интерфейсах вершителей
-
-            :param 'desc': str
-                Обязательное описание модуля исполнения. Может быть пустым.
-                Используется для отображения в интерфейсах вершителей
-
-            :param 'typeDesc': str
-                Обязательное описание ТИПА модуля исполнения. Может быть пустым.
-                Используется для отображения в интерфейсах вершителей
-            '''
-            self.motherBoard = atBoard
-            self.motherPinAddress = atPin
-            try: self.motherPin = self.motherBoard.get_pin(f'{self.motherPinAddress}:i')
-            except AttributeError: pass
-            self.instanceName = instanceName
-            self.instanceDescription = instanceDescription
-
-
-        def getId(self):
-            '''
-            Каждый объект оборудования в Hyrex AsQamm имеет собственный внут-
-            ренний индентификатор. У Arduino-исполнителей он формируется по
-            следующей схеме:
-
-            '{x}:{y}:{z}',
-            где x = COM-порт Arduino-исполнителя, к которому подключён датчик;
-                у = Адрес пина модуля исполнения, к которому подключён датчик;
-                z = ID драйвера модуля исполнения.
-
-            :returns: None
-            '''
-            return f'{self.motherBoard.motherPort}:{self.motherPinAddress}:{self.driverId}'
-
-
-class AqArduinoHardwareModes:
-    '''
-    В этом классе содержатся определители режимов работы пинов Arduino. Класс
-    используется в работе с PyFirmata
-    '''
-    Input = INPUT
-    Output = OUTPUT
-    Analog = ANALOG
-    PWM = PWM
-    Servo = SERVO
-    Off = UNAVAILABLE
+        return self.children
 
 
 import drivers                                  #Драйверы оборудования могут быть инициализированы
@@ -604,9 +210,9 @@ from threading import Thread
 class AqHardwareSystem:
     '''
     Класс системы управления оборудованием. Она осуществляет инициализацию
-    всех исполнителей, коплексов и модулей; занимается мониторингом (записью
-    значений) датчиков; осуществляет следование правилам (отдаёт команды мо-
-    дулям исполнения в соответствии с ними).
+    всех исполнителей и комплексов; занимается мониторингом (записью
+    значений) датчиков; осуществляет следование правилам (отдаёт команды 
+    исполнителям, работающим на вывод, в соответствии с ними).
 
     Описание важнейших атрибутов:
 
@@ -615,12 +221,14 @@ class AqHardwareSystem:
         пройзойдёт критическая ошибка, флаг будет установлен на False, и сер-
         вер узнает об ошибке по отрицательному значению этого флага
 
-    :attrib 'installedArduinoHardware': list
-        Этот список, после успешной инициализации системы, содержит все объек-
-        ты установленных исполнителе. Они инициализируются конструктором после-
-        довательно и добавляются в этот список. Если при инициализации какого-
-        то конкретного исполнителя произойдёт ошибка, то он не будет включён в
-        этот список
+    :attrib 'installedHardware': dict<str, list<AqHardwareDevice>>
+        Этот словарь, после успешной инициализации системы, содержит все объек-
+        ты установленных исполнителей. Ключами словаря являются имена поддержи-
+        ваемых протоколов, а значениями — списки с объектами установленных ис-
+        полнителей. Эти объекты инициализируются конструктором системы управле-
+        ния оборудованием последовательно и добавляются в словарь. Если при ин-
+        ициализации какого-то конкретного исполнителя произойдёт ошибка, то он
+        не будет включён в этот словарь
 
     :attrib 'monitors': list
         Этот список заполняется при вызове метода startMonitoring(), содержит
@@ -638,22 +246,23 @@ class AqHardwareSystem:
 
          —— В цикле, для каждого исполнителя, информация о котором есть в 
             'hardware.asqd', берётся ID драйвера этого исполнителя (такой ID пред-
-            ставляет из себя целое число от 1000 до 9999);
+            ставляет из себя строку длиной 4 символа, состоящую из символов латини-
+            цы и цифр от 0 до 9);
 
-         —— Затем, берётся значение из словаря drivers.__init__.Boards, при этом в
+         —— Затем, берётся значение из словаря drivers.__init__.Devices, при этом в
             качестве ключа используется тот самый ID драйвера. В качестве значения
             будет получен драйвер этого исполнителя, т. е. его КЛАСС;
 
          —— Сразу после этого этот полученный драйвер инициализируется с использо-
             ванием параметров, указанных в определении этого исполнителя, за исклю-
-            чением параметра 'pinMap'. Инициализированный объект добавляется в спи-
-            сок 'installedArduinoHardware';
+            чением параметра 'pinMap'. Инициализированный объект добавляется в сло-
+            варь;
 
          —— Если какой-то из вышеперечисленных этапов провален, то исполнитель не
-            будет включён в список 'installedArduinoHardware'.
+            будет включён в словарь 'installedHardware'.
         '''
         self.isOk = bool()
-        self.installedArduinoHardware = []
+        self.installedHardware = {}
         self.monitors = []
         self.logger = AqLogger('Hardware')
 
@@ -661,29 +270,86 @@ class AqHardwareSystem:
         #в этом классе.
         self.statisticAgent = AqStatist()
 
-        self.logger.debug('Инициализация оборудования начата')
+        #Инициализация протоколов
+        self.logger.info('Инициализация протоколов...')
+
+        for fileName in glob.glob('drivers\\platforms\\*.py'):
+            nameToImport = fileName.replace('\\', '.')[:-3]
+            platformName = fileName.replace('\\', '.')[:-3].split('.')[-1]
+            classNames = []
+
+            with open(fileName, 'r', encoding = 'utf-8') as file:
+                for line in file.readlines():
+                    if line.startswith('class '):
+                        try:
+                            if ('AqHardwareDevice' in line.split('(')[1]):
+                                classNames.append(line[6:line.index('(')])
+                                self.logger.debug(f'Класс устройства {line[6:line.index("(")]} инициализирован')
+                        except IndexError: continue
+
+            drivers.Platforms.update(
+                {platformName: [getattr(importlib.import_module(nameToImport), name) for name in classNames]})
+
+
+        #Инициализация драйверов
+        self.logger.info('Инициализация драйверов устройств...')
+
+        for folderName in glob.glob('drivers\\devices\\*'):
+            if '.' in folderName: continue
+            for installedPlatformName in drivers.Platforms.keys():
+                if installedPlatformName in folderName:
+                    deviceDriverClasses = {}
+
+                    for fileName in glob.glob(f'{folderName}\\**\\*.py'):
+                        with open(fileName, 'r', encoding = 'utf-8') as file:
+                            for line in file.readlines():
+                                if line.startswith('class '):
+                                    try:
+                                        for platformClass in drivers.Platforms[installedPlatformName]:
+                                            if platformClass.__name__ in line.split('(')[1]:
+                                                if fileName in deviceDriverClasses.keys():
+                                                    deviceDriverClasses[fileName].append(line[6:line.index('(')])
+                                                else: deviceDriverClasses.update({fileName: [line[6:line.index('(')]]})
+                                                self.logger.debug(f'Драйвер устройства {line[6:line.index("(")]} инициализирован')
+
+                                            else: continue
+                                    except IndexError: continue
+
+                    for driverFile, driverClassList in deviceDriverClasses.items():
+                        nameToImport = driverFile.replace('\\', '.')[:-3]
+
+                        for className in driverClassList:
+                            driverClass = getattr(importlib.import_module(nameToImport), className)
+                            drivers.Devices.update({driverClass.driverId: driverClass})
+
+
+        self.logger.info('Инициализация оборудования...')
         with open('data/system/~!hardware!~.asqd', 'r', encoding = 'utf-8') as configFile:
             try: 
                jsonString = loadJson(configFile.read())
 
                for hardwareObject in jsonString:
-                   self.logger.debug(f'Подключение к устройству на {hardwareObject[1]}...')
+                   self.logger.debug(f'Подключение к устройству по адресу {hardwareObject[1]}...')
                    try:
-                       instance = (drivers.Boards[hardwareObject[0]])(hardwareObject[1], drivers, **hardwareObject[2])
-                       self.installedArduinoHardware.append(instance)
-                       self.logger.info(f'Устройство типа {hardwareObject[0]} на портy {hardwareObject[1]} подключено.')
-                   except SerialException:
-                       self.logger.error(f'Не удалось инициализировать Arduino-устройство типа {hardwareObject[0]} на портy '
-                                         f'{hardwareObject[1]} из-за ошибки 511: не удалось найти запрашиваемое устройство')
-                       continue
+                       instance = (drivers.Devices[hardwareObject[0]])(hardwareObject[1], drivers, **hardwareObject[2])
+                       if instance.platform not in self.installedHardware.keys():
+                           self.installedHardware.update({instance.platform: [instance]})
+                       else: self.installedHardware[instance.platform].append(instance)
+                       self.logger.info(f'Устройство типа {hardwareObject[0]} по адресу {hardwareObject[1]} подключено.')
+                       self.logger.debug(self.installedHardware)
+                   #except SerialException:
+                    #   self.logger.error(f'Не удалось инициализировать устройство типа {hardwareObject[0]} по адресу '
+                     #                    f'{hardwareObject[1]} из-за ошибки 511: не удалось найти запрашиваемое устройство')
+                      # continue
+                   except Exception as e: raise e
                                        
 
             except JSONDecodeError:
                 self.logger.error(f'Не удалось получить данные JSON из файла "data/system/~!hardware!~.asqd", проверьте файл на'
                                    'синтаксические ошибки')
 
-        if len(self.installedArduinoHardware) == 0:
-            self.logger.critical(f'Не удалось инициализировать Arduino-устройства, используя информацию из файла "~!hardware!~.asqd". '
+        if not self.installedHardware:
+            self.logger.critical(f'Не удалось инициализировать yстройства, используя информацию из файла "~!hardware!~.asqd". '
                                  'Пожалуйста, убедитесь, что файл не повреждён и не пуст, что все устройства подключены и находятся'
                                  'в рабочем состоянии. Для решения данной проблемы попробуйте переустановить AsQammServer, при '
                                  'переустановке внимательно следите за правильностью вводимой информации об оборудовании')
@@ -702,10 +368,12 @@ class AqHardwareSystem:
         будет добавлен в список 'monitors' и запущен.
 
         Метод не принимает агрументов.
+
+        :returns: None
         '''
-        for unit in self.installedArduinoHardware:
+        for unit in self.installedHardware:
            if unit.isEnabled:
-               instance = AqArduinoDeviceMonitor(self, unit)
+               instance = unit.Monitor(self, unit)
                self.monitors.append(instance)
 
         for monitor in self.monitors:
@@ -715,30 +383,24 @@ class AqHardwareSystem:
     
     def getHardwareDataSheet(self) -> list:
         '''
-        Получить полную информацию об установленном оборудовании в
-        виде списка словарей, где каждый словарь представляет одно-
-        го исполнителя. Отключенные исполнители НЕ исключаются из
-        списка. Метод используется для отображения информации об 
-        оборудовании в вершителях. Представление идёт по следующей
-        схеме:
+        Получить полную информацию об установленном оборудовании в виде списка
+        словарей, где каждый словарь представляет одного исполнителя. Отключен-
+        ные исполнители НЕ исключаются из списка. Метод используется для отобра-
+        жения информации об оборудовании в вершителях. Представление идёт по сле-
+        дующей схеме:
 
         [
             /*Объект исполнителя, где:
-              a —— Тип исполнителя (на данный момент — возможен только 
-                   "ArduinoDevice");
-              b —— Используется ли исполнитель (значение параметра 'isEnabled'
-                   для данного исполнителя);
-              c —— ID драйвера исполнителя (любой ID драйвера представляет из
-                   себя целое число от 1000 до 9999);
-              d —— Для Arduino-исполнителя — адрес COM-порта, на котором он 
-                   располагается;
+              a —— Тип исполнителя;
+              b —— Используется ли исполнитель (значение параметра 'isEnabled' для
+                   данного исполнителя);
+              c —— ID драйвера исполнителя (любой ID драйвера представляет из себя
+                   строку длиной 4 символа, состоящую из символов латиницы и цифр
+                   от 0 до 9);
+              d —— Адрес исполнителя;
               e —— Обязательное описание исполнителя. Может быть пустым.
                    Используется для отображения в интерфейсах вершителей;
-              f —— Пин-карта исполнителя в виде словаря (см. документацию к
-                   AqHardwareDevice.ArduinoDevice.setPinMap());
-              g —— Количество модулей, которые подключены к исполнителю;
-              h —— Количество модулей, которые подключены к исполнителю и ис-
-                   пользуются
+              f —— Словарь с информацией о подчинённых исполнителях
             */
 
             {"unitType": a,
@@ -746,125 +408,32 @@ class AqHardwareSystem:
              "driverId": c,
              "comPort": d,
              "instanceDescription": e,
-             "pinMap": f,
-             "modulesQty": g,
-             "enabledQty": h},
+             "children": f},
 
              //другие определения исполнителей по той же схеме
         ]
         '''
-        modulesQty = 0   #Количество модулей, которые подключены к исполнителю
-        enabledQty = 0   #Количество модулей, которые подключены к исполнителю и ис-
+        modulesQty = 0   #Количество подчинённых, которые подключены к исполнителю
+        enabledQty = 0   #Количество подчинённых, которые подключены к исполнителю и ис-
                          #пользуются
         dataSheet = []
-        for unit in self.installedArduinoHardware: #КОСТЫЛЬ: проверки типа устройства нет
-            for pin, module in unit.getPinMap():
-                if module != None:
-                    modulesQty += 1
-                    if (module[1])['isEnabled']: enabledQty += 1
-                    continue
+        for unitList in self.installedHardware.values(): #КОСТЫЛЬ: проверки типа устройства нет
+            for unit in unitList:
+                for pin, child in unit.getChildren():
+                    if child != None:
+                        modulesQty += 1
+                        if (child[1])['isEnabled']: enabledQty += 1
+                        continue
 
-            dataSheet.append({'unitType'           : 'AqArduino',
-                              'isEnabled'          : unit.isEnabled,
-                              'driverId'           : unit.driverId,
-                              'comPort'            : unit.motherPort,
-                              'instanceDescription': unit.instanceDescription,
-                              'pinMap'             : dict(unit.getPinMap()),
-                              'modulesQty'         : modulesQty,
-                              'enabledQty'         : enabledQty})
-            modulesQty = 0
+                dataSheet.append({'platform'           : unit.platform,
+                                  'isEnabled'          : unit.isEnabled,
+                                  'driverId'           : unit.driverId,
+                                  'deviceAddress'      : unit.motherPort,
+                                  'typeDisplayName'    : unit.typeDisplayName,
+                                  'typeDescription'    : unit.typeDescription,
+                                  'instanceName'       : unit.instanceName,
+                                  'instanceDescription': unit.instanceDescription,
+                                  'children'           : dict(unit.getChildren())})
+                modulesQty = 0
 
         return dataSheet
-
-
-class AqArduinoDeviceMonitor(Thread):
-    '''
-    Класс `монитора` для исполнителя. `Монитор` представляет из себя
-    подвид потока; для исполнителей он выполняет лишь запуск отслежи-
-    вания значений датчиков. Некоторые вaжные атрибуты:
-
-    :attrib 'assignedBoardMonitors': list
-        Список содержит мониторы датчиков для всех таких модулей, ко-
-        торые подключены к исполнителю
-    '''
-    def __init__(self, hardwareSystem: AqHardwareSystem, assignToBoard: AqHardwareDevice.ArduinoDevice):
-        '''
-        Конструктор `монитора` для исполнителя.
-
-        :param 'hardwareSystem': AqHardwareSystem
-            Ссылка на объект системы управления оборудованием. 
-
-        :param 'assignToBoard': AqHardwareDevice.ArduinoDevice
-            Ссылка на объект исполнителя, с которым работает монитор.
-        '''
-        Thread.__init__(self, target = self._run, args = [hardwareSystem, assignToBoard],
-                        name = f'{assignToBoard.getId()}:monitor')
-        self.assignedBoard = assignToBoard
-        self.assignedBoardMonitors = []
-        
-
-    def _run(self, hardwareSystem: AqHardwareSystem, assignedBoard: AqHardwareDevice.ArduinoDevice):
-        '''
-        Рабочий метод `монитора` для исполнителя.
-
-        :param 'hardwareSystem': AqHardwareSystem
-            Ссылка на объект системы управления оборудованием. 
-
-        :param 'assignedBoard': AqHardwareDevice.ArduinoDevice
-            Ссылка на объект исполнителя, с которым работает монитор.
-        '''
-        for module in dict(assignedBoard.getPinMap(mode = object)).values():
-            try:
-                if type(module) == AqHardwareModule.ArduinoSensor:
-                    instance = AqArduinoSensorMonitor(hardwareSystem.statisticAgent, module)
-                    self.assignedBoardMonitors.append(instance)
-                else: continue
-            except AttributeError: continue
-
-        for monitor in self.assignedBoardMonitors: monitor.start()
-
-
-class AqArduinoSensorMonitor(Thread):
-    '''
-    Класс `монитора` для датчика. `Монитор` представляет из себя под-
-    вид потока; для датчиков он выполняет работу по регистрации значе-
-    ний с них через каждый, задаваемый для каждого отдельного датчика,
-    промежуток времени.
-    '''
-    def __init__(self, statisticAgent: AqStatist, assignToSensor: AqHardwareModule.ArduinoSensor):
-        '''
-        Конструктор `монитора` для датчика.
-
-        :param 'statisticAgent': AqStatist
-            Ссылка на объект регистратора статистики. 
-
-        :param 'assignToSensor': AqHardwareModule.ArduinoSensor
-            Ссылка на объект датчика, с которым работает монитор.
-        '''
-        Thread.__init__(self, target = self._run, args = [assignToSensor, statisticAgent],
-                        name = f'{assignToSensor.getId()}:monitor', daemon = True)
-
-
-    def _run(self, assignedSensor: AqHardwareModule.ArduinoSensor, statistic: AqStatist):
-        '''
-        Рабочий метод `монитора` для датчика.
-
-        :param 'assignedSensor': AqHardwareModule.ArduinoSensor
-            Ссылка на объект датчика, с которым работает монитор.
-  
-        :param 'statistic': AqStatist
-            Ссылка на объект регистратора статистики. 
-        '''
-        while True:
-            try:
-                if not self.statistic.isBusy:
-                    self.statistic.registerStatistic(self.assignedSensor.getId(), self.assignedSensor.bakedValue())
-                else:
-                    while self.statistic.isBusy: slp(0.48)
-                    self.statistic.registerStatistic(self.assignedSensor.getId(), self.assignedSensor.bakedValue())
-                    
-            except AssertionError:
-                slp(0.48)
-                continue
-
-            slp(self.assignedSensor.probeFrequency)

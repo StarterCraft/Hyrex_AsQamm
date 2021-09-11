@@ -44,20 +44,147 @@ class AqServer:
 
         self.serverLogger.debug('Проверка файлов окружения')
         self.mkreg()
-        self.mkffd()
 
 
     @staticmethod
-    @click.command('', context_settings = clickSettings, help = 'Запустить AsQamm Server')
-    @click.option('-c', '--custom')
-    def start() -> tuple:
+    @click.command(context_settings = clickSettings, help = 'Запустить AsQamm Server')
+    @click.option('-c', '--custom-address', 'useCustomAddress', nargs = 2, type = str,
+        help = 'Использовать нестандартный IP-адрес и порт')
+    @click.option('-H', '--hardware-offline', 'hardwareOffline', is_flag = True, 
+        help = 'Отключить инициализацию оборудования')
+    @click.option('-n', '--ngrok', is_flag = True,
+        help = 'Запустить сессию NGROK вместе с сервером')
+    def start(useCustomAddress, hardwareOffline, ngrok) -> None:
         '''
-        Метод, принимающщий аргументы (опции) от Click-a при запуске програм-
-        мы. Информация о них представлена ниже:
-        :returns: tuple
-            Аргументы запуска программы в виде кортежа
-        '''
+        Метод запуска сервера, который принимает в качестве аргументов 
+        аргументы запуска консоли.
 
+        :param 'useCustomAddress': click.OptionData
+            Параметр запуска: Использовать нестандартный IP-адрес и порт,
+            2 строковых аргумента
+
+        :param 'hardwareOffline': click.OptionData
+            Параметр запуска: Отключить инициализацию оборудования, флаг
+
+        :param 'ngrok': click.OptionData
+            Параметр запуска: Запустить сессию NGROK вместе с сервером, флаг
+
+        :returns: None
+        '''
+        global server, usersCore, hardwareCore
+        global IP, portstr
+
+        if useCustomAddress: IP, portstr = useCustomAddress
+        else:
+            with open('data/config/~!config!~.asqd', 'r') as configFile:
+                configData = (json.loads(AqCrypto.decryptContent(configFile.read())))
+                IP = configData['addressDefault']['ip']
+                portstr = configData['addressDefault']['port']
+
+        server = AqServer()
+        usersCore = AqUserSystem()
+
+        if not hardwareOffline:
+            hardwareCore = AqHardwareSystem()
+            assert hardwareCore.isOk
+        else: server.serverLogger.info('Сервер будет запущен без инициализации обоpудования')
+        
+        if ngrok: server.publishViaNgrok = True
+
+        @server.api.get('/getUserdata', description = 'Получить словарь данных пользователей')
+        def getUserdata(content: dict, request: Request):
+            global server
+
+            try:
+                if server.tok.isOk(content['tok']): 
+                    return server.standardResponse(usersCore.getUserData())
+                else: return server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
+
+
+        @server.api.get('/getUserRg', description = 'Получить внешний регистр')
+        def getUserRg(content: dict, request: Request):
+            global server
+
+            try:
+                if server.tok.isOk(content['tok']):
+                    return server.standardResponse(usersCore.getUserRegistry())
+                else: server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
+
+
+        @server.api.get('/getNewUserFilename', description = 'Получить новое случайное имя файла для нового аккаунта пользователя')
+        def getNewUserFilename(content: dict, request: Request):
+            global server
+
+            try:
+                if server.tok.isOk(content['tok']):
+                    return server.standardResponse(usersCore.getFilenameForNewUser())
+                else: server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
+
+
+        @server.api.post('/updateUserdata', description = 'Обновить словарь данных пользователей')
+        def updateUserdata(content: dict, request: Request):
+            global server
+
+            try:
+                if server.tok.isOk(content['tok']):
+                    usersCore.updateUserData(content['content'])
+                else: server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
+
+
+        @server.api.post('/updateUserRg', description = 'Обновить внешний регистр')
+        def updateUserRg(content: dict, request: Request):
+            global server
+
+            try:
+                if server.tok.isOk(content['tok']):
+                    usersCore.updateUserRegistry((content['content'])[1], (content['content'])[0])
+                else: server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
+
+
+        @server.api.delete('/delUserAcc', description = 'Удалить аккаунт пользователя (пользователей)')
+        def delUserAcc(content: dict, request: Request):
+            global server
+
+            try:
+                if server.tok.isOk(content['tok']):
+                    usersCore.deleteUserAccount(content['content'])
+                else: server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
+
+
+        @server.api.get('/getHardwareData', description = 'Получить информацию о подключённом оборудовании, если таковое присутствует')
+        def getHardwareData(content: dict, request: Request):
+            global server, hardwareCore
+            
+            try:
+                if server.tok.isOk(content['tok']) and hardwareCore:
+                    return server.standardResponse(hardwareCore.getHardwareDataSheet())
+                elif not hardwareCore: return server.errorResponse(501)
+                else: return server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
+
+
+        @server.api.get('/getLatestStats', description = 'Получить статистику за x времени')
+        def getQueriedStats(content: dict, request: Request):
+            global server, hardwareCore
+
+            try:
+                if server.tok.isOk(content['tok']) and hardwareCore:
+                    return server.standardResponse(hardwareCore.statisticAgent.getStatsByTimeQuery(content['query']))
+                elif not hardwareCore: return server.errorResponse(501)
+                else: server.errorResponse(401)
+            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
+
+
+        try: hardwareCore.startMonitoring()
+        except (NameError, AttributeError): pass
+
+        server.run(IP, int(portstr))
 
 
     def mkdirs(self) -> None:
@@ -203,158 +330,12 @@ class AqServer:
 
 if __name__ == '__main__':
     try:
-        hardwareCore = None
-        runningMode = None
-        IP = ''
-        portstr = ''
-        addArgs = []
+        server, usersCore, hardwareCore = None, None, None
+        IP, portstr = '', ''
 
         # Определим, запускаемся ли из оболочки Python или из exe
-        if argv[0].endswith('.py'):
-            runningMode = 'PYTHONENV'
-        else:
-            runningMode = 'EXE'
-            argv.insert(0, '')
-
-
-        if ('-c', '--customsettings', '-h', '--help', '-?') in argv:
-            try:
-                IP = argv[2]
-                portstr = argv[3]
-                addArgs = argv[4:]
-
-            except IndexError:
-                if not IP:
-                    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите IP-адрес для запуска: ', end = '')
-                    IP = input()
-
-                if not portstr:
-                    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Введите порт сервера для запуска: ', end = '')
-                    portstr = input()
-        
-                if not addArgs:
-                    print(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}STARTUP{Style.RESET_ALL}]: Нажмите {Fore.CYAN}ENTER{Style.RESET_ALL}'
-                          f' для запуска сервера в обычном режиме или используйте аргументы:\n'
-                          f'                 | "{Fore.CYAN}-h{Style.RESET_ALL}" или "{Fore.CYAN}--hardware-offline{Style.RESET_ALL}" '
-                          f'для запуска сервера в режиме совместимости без оборудования;\n'
-                          f'                 | "{Fore.CYAN}-n{Style.RESET_ALL}" или "{Fore.CYAN}--ngrok{Style.RESET_ALL}" '
-                          f'для вывода сервера в Интернет через ngrok')
-                    addArgs = input(f'[{Fore.GREEN}Server{Style.RESET_ALL}@{Fore.YELLOW}PROMPT{Style.RESET_ALL}]: ').split(' ')
-
-
-        else:
-            with open('data/config/~!config!~.asqd', 'r') as configFile:
-                configData = (json.loads(AqCrypto.decryptContent(configFile.read())))
-                IP = configData['serverDefault']['ip']
-                portstr = configData['serverDefault']['port']
-                addArgs = argv[0:]
-
-
-        server = AqServer()
-        usersCore = AqUserSystem()
-
-        if ('-h' or '--hardware-offline') not in addArgs:
-            hardwareCore = AqHardwareSystem()
-            assert hardwareCore.isOk
-
-        if not hardwareCore: server.serverLogger.info('Сервер будет запущен без инициализации обоpудования')
-        if ('-n' or '--ngrok') in addArgs: server.publishViaNgrok = True
-
-
-        @server.api.get('/getUserdata', description = 'Получить словарь данных пользователей')
-        def getUserdata(content: dict, request: Request):
-            global server
-
-            try:
-                if server.tok.isOk(content['tok']): 
-                    return server.standardResponse(usersCore.getUserData())
-                else: return server.errorResponse(401)
-            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
-
-
-        @server.api.get('/getUserRg', description = 'Получить внешний регистр')
-        def getUserRg(content: dict, request: Request):
-            global server
-
-            try:
-                if server.tok.isOk(content['tok']):
-                    return server.standardResponse(usersCore.getUserRegistry())
-                else: server.errorResponse(401)
-            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
-
-
-        @server.api.get('/getNewUserFilename', description = 'Получить новое случайное имя файла для нового аккаунта пользователя')
-        def getNewUserFilename(content: dict, request: Request):
-            global server
-
-            try:
-                if server.tok.isOk(content['tok']):
-                    return server.standardResponse(usersCore.getFilenameForNewUser())
-                else: server.errorResponse(401)
-            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
-
-
-        @server.api.post('/updateUserdata', description = 'Обновить словарь данных пользователей')
-        def updateUserdata(content: dict, request: Request):
-            global server
-
-            try:
-                if server.tok.isOk(content['tok']):
-                    usersCore.updateUserData(content['content'])
-                else: server.errorResponse(401)
-            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
-
-
-        @server.api.post('/updateUserRg', description = 'Обновить внешний регистр')
-        def updateUserRg(content: dict, request: Request):
-            global server
-
-            try:
-                if server.tok.isOk(content['tok']):
-                    usersCore.updateUserRegistry((content['content'])[1], (content['content'])[0])
-                else: server.errorResponse(401)
-            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
-
-
-        @server.api.delete('/delUserAcc', description = 'Удалить аккаунт пользователя (пользователей)')
-        def delUserAcc(content: dict, request: Request):
-            global server
-
-            try:
-                if server.tok.isOk(content['tok']):
-                    usersCore.deleteUserAccount(content['content'])
-                else: server.errorResponse(401)
-            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
-
-
-        @server.api.get('/getHardwareData', description = 'Получить информацию о подключённом оборудовании, если таковое присутствует')
-        def getHardwareData(content: dict, request: Request):
-            global server, hardwareCore
-            
-            try:
-                if server.tok.isOk(content['tok']) and hardwareCore:
-                    return server.standardResponse(hardwareCore.getHardwareDataSheet())
-                elif not hardwareCore: return server.errorResponse(501)
-                else: server.errorResponse(401)
-            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
-
-
-        @server.api.get('/getLatestStats', description = 'Получить статистику за x времени')
-        def getQueriedStats(content: dict, request: Request):
-            global server, hardwareCore
-
-            try:
-                if server.tok.isOk(content['tok']) and hardwareCore:
-                    return server.standardResponse(hardwareCore.statisticAgent.getStatsByTimeQuery(content['query']))
-                elif not hardwareCore: return server.errorResponse(501)
-                else: server.errorResponse(401)
-            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
-
-
-        try: hardwareCore.startMonitoring()
-        except (NameError, AttributeError): pass
-
-        server.run(IP, int(portstr))
+        runningMode = 'PYTHONENV' if argv[0].endswith('.py') else 'EXE'
+        AqServer.start()  
 
 
     except Exception as exception:

@@ -1,17 +1,20 @@
+import drivers
 from drivers.dependencies import *
+ArduinoDevice = drivers.getDeviceClass('arduino', 'ArduinoDevice')
+ArduinoSensor = drivers.getDeviceClass('arduino', 'ArduinoSensor')
 
 
-class GroveTemperatureSensor(AqHardwareModule.ArduinoSensor):
-    driverId = 1101
+class GroveTemperatureSensor(ArduinoSensor):
+    driverId = 'GT12'
     typeDescription = 'Аналоговый датчик темпepaтуры Grove версии 1.2'
 
-    def __init__(self, atBoard, atPin, **kwargs):
+    def __init__(self, atBoard: ArduinoDevice, atPin, **kwargs):
         super().__init__(atBoard, atPin, kwargs['isEnabled'], True, 
                          kwargs['instanceName'],
                          kwargs['instanceDescription'], 
                          self.temperature)
         self.attrl.extend(['calibrationValue', 'probeFrequency'])
-        self.type = AqHardwareModule.ArduinoSensor.Analog
+        self.type = ArduinoSensor.Analog
         self.bValue = 4275
         self.calibrationValue = int(kwargs['calibrationValue'])
         self.outputAccuracy = int(kwargs['outputAccuracy'])
@@ -21,7 +24,7 @@ class GroveTemperatureSensor(AqHardwareModule.ArduinoSensor):
         try:
             while not self.motherPin.read():
                 self.motherPin.read()
-                slp(0.5)
+                sleep(0.5)
         except AttributeError: pass
 
                      
@@ -35,7 +38,7 @@ class GroveTemperatureSensor(AqHardwareModule.ArduinoSensor):
             return round((1.0 / (log(1023.0 / self.value() - 1.0) / 
                         (self.bValue) + 1 / 298.15) - self.calibrationValue), self.outputAccuracy)
         except TypeError:
-            slp(2)
+            sleep(2)
             return self.temperature()
 
 

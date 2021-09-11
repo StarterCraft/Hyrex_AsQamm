@@ -5,25 +5,28 @@ import json
 
 class AqHardwareSystem:
     def __init__(self, root, server):
-        try: self.hardware = server.get('getHardwareData', json)
+        try:
+           self.hardware = server.get('getHardwareData', json)
         except ServerResponseException as exception: 
             if exception.data[1] == 501: self.hardware = []
+            raise exception
         self.logger = AqLogger('Hardware')
         self.mainTableModel = QtGui.QStandardItemModel(0, 6)
         
         for unit in self.hardware:
             lu = []
             item = QtGui.QStandardItem()
-            item.setText(str(unit['isEnabled']))
+            item.setText('✓' if str(unit['isEnabled']) else '❌')
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
             lu.append(item)
 
             item2 = QtGui.QStandardItem()
-            item2.setText(unit['unitType'])
+            item2.setText(unit['typeDisplayName'])
             item2.setTextAlignment(QtCore.Qt.AlignCenter)
             lu.append(item2)
 
             item3 = QtGui.QStandardItem()
-            item3.setText(unit['comPort'])
+            item3.setText(unit['deviceAddress'])
             item3.setTextAlignment(QtCore.Qt.AlignCenter)
             lu.append(item3)
 
@@ -33,12 +36,13 @@ class AqHardwareSystem:
             lu.append(item4)
 
             item5 = QtGui.QStandardItem()
-            item5.setText(unit['description'])
+            item5.setText(unit['instanceDescription'])
             item5.setTextAlignment(QtCore.Qt.AlignCenter)
             lu.append(item5)
 
             item6 = QtGui.QStandardItem()
-            item6.setText(f'{unit["modulesQty"]} | {unit["enabledQty"]}')
+            item6.setText(
+                f'{len(unit["children"])} | {len([child for child in unit["children"] if child.isEnabled])}')
             item6.setTextAlignment(QtCore.Qt.AlignCenter)
             lu.append(item6)
 
@@ -61,12 +65,12 @@ class AqHardwareSystem:
     def setHardwareListModel(self, root):
         root.ui.tbv_HardwareList.setModel(self.mainTableModel)
         
-        self.mainTableModel.setHorizontalHeaderLabels(['ВКЛ', 'Тип', 'Порт', 'Комплекс', 'Описание', 'МП | МГ'])
+        self.mainTableModel.setHorizontalHeaderLabels(['🔗', 'Тип', 'Порт', 'Комплекс', 'Описание', 'ПП | ПГ'])
         root.ui.tbv_HardwareList.setColumnWidth(0, 36)
-        root.ui.tbv_HardwareList.setColumnWidth(1, 96)
+        root.ui.tbv_HardwareList.setColumnWidth(1, 160)
         root.ui.tbv_HardwareList.setColumnWidth(2, 72)
         root.ui.tbv_HardwareList.setColumnWidth(3, 128)
-        root.ui.tbv_HardwareList.setColumnWidth(4, 480)
+        root.ui.tbv_HardwareList.setColumnWidth(4, 440)
         root.ui.tbv_HardwareList.setColumnWidth(5, 64)
 
         self.mainTableModel.itemChanged.connect( lambda: root.ui.lbl_SelectedHardwareUnit.setText(self.mainTableModel.item(self.mainTableModel.itemChanged().row(), column = 5).text()) )
