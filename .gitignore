@@ -7,7 +7,7 @@
 *.rsuser
 *.suo
 *.user
-AsQammServer/data/personal/*.asqd
+AsQammPyServer/data/personal/*.asqd
 AsQammDekstop/data/system/~!REG!~.sz
 *.userosscache
 *.sln.docstates
@@ -348,10 +348,13 @@ healthchecksdb
 /Hyrex AsQamm/AsQammDekstopConrol/AsQamm/alphalogo.psd
 /Hyrex AsQamm/AsQammDekstopConrol/data/personal
 /Hyrex AsQamm Server
-/AsQammServer/data/personal
-/AsQammServer/data/ffd32.bin.bak
-/AsQammServer/data/system/desktop.ini
-/AsQammServer/statistic
+/AsQammPyServer/data/personal
+/AsQammPyServer/data/config
+/AsQammPyServer/data/system
+
+/AsQammPyServer/data/ffd32.bin
+/AsQammPyServer/data/ffd32.bin.bak
+/AsQammPyServer/statistic
 /AsQammDekstopControl/pyduino_sketch
 /AsQammDekstopControl/images/images.zip
 *.psd
@@ -361,3 +364,4 @@ healthchecksdb
 /AsQammCrashHandler/build/AsQammCrashHandler/PYZ-00.pyz
 /AsQammCrashHandler/build/AsQammCrashHandler/xref-AsQammCrashHandler.html
 *.vcxitems
+/AsQammPyServer/2.5

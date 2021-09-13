@@ -24,7 +24,7 @@
  *  ПОДКЛЮЧЕНИЕ AsQamm-функций
  *============================================================================*/
 
-#include <AsQammArduinoFeature_DHTLif.h>   //Имя метода: DHTt
+#include <DHTLif.h>   //Имя метода: DHTt
 
 /*==============================================================================
  *  СТАНДАРТНЫЕ #define
@@ -725,10 +725,26 @@ void LEDo(const unsigned int effect, const unsigned int duration = 360) {
     //        Длительность эффекта. Параметр
     //        игнорируется, если 'effect' = 0.
 
-    if (effect == 0) led.Off().Forever();
-    if (effect == 1) led.Blink(duration, duration).Forever();
-    if (effect == 2) led.Breathe(duration).Forever();
-    if (effect == 3) led.Candle().Forever();
+    switch (effect) {
+        case 0:
+            led.Off().Forever();
+            break;
+
+        case 1:
+            led.Blink(duration, duration).Forever();
+            break;
+
+        case 2:
+            led.Breathe(duration).Forever();
+            break;
+
+        case 3:
+            led.Candle().Forever();
+            break;
+
+        default:
+            break;
+    }
 }
 
 /*============================================================================*/
