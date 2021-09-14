@@ -18,8 +18,7 @@ class AqCrypto:
     @staticmethod
     def decryptContent(string: str) -> str:
         '''
-        Преобразовать зашифрованную Base-64 строку в обыкновенную
-        строку.
+        Преобразовать зашифрованную Base-64 строку в обыкновенную.
 
         :param 'string': str
             Зашифрованная Base-64 строка
