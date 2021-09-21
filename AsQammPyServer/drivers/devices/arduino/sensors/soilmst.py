@@ -8,7 +8,7 @@ class CapacitiveSoilMoistureSensor(ArduinoSensor):
     driverId = 'ACSM'
 
     def __init__(self, atBoard: ArduinoDevice, atPin: str, **kwargs):
-        super().__init__(atBoard, atPin, kwargs['isEnabled'], True, kwargs['name'], kwargs['description'],
+        ArduinoSensor.__init__(atBoard, atPin, kwargs['isEnabled'], kwargs['name'], kwargs['description'],
                         'Аналоговый ёмкостный датчик влажности почвы версии 1.0', self.moisture)
         self.attrl.extend(['calibrationValue', 'probeFrequency'])
         self.type = ArduinoSensor.Analog

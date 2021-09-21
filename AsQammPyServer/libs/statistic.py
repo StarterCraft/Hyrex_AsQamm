@@ -124,12 +124,10 @@ class AqStatist:
     def registerStatistic(self, sensorIdToRegister: str, valueToRegister) -> None:
         '''
         Записать значение датчика в файл статистики.
-
         :param 'sensorIdToRegister': str
             Индентификатор датчика, значение которого записывают. Больше
             информации о индентификаторах датчиков можно узнать в докумен-
             тации к AqArduinoSensor.getId()
-
         :param 'valueToRegister':
             Значение датчика, которое нужно записать
         '''
@@ -179,8 +177,8 @@ class AqStatist:
         #self.logger.debug(f'Статистический агент сообщил, что регистрация значения заняла {endtimer} миллисекунд.')
         self.isBusy = False
         del timer, endtimer
-
-
+    
+        
     def getStatsByTimeQuery(self, query: str) -> list:
         '''
         Получить статистику по выборке времени в виде списка словарей

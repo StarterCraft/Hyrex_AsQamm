@@ -1,7 +1,7 @@
 VERSION = 'pre-α 115'
 VERSIONTUPLE = ('pre-α', '115')
 
-from types import (FunctionType as callable,
+from types import (FunctionType as Callable,
                    ModuleType   as module)
 
 clickSettings = {'help_option_names': ['-?', '-h', '--help']}

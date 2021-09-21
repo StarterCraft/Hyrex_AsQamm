@@ -93,6 +93,24 @@ class AqHardwareDevice:
         Атрибут, определяющий, способен ли исполнитель иметь других исполните-
         лей в подчинении
 
+    :attrib 'canRetrieve': bool
+        Может ли исполнитель получать и отправлять серверу какие-либо данные
+        (исполнять роль датчика)
+
+    :attrib 'retrieves': list<AqHardwareValueType>
+        Если исполнитель может получать и отправлять серверу какие-либо данные
+        (исполнять роль датчика), то — список типов значений, которые можно от
+        него получить
+
+    :attrib 'canExecute': bool
+        Может ли исполнитель получать от сервера команды и выполнть какие-либо
+        действия        
+
+    :attrib 'executes': list<AqHardwareActionType>
+        Если исполнитель может получать от сервера команды и выполнять по ним
+        какие-либо действия, то — список типов действий, которые он может воз-
+        вращать
+
     :attrib 'parent': AqHardwareDevice
         Если исполнитель является подчинённым, то в этом атрибуте будет нахо-
         диться ссылка на объект материнского исполнителя, иначе — None
@@ -181,6 +199,7 @@ class AqHardwareDevice:
         '''
         self.parent, self.isEnabled, self.isFertile = parent, isEnabled, isFertile
         self.platform, self.deviceId, self.deviceAddress = platform, id, address
+
         self.isControllable = not self.parent
         if self.isFertile: self.children = []
 
@@ -196,6 +215,129 @@ class AqHardwareDevice:
             raise NotImplementedError('Этот исполнитель не может иметь других исполнителей в подчинении')
 
         return self.children
+
+
+class AqHardwareValueType:
+    '''
+    Класс типа значений, получаемых от исполнителя с ролью Retriever.
+    '''
+    def __init__(self, parent: AqHardwareDevice, id: str, _type: type, 
+        unit: str, get: Callable, frequency: float, calm: Callable = None, 
+        calv = None, typeDisplayName: str = '', typeDescription: str = '',
+        instanceName: str = '', instanceDescription: str = ''):
+        '''
+        Конструктор типа значений, получаемых от исполнителя с ролью Retriever
+
+        :param 'parent': AqHardwareDevice
+            Исполнитель, который умеет передавать этот тип значений
+
+        :param 'id': str
+            Строковый индентификатор типа значения
+
+        :param '_type': type
+            Тип значения (int, float, str, ...)
+
+        :param 'unit': str
+            Строковый индентификатор единицы имерения значения
+
+        :param 'get': Callable
+            Метод получения значения
+
+        :param 'frequency': float
+            Частота опроса этого значения
+
+        :kwparam 'calm': Callable = None
+            Опционально, метод калибровки исполнителя для этого типа значения
+
+        :kwparam 'calv': _type = None
+            Значение калибровки исполнителя для этого типа его значения
+
+        :param 'typeDisplayName': str
+            Отображаемое имя типа значения. Может быть пустым. Используется для
+            отображения в интерфейсах вершителей
+
+        :param 'typeDescription': str
+            Отображаемое описание типа значения. Может быть пустым. Используется
+            для отображения в интерфейсах вершителей
+
+        :param 'instanceName': str
+            Отображаемое имя конкретного значения. Может быть пустым. Используется
+            для отображения в интерфейсах вершителей
+
+        :param 'instanceDescription': str
+            Отображаемое описание конкретного значения. Может быть пустым. Испо-
+            льзуется для отображения в интерфейсах вершителей
+        '''
+        self.parent, self.id, self.type, self.calibrationValue = parent, id, _type, calv
+        self.unit, self.get, self.calibrate, self.frequency = unit, get, calm, frequency
+        self.typeDisplayName, self.typeDescription, self.instanceName, self.instanceDescription = (
+            typeDisplayName, typeDescription, instanceName, instanceDescription)
+
+
+    def __call__(self):
+        return self.get()
+
+
+class AqHardwareActionType:
+    '''
+    Класс типа действия, которое может выполнить исполнитель с ролью Executor.
+    '''
+    def __init__(self, parent: AqHardwareDevice, run: Callable, 
+        typeDisplayName: str = '', typeDescription: str = '',
+        instanceName: str = '', instanceDescription: str = ''):
+        '''
+        Конструктор типа действия, которое может выполнить исполнитель с ролью Executor.
+
+        :param 'parent': AqHardwareDevice
+            Исполнитель, который умеет выполнять этот тип действий
+
+        :param 'run': Callable
+            Метод выполнения действия
+
+        :param 'typeDisplayName': str
+            Отображаемое имя типа действия. Может быть пустым. Используется для
+            отображения в интерфейсах вершителей
+
+        :param 'typeDescription': str
+            Отображаемое описание типа действия. Может быть пустым. Используется
+            для отображения в интерфейсах вершителей
+
+        :param 'instanceName': str
+            Отображаемое имя конкретного действия. Может быть пустым. Используется
+            для отображения в интерфейсах вершителей
+
+        :param 'instanceDescription': str
+            Отображаемое описание конкретного действия. Может быть пустым. Испо-
+            льзуется для отображения в интерфейсах вершителей
+        '''
+        self.parent, self.run = parent, run
+        self.typeDisplayName, self.typeDescription, self.instanceName, self.instanceDescription = (
+            typeDisplayName, typeDescription, instanceName, instanceDescription)
+        self.__call__ = self.run
+
+
+
+class AqHardwareDeviceRole(Enum):
+    '''
+    Перчисление возможных ролей исполнителя. Роли определяют, какие именно
+    возможности имеет конкретный исполнитель: соединяет ли он исполнителей
+    между собой, передаёт ли какие-то данные серверу, исполняет какие-то
+    команды (от сервера или от материнского исполнителя) или делает что-то
+    из этого одновременно.
+
+    :attrib Interconnector:
+        Роль исполнителя — 
+
+    :attrib Retriever:
+        Роль исполнителя — получение и передача серверу каких-либо данных.
+        Такую роль могут иметь, например, датчики
+
+    :attrib Executor:
+        Роль исполнителя — 
+    '''
+    Interonnector = 0
+    Retriever = 1
+    Executor = 2
 
 
 import drivers                                  #Драйверы оборудования могут быть инициализированы

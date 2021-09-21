@@ -9,18 +9,6 @@ from enum             import *
 import datetime
 
 
-class UndefinedCalibrationMethodError(Exception):
-    '''
-    Исключение вызывается, когда при инициализации Arduino-
-    датчика с положительным аргументом 'isCalib' не указан
-    аргумент 'clmeth'
-    '''
-    def __init__(self):
-        super().__init__('''Не обнаружен метод калибровки 'clmeth' при инициализации Arduino-'''
-                         '''датчика с возможностью калибровки. Проверьте определение класса '''
-                         '''датчика''')
-
-
 class ArduinoDevice(AqHardwareDevice, pyfirmata.Board):
         '''
         Класс Arduino-исполнителя. Имеет функциональность PyFirmata,
@@ -92,9 +80,9 @@ class ArduinoDevice(AqHardwareDevice, pyfirmata.Board):
                 for unit in dict(assignedBoard.getChildren(mode = object)).values():
                     try:
                         if issubclass(type(unit), ArduinoSensor):
-                            print(111)
-                            instance = ArduinoSensor.Monitor(hardwareSystem.statisticAgent, unit)
-                            self.assignedBoardMonitors.append(instance)
+                            for vt in unit.retrieves:
+                                instance = ArduinoSensor.Monitor(hardwareSystem.statisticAgent, vt)
+                                self.assignedBoardMonitors.append(instance)
                         else: continue
                     except AttributeError: continue
 
@@ -138,9 +126,9 @@ class ArduinoDevice(AqHardwareDevice, pyfirmata.Board):
                      в документации к функциональным библиотекам
                      AsQamm Arduino).
             '''
-
-            OKMessage = typemark('OKMessage')
-            ErrorMessage = typemark('ErrorMessage')
+            class MessageType(Enum):
+                OK = 1
+                Error = 0
 
             def __init__(self, string: str):
                 '''
@@ -160,18 +148,19 @@ class ArduinoDevice(AqHardwareDevice, pyfirmata.Board):
                 self.statusCode, self.methodName = string.split(';')[0], string.split(';')[1]
 
                 if self.statusCode == 'OK': #если сообщение без ошибки
-                    self.type = self.OKMessage
+                    self.type = self.MessageType.OK
                     self.receivedInfo = string.split(';')[2:]
 
                 elif self.statusCode == 'ERR': #если сообщение об 
-                    self.type = self.ErrorMessage
+                    self.type = self.MessageType.Error
                     self.errorCode = string.split(';')[2]
 
                 self.receivedAt = datetime.datetime.now()
         
 
         def __init__(self, comPort: str, isEnabled: bool,
-                instanceName: str, desc: str, template: (BoardTemplates, dict) = BoardTemplates.ArduinoUno):
+                instanceName: str, desc: str,
+                template: (BoardTemplates, dict) = BoardTemplates.ArduinoUno):
             '''
             Инициализировать экземпляр базового класса Arduino-исполнителя.
             Такие исполнители работают на базе протокола Firmata, сервер
@@ -219,6 +208,7 @@ class ArduinoDevice(AqHardwareDevice, pyfirmata.Board):
 
             self.receivedFirmataMessages = []
             self.add_cmd_handler(0x71, self.parseString)
+            self.senderBusy = False
 
 
         def __repr__(self):
@@ -341,6 +331,7 @@ class ArduinoDevice(AqHardwareDevice, pyfirmata.Board):
             :returns: None
             '''
             self.send_sysex(0x71, ArduinoUtil.str_to_two_byte_iter(string))
+            sleep(2)
 
 
         def send_sysex(self, sysexCmd: int, data: list = []) -> None:
@@ -371,17 +362,28 @@ class ArduinoDevice(AqHardwareDevice, pyfirmata.Board):
             self.receivedFirmataMessages.append(self.FirmataStringResponse(received))
 
 
-        def getLastMessage(self) -> FirmataStringResponse:
+        def getLastMessage(self, messageType = -1) -> FirmataStringResponse:
             '''
             Получить последнее полученное от платы сообщение Firmata.
 
+            :param 'messageType': FirmataStringResponse.MessageType
+
             :returns: FirmataStringResponse
             '''
-            currentTime = datetime.datetime.now()
-            for message in self.receivedFirmataMessages:
-                if ((currentTime - message.receivedAt) == 
-                    (min([currentTime - _message.receivedAt for _message in self.receivedFirmataMessages]))):
-                    return message
+            if messageType == -1:
+                currentTime = datetime.datetime.now()
+                for message in self.receivedFirmataMessages:
+                    if ((currentTime - message.receivedAt) == 
+                        (min([currentTime - _message.receivedAt for _message in self.receivedFirmataMessages]))):
+                        return message
+
+            else:
+                currentTime = datetime.datetime.now()
+                for message in self.receivedFirmataMessages:
+                    if ((currentTime - message.receivedAt) == 
+                        (min([currentTime - _message.receivedAt for _message
+                              in self.receivedFirmataMessages if _message.type == messageType]))):
+                        return message
 
 
 class ArduinoSensor(AqHardwareDevice):
@@ -399,10 +401,7 @@ class ArduinoSensor(AqHardwareDevice):
     :attrib 'motherBoard': ArduinoDevice
         Ссылка на объект Arduino-исполнителя, к которому подключён датчик
 
-    :attrib 'isCalibrateable': bool
-        Значение параметра определяется тем, может ли датчик, объект которого
-        инициализируется, быть откалиброван (True) или нет (False). Если True,
-        то должен существовать метод калибровки
+    
 
     :attrib 'instanceName': str
         Обязательное отображаемое имя датчика. Может быть пустым.
@@ -418,36 +417,36 @@ class ArduinoSensor(AqHardwareDevice):
         ТИПА исполнителя.
         Используется для отображения в интерфейсах вершителей
 
-    :attrib 'valueTypes': list<dict<str, str>>
-        Список типов возможных значений, которые может возвращать дат-
-        чик.
+    :attrib 'retrieves': list<AqHardwareValueType>
+        Список типов значений, которые можно получить от датчика
     '''
     class Monitor(Thread):
         '''
-        Класс `монитора` для датчика. `Монитор` представляет из себя под-
+        Класс `монитора` для значения. `Монитор` представляет из себя под-
         вид потока; для датчиков он выполняет работу по регистрации значе-
-        ний с них через каждый, задаваемый для каждого отдельного датчика,
-        промежуток времени.
+        ний с них через каждый, задаваемый для каждого отдельного значения,
+        промежуток времени. Каждый монитор регистрирует только одно значение
+        датчика.
         '''
-        def __init__(self, statisticAgent, assignToSensor):
+        def __init__(self, statisticAgent: AqStatist, assignToValueType: AqHardwareValueType):
             '''
             Конструктор `монитора` для датчика.
 
             :param 'statisticAgent': AqStatist
                 Ссылка на объект регистратора статистики. 
 
-            :param 'assignToSensor': ArduinoSensor
-                Ссылка на объект датчика, с которым работает монитор.
+            :param 'assignToValueType': ArduinoSensor
+                Ссылка на объект типа значения датчика, с которым работает монитор.
             '''
-            Thread.__init__(self, target = self._run, args = [assignToSensor, statisticAgent],
-                            name = f'{assignToSensor.deviceId}:monitor', daemon = True)
+            Thread.__init__(self, target = self._run, args = [assignToValueType, statisticAgent],
+                            name = f'{assignToValueType.parent.deviceId}:monitor', daemon = True)
 
 
-        def _run(self, assignedSensor, statistic):
+        def _run(self, assignedValueType: AqHardwareValueType, statistic: AqStatist):
             '''
             Рабочий метод `монитора` для датчика.
 
-            :param 'assignedSensor': ArduinoSensor
+            :param 'assignedValueType': ArduinoSensor
                 Ссылка на объект датчика, с которым работает монитор.
   
             :param 'statistic': AqStatist
@@ -456,16 +455,18 @@ class ArduinoSensor(AqHardwareDevice):
             while True:
                 try:
                     if not statistic.isBusy:
-                        statistic.registerStatistic(assignedSensor.getId(), assignedSensor.bakedValue())
+                        statistic.registerStatistic(
+                            f'{assignedValueType.parent.getId()}:{assignedValueType.id}', assignedValueType())
                     else:
-                        while statistic.isBusy: sleep(0.48)
-                        statistic.registerStatistic(assignedSensor.getId(), assignedSensor.bakedValue())
-                    
+                        while statistic.isBusy: sleep(1)
+                        statistic.registerStatistic(
+                            f'{assignedValueType.parent.getId()}:{assignedValueType.id}', assignedValueType())
+
                 except AssertionError:
-                    sleep(0.48)
+                    sleep(1)
                     continue
 
-                sleep(assignedSensor.probeFrequency)
+                sleep(assignedValueType.frequency)
 
 
     Analog = typemark('AnalogSensor')       #Маркер аналогового типа
@@ -474,8 +475,7 @@ class ArduinoSensor(AqHardwareDevice):
     attrl = ['instanceDescription', 'isEnabled']
 
     def __init__(self, atBoard: ArduinoDevice, atPin: str, isEnabled: bool,
-            isCalib: bool, instanceName: str, desc: str, bkmeth: callable,
-            **kwargs):
+            instanceName: str, desc: str, **kwargs):
         '''
         Инициализировать Аrduino-датчик.
 
@@ -492,12 +492,6 @@ class ArduinoSensor(AqHardwareDevice):
             танут работать правила, в условиях которых фигурирует данный
             датчик
 
-        :param 'isCalib': bool
-            Может ли датчик, объект которого инициализируется, быть отка-
-            либрован (True) или нет (False). Если True, то должен быть
-            по ключевому слову предоставлен аргумент 'clmeth', в противном
-            случае будет вызвано исключение.
-
         :param 'instanceName': str
             Обязательное отображаемое имя датчика. Может быть пустым,
             но не рекомендуется оставлять его таким.
@@ -506,32 +500,12 @@ class ArduinoSensor(AqHardwareDevice):
         :param 'desc': str
             Обязательное описание датчика. Может быть пустым.
             Используется для отображения в интерфейсах вершителей
-
-        :param 'bkmeth': list<callable>
-            Методы получения готовых значений датчика. В определении каж-
-            дого из отдельных типов датчиков должен быть определены особые
-            методы получения значения для этого типа датчика, которые дол-
-            жены быть направлен в этот агрумент. Это нужно для того, чтобы
-            компоненты, которым неизвестно таких методов, могли вызвать
-            их вызовом метода bakedValue
-
-        :kwparam 'clmeth': callable
-            Метод калибровки датчика. Если параметр 'isCalib' истиннен, то
-            необходимо предоставить мeтод калибровки датчика.
-            Это — параметр по ключевому слову!
         '''
         AqHardwareDevice.__init__(self, isEnabled, f'{atBoard.deviceAddress}:{atPin}:{self.driverId}', 
             'arduino', f'{atBoard.deviceAddress}:{atPin}',
             parent = atBoard, instanceName = instanceName, instanceDescription = desc)
         try: self.motherPin = self.parent.get_pin(f'{atPin}:i')
         except AttributeError: pass
-
-        if isCalib:
-            self.isCalibrateable = isCalib
-            try: self.calibrate = kwargs['clmeth']
-            except: raise UndefinedCalibrationMethodError()
-
-        self.bakedValue = bkmeth
 
 
     def __repr__(self):
