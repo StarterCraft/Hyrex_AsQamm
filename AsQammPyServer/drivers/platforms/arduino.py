@@ -86,7 +86,9 @@ class ArduinoDevice(AqHardwareDevice, pyfirmata.Board):
                         else: continue
                     except AttributeError: continue
 
-                for monitor in self.assignedBoardMonitors: monitor.start()
+                for monitor in self.assignedBoardMonitors: 
+                    monitor.start()
+                    sleep(1)
 
 
         class AqArduinoHardwareModes:
@@ -439,31 +441,36 @@ class ArduinoSensor(AqHardwareDevice):
                 Ссылка на объект типа значения датчика, с которым работает монитор.
             '''
             Thread.__init__(self, target = self._run, args = [assignToValueType, statisticAgent],
-                            name = f'{assignToValueType.parent.deviceId}:monitor', daemon = True)
+                name = f'{assignToValueType.parent.getId()}:{assignToValueType.id}', daemon = True)
 
 
         def _run(self, assignedValueType: AqHardwareValueType, statistic: AqStatist):
             '''
             Рабочий метод `монитора` для датчика.
 
-            :param 'assignedValueType': ArduinoSensor
-                Ссылка на объект датчика, с которым работает монитор.
+            :param 'assignedValueType': AqHardwareValueType
+                Ссылка на объект типа значения, с которым работает монитор.
   
             :param 'statistic': AqStatist
                 Ссылка на объект регистратора статистики. 
             '''
             while True:
+                value = assignedValueType()
+
                 try:
                     if not statistic.isBusy:
                         statistic.registerStatistic(
-                            f'{assignedValueType.parent.getId()}:{assignedValueType.id}', assignedValueType())
+                            f'{assignedValueType.parent.getId()}:{assignedValueType.id}', value)
                     else:
                         while statistic.isBusy: sleep(1)
                         statistic.registerStatistic(
-                            f'{assignedValueType.parent.getId()}:{assignedValueType.id}', assignedValueType())
+                            f'{assignedValueType.parent.getId()}:{assignedValueType.id}', value)
+
+                    print(f'{self.getName()} working')
 
                 except AssertionError:
                     sleep(1)
+                    print(473)
                     continue
 
                 sleep(assignedValueType.frequency)

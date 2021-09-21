@@ -121,19 +121,25 @@ class AqStatist:
         self.isBusy = bool(False)
 
 
-    def registerStatistic(self, sensorIdToRegister: str, valueToRegister) -> None:
+    def registerStatistic(self, valueId: str, value) -> None:
         '''
         Записать значение датчика в файл статистики.
-        :param 'sensorIdToRegister': str
+
+        :param 'valueId': str
             Индентификатор датчика, значение которого записывают. Больше
             информации о индентификаторах датчиков можно узнать в докумен-
             тации к AqArduinoSensor.getId()
-        :param 'valueToRegister':
+
+        :param 'value':
             Значение датчика, которое нужно записать
+
+        :returns: None
         '''
-        assert valueToRegister
+        assert value
+
+        self.logger.debug(f'Регистрирую: {valueId}, {value}')
         self.isBusy = True
-        timer = time.perf_counter_ns() / 1000000
+        timer = time.perf_counter_ns()
 
         if f'statistic/{time.strftime("%d%b%Y")}.asqd' != self.currentCsvFile:
             self.currentCsvFile = f'statistic/{time.strftime("%d%b%Y")}.asqd'
@@ -151,30 +157,23 @@ class AqStatist:
 
         with open(self.currentCsvFile, 'w+', encoding = 'utf-8', newline = '') as csvFile:
             for dictionary in jsonString[-16:]:
-                try:
-                    if   dictionary['time'] == f'{time.strftime("%H:%M")}' and (dictionary[sensorIdToRegister] != valueToRegister or 
-                                                                                dictionary[sensorIdToRegister] == valueToRegister):
-                        #Если текущая строка — с текущем временем, но значение для данного sensorIdToRegister нет, то
-                        #будет вызван KeyError (cм. строку 31)
-                        break
+                if  dictionary['time'] == f'{time.strftime("%H:%M")}':
+                    #Если текущая строка — с текущем временем, но значение для данного valueId нет, то
+                    #будет вызван KeyError (cм. строку 31)
+                    dictionary.update({valueId: value})
+                    break
 
-                    elif dictionary['time'] != f'{time.strftime("%H:%M")}':
-                        #Если текущая строка содержит время, отличное от текущего, то пропустить её
-                        continue
-
-                except KeyError:
-                    #Если текущая строка — с текущем временем, но значение для данного sensorIdToRegister нет, то
-                    #добавляем это значение в dictionary
-                    dictionary.update({sensorIdToRegister: valueToRegister})
-
+                else:
+                    #Если текущая строка содержит время, отличное от текущего, то пропустить её
+                    continue
             else:
                 #Если строки с текущим временем не было найдено
-                jsonString.append({'time': f'{time.strftime("%H:%M")}', sensorIdToRegister: valueToRegister})
+                jsonString.append({'time': f'{time.strftime("%H:%M")}', valueId: value})
 
             csvFile.write((pandas.read_json(json.dumps(jsonString), orient = 'records')).to_csv(index = False))
 
-        endtimer = time.perf_counter_ns() / 1000000
-        #self.logger.debug(f'Статистический агент сообщил, что регистрация значения заняла {endtimer} миллисекунд.')
+        endtimer = time.perf_counter_ns()
+        #self.logger.debug(f'Статистический агент сообщил, что регистрация значения заняла {endtimer - timer} наносекунд.')
         self.isBusy = False
         del timer, endtimer
     

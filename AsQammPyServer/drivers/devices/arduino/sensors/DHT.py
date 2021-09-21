@@ -25,7 +25,7 @@ class DHT22Sensor(ArduinoSensor):
                 typeDisplayName = 'Температура, oC'),
             
             AqHardwareValueType(self, 'HUMIP', float, 'percent', self.humidity,
-                (kwargs['probeFrequency'][0] if 'probeFrequency' in kwargs.keys() else 60.0),
+                (kwargs['probeFrequency'][1] if 'probeFrequency' in kwargs.keys() else 60.0),
                 typeDisplayName = 'Относительная влажность, %')]
         
 
