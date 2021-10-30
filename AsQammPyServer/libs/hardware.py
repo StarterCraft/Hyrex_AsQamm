@@ -114,6 +114,10 @@ class AqHardwareDevice:
     :attrib 'parent': AqHardwareDevice
         Если исполнитель является подчинённым, то в этом атрибуте будет нахо-
         диться ссылка на объект материнского исполнителя, иначе — None
+
+    :attrib 'children': list<AqHardwareDevice>
+        Если исполнитель может иметь подчинённых исполнителей, то этот список
+        будет их содержать
         
     :attrib 'platform': str
         Индентификатор протокола
@@ -313,31 +317,10 @@ class AqHardwareActionType:
         self.parent, self.run = parent, run
         self.typeDisplayName, self.typeDescription, self.instanceName, self.instanceDescription = (
             typeDisplayName, typeDescription, instanceName, instanceDescription)
-        self.__call__ = self.run
+        
 
-
-
-class AqHardwareDeviceRole(Enum):
-    '''
-    Перчисление возможных ролей исполнителя. Роли определяют, какие именно
-    возможности имеет конкретный исполнитель: соединяет ли он исполнителей
-    между собой, передаёт ли какие-то данные серверу, исполняет какие-то
-    команды (от сервера или от материнского исполнителя) или делает что-то
-    из этого одновременно.
-
-    :attrib Interconnector:
-        Роль исполнителя — 
-
-    :attrib Retriever:
-        Роль исполнителя — получение и передача серверу каких-либо данных.
-        Такую роль могут иметь, например, датчики
-
-    :attrib Executor:
-        Роль исполнителя — 
-    '''
-    Interonnector = 0
-    Retriever = 1
-    Executor = 2
+    def __call__(self):
+        self.run()
 
 
 import drivers                                  #Драйверы оборудования могут быть инициализированы
@@ -371,12 +354,91 @@ class AqHardwareSystem:
         ициализации какого-то конкретного исполнителя произойдёт ошибка, то он
         не будет включён в этот словарь
 
-    :attrib 'monitors': list
+    :attrib 'monitors': list<AqArduinoDeviceMonitor>
         Этот список заполняется при вызове метода startMonitoring(), содержит
         объекты мониторов (см. документацию к AqArduinoDeviceMonitor) для каждо-
         го исполнителя. Если при инициализации какого-либо из мониторов произой-
         дёт ошибка, то он не будет включён в этот список
     '''
+    def loadPlatformDrivers(self) -> None:
+        '''
+        Инициализировать драйверы протоколов.
+
+        :returns: None 
+        '''
+        for fileName in glob.glob('drivers\\platforms\\*.py'):
+            nameToImport = fileName.replace('\\', '.')[:-3]
+            platformName = fileName.replace('\\', '.')[:-3].split('.')[-1]
+            classNames = []
+
+            with open(fileName, 'r', encoding = 'utf-8') as file:
+                for line in file.readlines():
+                    if line.startswith('class '):
+                        try:
+                            if ('AqHardwareDevice' in line.split('(')[1]):
+                                classNames.append(line[6:line.index('(')])
+                                self.logger.debug(f'Класс протокола {line[6:line.index("(")]} инициализирован')
+                        except IndexError: continue
+
+                drivers.Platforms.update(
+                    {platformName: [getattr(importlib.import_module(nameToImport), name) for name in classNames]})
+
+
+    def loadDeviceDrivers(self) -> None:
+        '''
+        Инициализировать драйверы устройств.
+
+        :returns: None 
+        '''
+        for folderName in glob.glob('drivers\\devices\\*'):
+            if '.' in folderName: continue
+            for installedPlatformName in drivers.Platforms.keys():
+                if installedPlatformName in folderName:
+                    deviceDriverClasses = {}
+
+                    for fileName in glob.glob(f'{folderName}\\**\\*.py'):
+                        with open(fileName, 'r', encoding = 'utf-8') as file:
+                            for line in file.readlines():
+                                if line.startswith('class '):
+                                    try:
+                                        for platformClass in drivers.Platforms[installedPlatformName]:
+                                            if platformClass.__name__ in line.split('(')[1]:
+                                                if fileName in deviceDriverClasses.keys():
+                                                    deviceDriverClasses[fileName].append(line[6:line.index('(')])
+                                                else: deviceDriverClasses.update({fileName: [line[6:line.index('(')]]})
+                                                self.logger.debug(f'Драйвер устройства {line[6:line.index("(")]} инициализирован')
+
+                                            else: continue
+                                    except IndexError: continue
+
+                    for driverFile, driverClassList in deviceDriverClasses.items():
+                        nameToImport = driverFile.replace('\\', '.')[:-3]
+
+                        for className in driverClassList:
+                            driverClass = getattr(importlib.import_module(nameToImport), className)
+                            drivers.Devices.update({driverClass.driverId: driverClass})
+
+
+    def initializeDevice(self, deviceData: list) -> None:
+        '''
+        Инициализировать устройство.
+
+        :param 'deviceData': list
+            Список с данными устройства
+
+        :returns: None
+        '''
+        try:
+            instance = (drivers.Devices[deviceData[0]])(deviceData[1], drivers, **deviceData[2])
+            if instance.platform not in self.installedHardware.keys():
+                self.installedHardware.update({instance.platform: [instance]})
+            else: self.installedHardware[instance.platform].append(instance)
+            self.logger.info(f'Устройство типа {deviceData[0]} по адресу {deviceData[1]} подключено.')
+        except SerialException:
+            self.logger.error(f'Не удалось инициализировать устройство типа {deviceData[0]} по адресу '
+                f'{deviceData[1]} из-за ошибки 511: не удалось найти запрашиваемое устройство')            
+
+
     def __init__(self):
         '''
         Инициализировать систему управления оборудованием. Этот конструктор
@@ -413,77 +475,26 @@ class AqHardwareSystem:
 
         #Инициализация протоколов
         self.logger.info('Инициализация протоколов...')
-
-        for fileName in glob.glob('drivers\\platforms\\*.py'):
-            nameToImport = fileName.replace('\\', '.')[:-3]
-            platformName = fileName.replace('\\', '.')[:-3].split('.')[-1]
-            classNames = []
-
-            with open(fileName, 'r', encoding = 'utf-8') as file:
-                for line in file.readlines():
-                    if line.startswith('class '):
-                        try:
-                            if ('AqHardwareDevice' in line.split('(')[1]):
-                                classNames.append(line[6:line.index('(')])
-                                self.logger.debug(f'Класс устройства {line[6:line.index("(")]} инициализирован')
-                        except IndexError: continue
-
-            drivers.Platforms.update(
-                {platformName: [getattr(importlib.import_module(nameToImport), name) for name in classNames]})
-
+        self.loadPlatformDrivers()
 
         #Инициализация драйверов
         self.logger.info('Инициализация драйверов устройств...')
-
-        for folderName in glob.glob('drivers\\devices\\*'):
-            if '.' in folderName: continue
-            for installedPlatformName in drivers.Platforms.keys():
-                if installedPlatformName in folderName:
-                    deviceDriverClasses = {}
-
-                    for fileName in glob.glob(f'{folderName}\\**\\*.py'):
-                        with open(fileName, 'r', encoding = 'utf-8') as file:
-                            for line in file.readlines():
-                                if line.startswith('class '):
-                                    try:
-                                        for platformClass in drivers.Platforms[installedPlatformName]:
-                                            if platformClass.__name__ in line.split('(')[1]:
-                                                if fileName in deviceDriverClasses.keys():
-                                                    deviceDriverClasses[fileName].append(line[6:line.index('(')])
-                                                else: deviceDriverClasses.update({fileName: [line[6:line.index('(')]]})
-                                                self.logger.debug(f'Драйвер устройства {line[6:line.index("(")]} инициализирован')
-
-                                            else: continue
-                                    except IndexError: continue
-
-                    for driverFile, driverClassList in deviceDriverClasses.items():
-                        nameToImport = driverFile.replace('\\', '.')[:-3]
-
-                        for className in driverClassList:
-                            driverClass = getattr(importlib.import_module(nameToImport), className)
-                            drivers.Devices.update({driverClass.driverId: driverClass})
-
-
+        self.loadDeviceDrivers()
+        
+        #Инициализация оборудования
         self.logger.info('Инициализация оборудования...')
         with open('data/system/~!hardware!~.asqd', 'r', encoding = 'utf-8') as configFile:
             try: 
-               jsonString = loadJson(configFile.read())
+                jsonString = loadJson(configFile.read())
+                initializers = []
 
-               for hardwareObject in jsonString:
-                   self.logger.debug(f'Подключение к устройству по адресу {hardwareObject[1]}...')
-                   try:
-                       instance = (drivers.Devices[hardwareObject[0]])(hardwareObject[1], drivers, **hardwareObject[2])
-                       if instance.platform not in self.installedHardware.keys():
-                           self.installedHardware.update({instance.platform: [instance]})
-                       else: self.installedHardware[instance.platform].append(instance)
-                       self.logger.info(f'Устройство типа {hardwareObject[0]} по адресу {hardwareObject[1]} подключено.')
-                       self.logger.debug(self.installedHardware)
-                   #except SerialException:
-                    #   self.logger.error(f'Не удалось инициализировать устройство типа {hardwareObject[0]} по адресу '
-                     #                    f'{hardwareObject[1]} из-за ошибки 511: не удалось найти запрашиваемое устройство')
-                      # continue
-                   except Exception as e: raise e
-                                       
+                for deviceData in jsonString:
+                    self.logger.debug(f'Подключение к устройству по адресу {deviceData[1]}...')
+                    initializers.append(Thread(target = self.initializeDevice, name = f'DeviceInitializer:{deviceData[1]}', 
+                        args = (deviceData,)))
+
+                for thread in initializers: thread.start()
+                while not (True not in [thread.is_alive() for thread in initializers]): sleep(1)
 
             except JSONDecodeError:
                 self.logger.error(f'Не удалось получить данные JSON из файла "data/system/~!hardware!~.asqd", проверьте файл на'
@@ -564,7 +575,7 @@ class AqHardwareSystem:
                 for pin, child in unit.getChildren():
                     if child != None:
                         modulesQty += 1
-                        if (child[1])['isEnabled']: enabledQty += 1
+                        if (child[1]['isEnabled']): enabledQty += 1
                         continue
 
                 dataSheet.append({'platform'           : unit.platform,

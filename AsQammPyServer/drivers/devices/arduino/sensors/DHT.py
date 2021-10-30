@@ -14,9 +14,10 @@ class DHT22Sensor(ArduinoSensor):
         ArduinoSensor.__init__(self, atBoard, atPin,
             kwargs['isEnabled'], kwargs['instanceName'], kwargs['instanceDescription'])
 
-        print(kwargs)
         self.attrl.extend(['probeFrequency'])
         self.type = ArduinoSensor.Digital
+
+        self.probeFrequency = (kwargs['probeFrequency'] if 'probeFrequency' in kwargs.keys() else [60.0, 60.0])
 
         self.canRetrieve = True
         self.retrieves = [

@@ -1,0 +1,71 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Drivers\Platforms\Arduino.cs">
+      <Plugin>true</Plugin>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Client\**" />
+    <Compile Remove="Hardware\**" />
+    <Compile Remove="Utilities\**" />
+    <Content Remove="Client\**" />
+    <Content Remove="Hardware\**" />
+    <Content Remove="Utilities\**" />
+    <EmbeddedResource Remove="Client\**" />
+    <EmbeddedResource Remove="Hardware\**" />
+    <EmbeddedResource Remove="Utilities\**" />
+    <None Remove="Client\**" />
+    <None Remove="Hardware\**" />
+    <None Remove="Utilities\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="DriverControl.cs" />
+    <Compile Remove="Program.cs" />
+    <Compile Remove="Startup.cs" />
+    <Compile Remove="ValuesController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NLog" Version="4.7.11" />
+    <PackageReference Include="SolidSoils.Arduino.Client" Version="0.4.0" />
+    <PackageReference Include="System.IO.Ports" Version="5.0.1" />
+    <PackageReference Include="System.Useful" Version="2.0.1.8" />
+    <PackageReference Include="Useful.Extensions" Version="3.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Drivers\Devices\Arduino\Boards\" />
+    <Folder Include="Drivers\Devices\Arduino\Executors\" />
+    <Folder Include="Drivers\Devices\Arduino\Sensors\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="CSServerCore.csproj" />
+  </ItemGroup>
+
+  <Target Name="BuildPlugins">
+  <CSC Condition="%(Compile.Plugin) == 'true'" Sources="%(Compile.FullPath)" TargetType="library" OutputAssembly="$(OutputPath)%(Compile.FileName).dll" EmitDebugInformation="true" />
+</Target>
+
+<Target Name="AfterBuild" DependsOnTargets="BuildPlugins">
+</Target>
+
+</Project>

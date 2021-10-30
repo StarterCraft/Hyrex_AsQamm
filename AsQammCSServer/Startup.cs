@@ -30,10 +30,10 @@ namespace AsQammServer
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+            endpoints.MapGet("/", async context =>
+            {
+                await context.Response.WriteAsync("Hello World!");
+            });
             });
         }
     }

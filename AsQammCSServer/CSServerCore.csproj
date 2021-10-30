@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Drivers\**" />
+    <Content Remove="Drivers\**" />
+    <EmbeddedResource Remove="Drivers\**" />
+    <None Remove="Drivers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="3t0etqnr.fva~" />
+    <None Remove="Hardware\AqHardwareUtilities.cs~RF193f112a.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NLog" Version="4.7.11" />
+    <PackageReference Include="SolidSoils.Arduino.Client" Version="0.4.0" />
+    <PackageReference Include="System.IO.Ports" Version="5.0.1" />
+    <PackageReference Include="System.Useful" Version="2.0.1.8" />
+    <PackageReference Include="Useful.Extensions" Version="3.0.1" />
+  </ItemGroup>
+
+</Project>

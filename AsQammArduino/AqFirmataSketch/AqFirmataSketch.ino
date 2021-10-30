@@ -705,7 +705,7 @@ unsigned long charIndex(const char * findIn, const unsigned int symbol) {
 
     char * pointer = strchr(findIn, symbol);
     if (pointer != NULL) return (pointer - findIn);
-    if (pointer == NULL) return 0;
+    return 0;
 }
 
 /*==========ЗДЕСЬ ОПРЕДЕЛЯЕМ МЕТОДЫ ДЛЯ ВЫЗОВА СТРОКОВЫМИ командами===========*/

@@ -89,8 +89,7 @@ class AqTokChecker:
 
         :returns: bool
         '''
-        if bytes(AqCrypto.encryptContent(tok), 'utf-8') in self.tok: return True
-        else: return False
+        return bytes(AqCrypto.encryptContent(tok), 'utf-8') in self.tok
 
 
 class AqLogger:

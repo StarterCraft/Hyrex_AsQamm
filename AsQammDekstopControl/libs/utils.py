@@ -17,6 +17,7 @@ class AqUIFunctions:
     class WarningMessageboxLevel:    pass
     class CriticalMessageboxLevel:   pass
 
+
     def showMessageBox(self, root: QtCore.QObject, level: (InfoMessageboxLevel or
                                                      WarningMessageboxLevel or
                                                      CriticalMessageboxLevel), title: str, message: str):
@@ -73,14 +74,16 @@ class AqUIFunctions:
         
     @staticmethod
     def changeInterfaceMode(self, root, userscore):
-        if ((root.ui.stack.currentWidget()) == (root.ui.page_3)) or ((root.ui.stack.currentWidget()) == (root.ui.page_6)):
+        if root.ui.stack.currentWidget() == root.ui.page_Home: root.ui.mda_HomeScreenWidgets.tileSubWindows()
+
+        if ((root.ui.stack.currentWidget()) == (root.ui.page_Plants)) or ((root.ui.stack.currentWidget()) == (root.ui.page_6)):
 
             if userscore.getCurrentUser().getPermits('pxPlants') == True:
 
-                if root.ui.stack.currentWidget() == (root.ui.page_3):
+                if root.ui.stack.currentWidget() == (root.ui.page_Plants):
                     root.ui.stack.setCurrentWidget(root.ui.page_6)
                 elif root.ui.stack.currentWidget() == (root.ui.page_6):
-                    root.ui.stack.setCurrentWidget(root.ui.page_3)
+                    root.ui.stack.setCurrentWidget(root.ui.page_Plants)
             else:
                 root.msg = QMessageBox.critical(root, 'Действие запрещено', 'Вы не имеете права на осуществление этого действия')
 
@@ -158,25 +161,25 @@ class AqUIFunctions:
 
 
     @staticmethod
-    def selectPage(id, root):
-        if id == 1:
-            root.ui.stack.setCurrentWidget(root.ui.page_1)
+    def selectPage(id: int, root) -> None:
+        if id == 0:
+            root.ui.stack.setCurrentWidget(root.ui.page_Home)
             root.ui.lbl_PageName.setText('Наш дом')
 
-        elif id == 2:
-            root.ui.stack.setCurrentWidget(root.ui.page_2)
+        elif id == 1:
+            root.ui.stack.setCurrentWidget(root.ui.page_Defense)
             root.ui.lbl_PageName.setText('Защита')
 
-        elif id == 3:
-            root.ui.stack.setCurrentWidget(root.ui.page_3)
+        elif id == 2:
+            root.ui.stack.setCurrentWidget(root.ui.page_Plants)
             root.ui.lbl_PageName.setText('Растения')
 
-        elif id == 4:
-            root.ui.stack.setCurrentWidget(root.ui.page_4)
-            root.ui.lbl_PageName.setText('Устройства')
+        elif id == 3:
+            root.ui.stack.setCurrentWidget(root.ui.page_Hardware)
+            root.ui.lbl_PageName.setText('Оборудование')
 
-        elif id == 5:
-            root.ui.stack.setCurrentWidget(root.ui.page_5)
+        elif id == 4:
+            root.ui.stack.setCurrentWidget(root.ui.page_Settings)
             root.ui.lbl_PageName.setText('Конфигурация')
 
             
@@ -205,13 +208,13 @@ class AqUIFunctions:
             root.ui.lbl_LoadingText.setGeometry(QtCore.QRect(335, 260, 250, 25))
             root.ui.frame_top.hide()
 
-        root.ui.stack.setCurrentWidget(root.ui.page_loading)
+        root.ui.stack.setCurrentWidget(root.ui.page_Loading)
         root.animation3.start()
 
         
     @staticmethod
     def hideLoadingAnimation(root, switchTo: QWidget):
-        if not root.ui.frame_top.isVisible() and switchTo != root.ui.page_login:
+        if not root.ui.frame_top.isVisible() and switchTo != root.ui.page_Login:
             root.ui.frame_top.show()
         else:
             root.ui.frame_top.hide()
@@ -275,11 +278,11 @@ class AqUIFunctions:
                 root.ui.stack.setStyleSheet(styleSheets['stack'])
                 root.ui.frame_left_menu.setStyleSheet(styleSheets['mainMenuFrame'])
 
-                root.ui.btn_page1.setStyleSheet(styleSheets['homeScreenMainMenuButton'])
-                root.ui.btn_page2.setStyleSheet(styleSheets['defenseScreenMainMenuButton'])
-                root.ui.btn_page3.setStyleSheet(styleSheets['plantsScreenMainMenuButton'])
-                root.ui.btn_page4.setStyleSheet(styleSheets['hardwareScreenMainMenuButton'])
-                root.ui.btn_page5.setStyleSheet(styleSheets['configScreenMainMenuButton'])
+                root.ui.btn_HomePage.setStyleSheet(styleSheets['homeScreenMainMenuButton'])
+                root.ui.btn_DefensePage.setStyleSheet(styleSheets['defenseScreenMainMenuButton'])
+                root.ui.btn_PlantsPage.setStyleSheet(styleSheets['plantsScreenMainMenuButton'])
+                root.ui.btn_HardwarePage.setStyleSheet(styleSheets['hardwareScreenMainMenuButton'])
+                root.ui.btn_SettingsPage.setStyleSheet(styleSheets['configScreenMainMenuButton'])
 
                 root.ui.frame_top.setStyleSheet(styleSheets['topBarFrame'])
                 root.ui.lbl_PageName.setStyleSheet(styleSheets['topBarTexts'])
@@ -307,27 +310,27 @@ class AqUIFunctions:
                 icon2 = QtGui.QIcon()
                 icon2.addPixmap(QtGui.QPixmap(iconAddresses['house_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 icon2.addPixmap(QtGui.QPixmap(":/inactive/inactive/house_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-                root.ui.btn_page1.setIcon(icon2)
+                root.ui.btn_HomePage.setIcon(icon2)
 
                 icon3 = QtGui.QIcon()
                 icon3.addPixmap(QtGui.QPixmap(iconAddresses['defense_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 icon3.addPixmap(QtGui.QPixmap(":/inactive/inactive/defense_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-                root.ui.btn_page2.setIcon(icon3)
+                root.ui.btn_DefensePage.setIcon(icon3)
 
                 icon4 = QtGui.QIcon()
                 icon4.addPixmap(QtGui.QPixmap(iconAddresses['plants_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 icon4.addPixmap(QtGui.QPixmap(":/inactive/inactive/plants_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-                root.ui.btn_page3.setIcon(icon4)
+                root.ui.btn_PlantsPage.setIcon(icon4)
 
                 icon5 = QtGui.QIcon()
                 icon5.addPixmap(QtGui.QPixmap(iconAddresses['hardware_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 icon5.addPixmap(QtGui.QPixmap(":/inactive/inactive/hardware_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-                root.ui.btn_page4.setIcon(icon5)
+                root.ui.btn_HardwarePage.setIcon(icon5)
 
                 icon6 = QtGui.QIcon()
                 icon6.addPixmap(QtGui.QPixmap(iconAddresses['config_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 icon6.addPixmap(QtGui.QPixmap(":/inactive/inactive/config_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-                root.ui.btn_page5.setIcon(icon6)
+                root.ui.btn_SettingsPage.setIcon(icon6)
 
                 icon11 = QtGui.QIcon()
                 icon11.addPixmap(QtGui.QPixmap(iconAddresses['config_ico_-c']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -1034,11 +1037,11 @@ class AqConfigSystem:
         for popup in root.popups:
             popup.setWindowOpacity((currentUser.config.popupOpacity))
 
-        root.ui.btn_page1.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['homeScreen']))))
-        root.ui.btn_page2.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['defenseScreen']))))
-        root.ui.btn_page3.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['plantsScreen']))))
-        root.ui.btn_page4.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['hardwareScreen']))))
-        root.ui.btn_page5.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['configScreen']))))
+        root.ui.btn_HomePage.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['homeScreen']))))
+        root.ui.btn_DefensePage.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['defenseScreen']))))
+        root.ui.btn_PlantsPage.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['plantsScreen']))))
+        root.ui.btn_HardwarePage.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['hardwareScreen']))))
+        root.ui.btn_SettingsPage.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['configScreen']))))
         root.ui.btn_InterfaceMode.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['changeInterfaceMode']))))
         root.ui.btn_Apply.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['applyChanges']))))
         root.ui.btn_Save.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['saveChanges']))))

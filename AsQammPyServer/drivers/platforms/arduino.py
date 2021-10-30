@@ -302,7 +302,7 @@ class ArduinoDevice(AqHardwareDevice, pyfirmata.Board):
                     else:
                         for attrib in unit.attrl:
                             unitDict.update({attrib: getattr(unit, attrib)})
-                        items.append(tuple([pin, [unit.driverId, unit.isEnabled, unitDict]]))
+                        items.append(tuple([pin, [unit.driverId, unitDict]]))
                         continue
 
             if mode == object:
@@ -403,8 +403,6 @@ class ArduinoSensor(AqHardwareDevice):
     :attrib 'motherBoard': ArduinoDevice
         Ссылка на объект Arduino-исполнителя, к которому подключён датчик
 
-    
-
     :attrib 'instanceName': str
         Обязательное отображаемое имя датчика. Может быть пустым.
         Используется для отображения в интерфейсах вершителей
@@ -459,11 +457,11 @@ class ArduinoSensor(AqHardwareDevice):
 
                 try:
                     if not statistic.isBusy:
-                        statistic.registerStatistic(
+                        statistic.registerStatistic(datetime.datetime.now(),
                             f'{assignedValueType.parent.getId()}:{assignedValueType.id}', value)
                     else:
                         while statistic.isBusy: sleep(1)
-                        statistic.registerStatistic(
+                        statistic.registerStatistic(datetime.datetime.now(),
                             f'{assignedValueType.parent.getId()}:{assignedValueType.id}', value)
 
                     print(f'{self.getName()} working')

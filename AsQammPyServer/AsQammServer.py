@@ -162,11 +162,12 @@ class AqServer:
             global server, hardwareCore
             
             try:
-                if server.tok.isOk(content['tok']) and hardwareCore:
+                if server.tok.isOk(content['tok']) and hardwareCore is not None:
                     return server.standardResponse(hardwareCore.getHardwareDataSheet())
                 elif not hardwareCore: return server.errorResponse(501)
                 else: return server.errorResponse(401)
-            except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
+            except: raise
+            #except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
 
 
         @server.api.get('/getLatestStats', description = 'Получить статистику за x времени')
@@ -320,6 +321,7 @@ class AqServer:
                  "errorDescription": b
             }
         '''
+        print(323, errorCode)
         errors = {400: 'Bad request',
                   401: 'Unauthorized request',
                   501: 'Hardware not initialized'}

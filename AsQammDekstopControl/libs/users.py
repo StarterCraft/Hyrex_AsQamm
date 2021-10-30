@@ -102,11 +102,11 @@ class AqUsersClient:
             root.ui.lbl_LoginStatus.hide()
 
             root.ui.btn_Toggle.setEnabled(False)
-            root.ui.btn_page1.setEnabled(False)
-            root.ui.btn_page2.setEnabled(False)
-            root.ui.btn_page3.setEnabled(False)
-            root.ui.btn_page4.setEnabled(False)
-            root.ui.btn_page5.setEnabled(False)
+            root.ui.btn_HomePage.setEnabled(False)
+            root.ui.btn_DefensePage.setEnabled(False)
+            root.ui.btn_PlantsPage.setEnabled(False)
+            root.ui.btn_HardwarePage.setEnabled(False)
+            root.ui.btn_SettingsPage.setEnabled(False)
 
             root.ui.btn_Apply.setEnabled(False)
             root.ui.btn_Save.setEnabled(False)
@@ -115,7 +115,7 @@ class AqUsersClient:
             root.ui.lnI_Login.setText('')
             root.ui.lnI_Password.setText('')
 
-            root.ui.stack.setCurrentWidget(root.ui.page_login)
+            root.ui.stack.setCurrentWidget(root.ui.page_Login)
 
             self.userSystemLogger.info('Интерфейс приложения подготовлен для входа пользователя в систему')
 
@@ -133,19 +133,19 @@ class AqUsersClient:
             root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(450, 110, 280, 130))
 
             root.ui.btn_Toggle.setEnabled(True)
-            root.ui.btn_page1.setEnabled(True)
+            root.ui.btn_HomePage.setEnabled(True)
 
-            if currentUser.getPermits('pxDefnBasic'): root.ui.btn_page2.setEnabled(True)
-            else: root.ui.btn_page2.setEnabled(False)
+            if currentUser.getPermits('pxDefnBasic'): root.ui.btn_DefensePage.setEnabled(True)
+            else: root.ui.btn_DefensePage.setEnabled(False)
 
-            if currentUser.getPermits('pxPlants'): root.ui.btn_page3.setEnabled(True)
-            else: root.ui.btn_page3.setEnabled(False)
+            if currentUser.getPermits('pxPlants'): root.ui.btn_PlantsPage.setEnabled(True)
+            else: root.ui.btn_PlantsPage.setEnabled(False)
 
-            if currentUser.getPermits('pxHardware'): root.ui.btn_page4.setEnabled(True)
-            else: root.ui.btn_page4.setEnabled(False)
+            if currentUser.getPermits('pxHardware'): root.ui.btn_HardwarePage.setEnabled(True)
+            else: root.ui.btn_HardwarePage.setEnabled(False)
 
-            if currentUser.getPermits('pxConfig'): root.ui.btn_page5.setEnabled(True)
-            else: root.ui.btn_page5.setEnabled(False)
+            if currentUser.getPermits('pxConfig'): root.ui.btn_SettingsPage.setEnabled(True)
+            else: root.ui.btn_SettingsPage.setEnabled(False)
 
             if currentUser.getPermits('pxConfigAsAdmin'):
                 root.ui.box_UsersDbEdit.setTitle('Управление пользователями')
@@ -175,7 +175,7 @@ class AqUsersClient:
                 libs.utils.AqUIFunctions.loadSpecifiedTheme(root, currentUser.config.theme)
             else: pass
 
-            root.ui.stack.setCurrentWidget(root.ui.page_1)
+            root.ui.stack.setCurrentWidget(root.ui.page_Home)
 
             del currentUser
 
@@ -258,7 +258,7 @@ class AqUsersClient:
             paThread.start()
 
         except IndexError:
-            libs.utils.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
+            libs.utils.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_Login)
             root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(500, 120, 280, 150))
             root.ui.lbl_LoginStatus.show()
             root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
@@ -273,7 +273,7 @@ class AqUsersClient:
 
     def userCheck(self, root, usersCore, boolean):
         if boolean:
-            libs.utils.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_1)
+            libs.utils.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_Home)
             self.selector[0].setAsCurrent(True)
             self.setCurrentUser(root, self.selector[0])
             self.selector[0].edited = False
@@ -288,7 +288,7 @@ class AqUsersClient:
             self.userSystemLogger.info(f'Вход в систему произведён пользователем {self.selector[0].login}')
 
         else:
-            libs.utils.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
+            libs.utils.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_Login)
             root.ui.box_Login.setGeometry(PyQt5.QtCore.QRect(500, 120, 280, 150))
             root.ui.lbl_LoginStatus.show()
             root.ui.lbl_LoginStatus.setStyleSheet('color: red;')
@@ -304,6 +304,7 @@ class AqUsersClient:
         self.loggedIn = True
         self.cleanUserList()
         self.currentUser = self.users[0]
+        playsound(root.sounds['login'], False)
         self.lockApp(root, usersCore)
 
         self.userSystemLogger.info('Вход в систему произведён в режиме гостя')
@@ -505,7 +506,7 @@ class AqUsersClient:
 
     def logOutLock(self, root, usersCore):
         self.lockApp(root, usersCore)
-        libs.utils.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_login)
+        libs.utils.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_Login)
 
 
 class AqUser:    

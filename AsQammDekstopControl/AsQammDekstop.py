@@ -147,25 +147,23 @@ if __name__ == '__main__':
         root.ui.btn_DefnToggleCamList.toggled.connect(lambda: AqUIFunctions.toggleSimpleWidgetInteraction(root, 320, 2))
 
         #Страница 'Дом'
-        root.ui.btn_page1.clicked.connect( lambda: AqUIFunctions.selectPage(1, root) )
+        root.ui.btn_HomePage.clicked.connect( lambda: AqUIFunctions.selectPage(0, root) )
 
         #Страница 'Защита'
-        root.ui.btn_page2.clicked.connect( lambda: AqUIFunctions.selectPage(2, root) )
+        root.ui.btn_DefensePage.clicked.connect( lambda: AqUIFunctions.selectPage(1, root) )
 
         #Страница 'Растения'
-        root.ui.btn_page3.clicked.connect( lambda: AqUIFunctions.selectPage(3, root) )
+        root.ui.btn_PlantsPage.clicked.connect( lambda: AqUIFunctions.selectPage(2, root) )
 
         #Страница 'Устройства'
-        root.ui.btn_page4.clicked.connect( lambda: AqUIFunctions.selectPage(4, root) )
+        root.ui.btn_HardwarePage.clicked.connect( lambda: AqUIFunctions.selectPage(3, root) )
 
         #Страница 'Конфигурация'
-        root.ui.btn_page5.clicked.connect( lambda: AqUIFunctions.selectPage(5, root) )
+        root.ui.btn_SettingsPage.clicked.connect( lambda: AqUIFunctions.selectPage(4, root) )
     
         usersCore.loadUsers(root, server, usersCore)
         AqUIFunctions.mapThemes(root)
         root.rootLogger.debug('Темы интерфейса загружены')
-
-        AqUIFunctions.generateLoadingAnimation(root)
 
         hardwareSystem.setHardwareListModel(root)
         root.ui.btn_UserInit.clicked.connect( lambda: usersCore.userInit(root, server, usersCore) )
@@ -183,6 +181,7 @@ if __name__ == '__main__':
         root.ui.cbb_Theme.currentTextChanged.connect( lambda: AqUIFunctions.loadSpecifiedTheme(root, (AqUIFunctions.getSelectedThemeId(root.ui.cbb_Theme))) )
 
         root.rootLogger.debug('Привязка кнопок в интерфейсе приложения завершена успешно')
+        root.ui.mda_HomeScreenWidgets.tileSubWindows()
 
         usersCore.lockApp(root, usersCore)
         root.mainloop(app)

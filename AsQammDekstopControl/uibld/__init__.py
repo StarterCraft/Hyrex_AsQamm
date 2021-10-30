@@ -87,7 +87,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lbl_PageName.sizePolicy().hasHeightForWidth())
         self.lbl_PageName.setSizePolicy(sizePolicy)
-        self.lbl_PageName.setMaximumSize(QtCore.QSize(150, 16777215))
+        self.lbl_PageName.setMinimumSize(QtCore.QSize(150, 30))
+        self.lbl_PageName.setMaximumSize(QtCore.QSize(150, 30))
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
         font.setPointSize(12)
@@ -286,16 +287,16 @@ class Ui_MainWindow(object):
         self.cel_TopMenuBtn1.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
         self.cel_TopMenuBtn1.setSpacing(2)
         self.cel_TopMenuBtn1.setObjectName("cel_TopMenuBtn1")
-        self.btn_page1 = QtWidgets.QPushButton(self.frame_top_menus)
+        self.btn_HomePage = QtWidgets.QPushButton(self.frame_top_menus)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_page1.sizePolicy().hasHeightForWidth())
-        self.btn_page1.setSizePolicy(sizePolicy)
-        self.btn_page1.setMinimumSize(QtCore.QSize(0, 40))
-        self.btn_page1.setMaximumSize(QtCore.QSize(60, 60))
-        self.btn_page1.setAutoFillBackground(False)
-        self.btn_page1.setStyleSheet("QPushButton {\n"
+        sizePolicy.setHeightForWidth(self.btn_HomePage.sizePolicy().hasHeightForWidth())
+        self.btn_HomePage.setSizePolicy(sizePolicy)
+        self.btn_HomePage.setMinimumSize(QtCore.QSize(0, 40))
+        self.btn_HomePage.setMaximumSize(QtCore.QSize(60, 60))
+        self.btn_HomePage.setAutoFillBackground(False)
+        self.btn_HomePage.setStyleSheet("QPushButton {\n"
 "    color: rgb(255, 255, 255);\n"
 "    background-color: rgb(35, 35, 35);\n"
 "    border: 0px flat;\n"
@@ -306,27 +307,27 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QPushButton:pressed { background-color: rgb(70, 175, 38); }")
-        self.btn_page1.setText("")
+        self.btn_HomePage.setText("")
         icon6 = QtGui.QIcon()
         icon6.addPixmap(QtGui.QPixmap(":/white/white/house_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         icon6.addPixmap(QtGui.QPixmap(":/inactive/inactive/house_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.btn_page1.setIcon(icon6)
-        self.btn_page1.setIconSize(QtCore.QSize(64, 64))
-        self.btn_page1.setObjectName("btn_page1")
-        self.cel_TopMenuBtn1.addWidget(self.btn_page1)
+        self.btn_HomePage.setIcon(icon6)
+        self.btn_HomePage.setIconSize(QtCore.QSize(64, 64))
+        self.btn_HomePage.setObjectName("btn_HomePage")
+        self.cel_TopMenuBtn1.addWidget(self.btn_HomePage)
         self.verticalLayout_2.addLayout(self.cel_TopMenuBtn1)
         self.cel_TopMenuBtn2 = QtWidgets.QHBoxLayout()
         self.cel_TopMenuBtn2.setSpacing(2)
         self.cel_TopMenuBtn2.setObjectName("cel_TopMenuBtn2")
-        self.btn_page2 = QtWidgets.QPushButton(self.frame_top_menus)
+        self.btn_DefensePage = QtWidgets.QPushButton(self.frame_top_menus)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_page2.sizePolicy().hasHeightForWidth())
-        self.btn_page2.setSizePolicy(sizePolicy)
-        self.btn_page2.setMinimumSize(QtCore.QSize(0, 40))
-        self.btn_page2.setMaximumSize(QtCore.QSize(60, 60))
-        self.btn_page2.setStyleSheet("QPushButton {\n"
+        sizePolicy.setHeightForWidth(self.btn_DefensePage.sizePolicy().hasHeightForWidth())
+        self.btn_DefensePage.setSizePolicy(sizePolicy)
+        self.btn_DefensePage.setMinimumSize(QtCore.QSize(0, 40))
+        self.btn_DefensePage.setMaximumSize(QtCore.QSize(60, 60))
+        self.btn_DefensePage.setStyleSheet("QPushButton {\n"
 "    color: rgb(255, 255, 255);\n"
 "    background-color: rgb(35, 35, 35);\n"
 "    border: 0px solid;\n"
@@ -336,27 +337,27 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QPushButton:pressed { background-color: rgb(70, 175, 38); }")
-        self.btn_page2.setText("")
+        self.btn_DefensePage.setText("")
         icon7 = QtGui.QIcon()
         icon7.addPixmap(QtGui.QPixmap(":/white/white/defense_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         icon7.addPixmap(QtGui.QPixmap(":/inactive/inactive/defense_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.btn_page2.setIcon(icon7)
-        self.btn_page2.setIconSize(QtCore.QSize(60, 60))
-        self.btn_page2.setObjectName("btn_page2")
-        self.cel_TopMenuBtn2.addWidget(self.btn_page2)
+        self.btn_DefensePage.setIcon(icon7)
+        self.btn_DefensePage.setIconSize(QtCore.QSize(60, 60))
+        self.btn_DefensePage.setObjectName("btn_DefensePage")
+        self.cel_TopMenuBtn2.addWidget(self.btn_DefensePage)
         self.verticalLayout_2.addLayout(self.cel_TopMenuBtn2)
         self.cel_TopMenuBtn3 = QtWidgets.QHBoxLayout()
         self.cel_TopMenuBtn3.setSpacing(2)
         self.cel_TopMenuBtn3.setObjectName("cel_TopMenuBtn3")
-        self.btn_page3 = QtWidgets.QPushButton(self.frame_top_menus)
+        self.btn_PlantsPage = QtWidgets.QPushButton(self.frame_top_menus)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_page3.sizePolicy().hasHeightForWidth())
-        self.btn_page3.setSizePolicy(sizePolicy)
-        self.btn_page3.setMinimumSize(QtCore.QSize(0, 40))
-        self.btn_page3.setMaximumSize(QtCore.QSize(60, 60))
-        self.btn_page3.setStyleSheet("QPushButton {\n"
+        sizePolicy.setHeightForWidth(self.btn_PlantsPage.sizePolicy().hasHeightForWidth())
+        self.btn_PlantsPage.setSizePolicy(sizePolicy)
+        self.btn_PlantsPage.setMinimumSize(QtCore.QSize(0, 40))
+        self.btn_PlantsPage.setMaximumSize(QtCore.QSize(60, 60))
+        self.btn_PlantsPage.setStyleSheet("QPushButton {\n"
 "    color: rgb(255, 255, 255);\n"
 "    background-color: rgb(35, 35, 35);\n"
 "    border: 0px solid;\n"
@@ -366,29 +367,29 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QPushButton:pressed { background-color: rgb(70, 175, 38); }")
-        self.btn_page3.setText("")
+        self.btn_PlantsPage.setText("")
         icon8 = QtGui.QIcon()
         icon8.addPixmap(QtGui.QPixmap(":/white/white/plants_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         icon8.addPixmap(QtGui.QPixmap(":/inactive/inactive/plants_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.btn_page3.setIcon(icon8)
-        self.btn_page3.setIconSize(QtCore.QSize(64, 50))
-        self.btn_page3.setObjectName("btn_page3")
-        self.cel_TopMenuBtn3.addWidget(self.btn_page3)
+        self.btn_PlantsPage.setIcon(icon8)
+        self.btn_PlantsPage.setIconSize(QtCore.QSize(64, 50))
+        self.btn_PlantsPage.setObjectName("btn_PlantsPage")
+        self.cel_TopMenuBtn3.addWidget(self.btn_PlantsPage)
         self.verticalLayout_2.addLayout(self.cel_TopMenuBtn3)
         spacerItem2 = QtWidgets.QSpacerItem(60, 120, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem2)
         self.cel_TopMenuBtn4 = QtWidgets.QHBoxLayout()
         self.cel_TopMenuBtn4.setSpacing(2)
         self.cel_TopMenuBtn4.setObjectName("cel_TopMenuBtn4")
-        self.btn_page4 = QtWidgets.QPushButton(self.frame_top_menus)
+        self.btn_HardwarePage = QtWidgets.QPushButton(self.frame_top_menus)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_page4.sizePolicy().hasHeightForWidth())
-        self.btn_page4.setSizePolicy(sizePolicy)
-        self.btn_page4.setMinimumSize(QtCore.QSize(0, 40))
-        self.btn_page4.setMaximumSize(QtCore.QSize(60, 60))
-        self.btn_page4.setStyleSheet("QPushButton {\n"
+        sizePolicy.setHeightForWidth(self.btn_HardwarePage.sizePolicy().hasHeightForWidth())
+        self.btn_HardwarePage.setSizePolicy(sizePolicy)
+        self.btn_HardwarePage.setMinimumSize(QtCore.QSize(0, 40))
+        self.btn_HardwarePage.setMaximumSize(QtCore.QSize(60, 60))
+        self.btn_HardwarePage.setStyleSheet("QPushButton {\n"
 "    color: rgb(255, 255, 255);\n"
 "    background-color: rgb(35, 35, 35);\n"
 "    border: 0px solid;\n"
@@ -398,27 +399,27 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QPushButton:pressed { background-color: rgb(70, 175, 38); }")
-        self.btn_page4.setText("")
+        self.btn_HardwarePage.setText("")
         icon9 = QtGui.QIcon()
         icon9.addPixmap(QtGui.QPixmap(":/white/white/control_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         icon9.addPixmap(QtGui.QPixmap(":/inactive/inactive/control_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.btn_page4.setIcon(icon9)
-        self.btn_page4.setIconSize(QtCore.QSize(72, 72))
-        self.btn_page4.setObjectName("btn_page4")
-        self.cel_TopMenuBtn4.addWidget(self.btn_page4)
+        self.btn_HardwarePage.setIcon(icon9)
+        self.btn_HardwarePage.setIconSize(QtCore.QSize(72, 72))
+        self.btn_HardwarePage.setObjectName("btn_HardwarePage")
+        self.cel_TopMenuBtn4.addWidget(self.btn_HardwarePage)
         self.verticalLayout_2.addLayout(self.cel_TopMenuBtn4)
         self.cel_TopMenuBtn5 = QtWidgets.QHBoxLayout()
         self.cel_TopMenuBtn5.setSpacing(2)
         self.cel_TopMenuBtn5.setObjectName("cel_TopMenuBtn5")
-        self.btn_page5 = QtWidgets.QPushButton(self.frame_top_menus)
+        self.btn_SettingsPage = QtWidgets.QPushButton(self.frame_top_menus)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_page5.sizePolicy().hasHeightForWidth())
-        self.btn_page5.setSizePolicy(sizePolicy)
-        self.btn_page5.setMinimumSize(QtCore.QSize(0, 40))
-        self.btn_page5.setMaximumSize(QtCore.QSize(60, 60))
-        self.btn_page5.setStyleSheet("QPushButton {\n"
+        sizePolicy.setHeightForWidth(self.btn_SettingsPage.sizePolicy().hasHeightForWidth())
+        self.btn_SettingsPage.setSizePolicy(sizePolicy)
+        self.btn_SettingsPage.setMinimumSize(QtCore.QSize(0, 40))
+        self.btn_SettingsPage.setMaximumSize(QtCore.QSize(60, 60))
+        self.btn_SettingsPage.setStyleSheet("QPushButton {\n"
 "    color: rgb(255, 255, 255);\n"
 "    background-color: rgb(35, 35, 35);\n"
 "    border: 0px solid;\n"
@@ -428,14 +429,14 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QPushButton:pressed { background-color: rgb(70, 175, 38); }")
-        self.btn_page5.setText("")
+        self.btn_SettingsPage.setText("")
         icon10 = QtGui.QIcon()
         icon10.addPixmap(QtGui.QPixmap(":/white/white/config_ico.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         icon10.addPixmap(QtGui.QPixmap(":/inactive/inactive/config_ico_-i_.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.btn_page5.setIcon(icon10)
-        self.btn_page5.setIconSize(QtCore.QSize(60, 60))
-        self.btn_page5.setObjectName("btn_page5")
-        self.cel_TopMenuBtn5.addWidget(self.btn_page5)
+        self.btn_SettingsPage.setIcon(icon10)
+        self.btn_SettingsPage.setIconSize(QtCore.QSize(60, 60))
+        self.btn_SettingsPage.setObjectName("btn_SettingsPage")
+        self.cel_TopMenuBtn5.addWidget(self.btn_SettingsPage)
         self.verticalLayout_2.addLayout(self.cel_TopMenuBtn5)
         self.verticalLayout_3.addWidget(self.frame_top_menus)
         spacerItem3 = QtWidgets.QSpacerItem(20, 15, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -758,743 +759,31 @@ class Ui_MainWindow(object):
 "QKeySequenceEdit { font: 9pt \"Segoe UI Semilight\"; color: white; }\n"
 "")
         self.stack.setObjectName("stack")
-        self.page_1 = QtWidgets.QWidget()
-        self.page_1.setStyleSheet("")
-        self.page_1.setObjectName("page_1")
-        self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.page_1)
+        self.page_Home = QtWidgets.QWidget()
+        self.page_Home.setStyleSheet("")
+        self.page_Home.setObjectName("page_Home")
+        self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.page_Home)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
-        self.grd_HomeRootWidget = QtWidgets.QGridLayout()
-        self.grd_HomeRootWidget.setObjectName("grd_HomeRootWidget")
-        self.box_HotWaterCon = QtWidgets.QGroupBox(self.page_1)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.box_HotWaterCon.sizePolicy().hasHeightForWidth())
-        self.box_HotWaterCon.setSizePolicy(sizePolicy)
-        self.box_HotWaterCon.setMaximumSize(QtCore.QSize(300, 16777215))
-        self.box_HotWaterCon.setObjectName("box_HotWaterCon")
-        self.gridLayout_6 = QtWidgets.QGridLayout(self.box_HotWaterCon)
-        self.gridLayout_6.setContentsMargins(7, 4, 7, -1)
-        self.gridLayout_6.setObjectName("gridLayout_6")
-        self.formLayout_9 = QtWidgets.QFormLayout()
-        self.formLayout_9.setContentsMargins(-1, 8, 0, 4)
-        self.formLayout_9.setObjectName("formLayout_9")
-        self.lbl_ReadOnly65 = QtWidgets.QLabel(self.box_HotWaterCon)
-        self.lbl_ReadOnly65.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly65.setObjectName("lbl_ReadOnly65")
-        self.formLayout_9.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly65)
-        self.lbl_HourHWaterConsumption = QtWidgets.QPushButton(self.box_HotWaterCon)
-        self.lbl_HourHWaterConsumption.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_HourHWaterConsumption.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_HourHWaterConsumption.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
+        self.mda_HomeScreenWidgets = QtWidgets.QMdiArea(self.page_Home)
+        self.mda_HomeScreenWidgets.setStyleSheet("QMdiSubWindow\n"
+"{\n"
+"    border:1px solid black;\n"
+"    background-color: rgb(45, 45, 45);\n"
 "}\n"
 "\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
+"QMdiSubWindow:title \n"
+"{\n"
+"    background-color: rgb(45, 45, 45);\n"
 "}")
-        self.lbl_HourHWaterConsumption.setObjectName("lbl_HourHWaterConsumption")
-        self.formLayout_9.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.lbl_HourHWaterConsumption)
-        self.lbl_ReadOnly66 = QtWidgets.QLabel(self.box_HotWaterCon)
-        self.lbl_ReadOnly66.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly66.setObjectName("lbl_ReadOnly66")
-        self.formLayout_9.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly66)
-        self.lbl_DailyHWaterConsumption = QtWidgets.QPushButton(self.box_HotWaterCon)
-        self.lbl_DailyHWaterConsumption.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_DailyHWaterConsumption.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_DailyHWaterConsumption.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
-"}")
-        self.lbl_DailyHWaterConsumption.setObjectName("lbl_DailyHWaterConsumption")
-        self.formLayout_9.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.lbl_DailyHWaterConsumption)
-        self.lbl_ReadOnly67 = QtWidgets.QLabel(self.box_HotWaterCon)
-        self.lbl_ReadOnly67.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly67.setObjectName("lbl_ReadOnly67")
-        self.formLayout_9.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly67)
-        self.lbl_WeeklyHWaterConsumption = QtWidgets.QPushButton(self.box_HotWaterCon)
-        self.lbl_WeeklyHWaterConsumption.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_WeeklyHWaterConsumption.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_WeeklyHWaterConsumption.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
-"}")
-        self.lbl_WeeklyHWaterConsumption.setObjectName("lbl_WeeklyHWaterConsumption")
-        self.formLayout_9.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.lbl_WeeklyHWaterConsumption)
-        self.lbl_ReadOnly68 = QtWidgets.QLabel(self.box_HotWaterCon)
-        self.lbl_ReadOnly68.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly68.setObjectName("lbl_ReadOnly68")
-        self.formLayout_9.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly68)
-        self.lbl_MonthlyHWaterConsumption = QtWidgets.QPushButton(self.box_HotWaterCon)
-        self.lbl_MonthlyHWaterConsumption.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_MonthlyHWaterConsumption.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_MonthlyHWaterConsumption.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
-"}")
-        self.lbl_MonthlyHWaterConsumption.setObjectName("lbl_MonthlyHWaterConsumption")
-        self.formLayout_9.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.lbl_MonthlyHWaterConsumption)
-        self.gridLayout_6.addLayout(self.formLayout_9, 0, 0, 1, 1)
-        self.line_11 = QtWidgets.QFrame(self.box_HotWaterCon)
-        self.line_11.setFrameShape(QtWidgets.QFrame.VLine)
-        self.line_11.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line_11.setObjectName("line_11")
-        self.gridLayout_6.addWidget(self.line_11, 0, 1, 1, 1)
-        self.plw_HWaterConsumption = PlotWidget(self.box_HotWaterCon)
-        self.plw_HWaterConsumption.setMinimumSize(QtCore.QSize(196, 97))
-        self.plw_HWaterConsumption.setMaximumSize(QtCore.QSize(196, 16777215))
-        self.plw_HWaterConsumption.setStyleSheet("border: none")
-        self.plw_HWaterConsumption.setInteractive(False)
-        self.plw_HWaterConsumption.setObjectName("plw_HWaterConsumption")
-        self.gridLayout_6.addWidget(self.plw_HWaterConsumption, 0, 2, 1, 1)
-        self.grd_HomeRootWidget.addWidget(self.box_HotWaterCon, 2, 0, 1, 1)
-        self.box_EnergyOvw = QtWidgets.QGroupBox(self.page_1)
-        self.box_EnergyOvw.setMinimumSize(QtCore.QSize(300, 129))
-        self.box_EnergyOvw.setMaximumSize(QtCore.QSize(300, 16777215))
-        self.box_EnergyOvw.setObjectName("box_EnergyOvw")
-        self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.box_EnergyOvw)
-        self.horizontalLayout_5.setContentsMargins(7, 4, 7, -1)
-        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.formLayout_6 = QtWidgets.QFormLayout()
-        self.formLayout_6.setContentsMargins(-1, 8, 4, 4)
-        self.formLayout_6.setObjectName("formLayout_6")
-        self.lbl_ReadOnly55 = QtWidgets.QLabel(self.box_EnergyOvw)
-        self.lbl_ReadOnly55.setObjectName("lbl_ReadOnly55")
-        self.formLayout_6.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly55)
-        self.lbl_DirectESStatus = QtWidgets.QLabel(self.box_EnergyOvw)
-        self.lbl_DirectESStatus.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.lbl_DirectESStatus.setObjectName("lbl_DirectESStatus")
-        self.formLayout_6.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.lbl_DirectESStatus)
-        self.lbl_ReadOnly56 = QtWidgets.QLabel(self.box_EnergyOvw)
-        self.lbl_ReadOnly56.setObjectName("lbl_ReadOnly56")
-        self.formLayout_6.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly56)
-        self.lbl_ReserveESStatus = QtWidgets.QLabel(self.box_EnergyOvw)
-        self.lbl_ReserveESStatus.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.lbl_ReserveESStatus.setObjectName("lbl_ReserveESStatus")
-        self.formLayout_6.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.lbl_ReserveESStatus)
-        spacerItem4 = QtWidgets.QSpacerItem(20, 12, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        self.formLayout_6.setItem(1, QtWidgets.QFormLayout.LabelRole, spacerItem4)
-        spacerItem5 = QtWidgets.QSpacerItem(20, 12, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        self.formLayout_6.setItem(1, QtWidgets.QFormLayout.FieldRole, spacerItem5)
-        self.btn_ESStatusSwitch = QtWidgets.QPushButton(self.box_EnergyOvw)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Maximum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_ESStatusSwitch.sizePolicy().hasHeightForWidth())
-        self.btn_ESStatusSwitch.setSizePolicy(sizePolicy)
-        self.btn_ESStatusSwitch.setMinimumSize(QtCore.QSize(80, 20))
-        self.btn_ESStatusSwitch.setMaximumSize(QtCore.QSize(16777215, 30))
-        self.btn_ESStatusSwitch.setObjectName("btn_ESStatusSwitch")
-        self.formLayout_6.setWidget(3, QtWidgets.QFormLayout.SpanningRole, self.btn_ESStatusSwitch)
-        self.horizontalLayout_5.addLayout(self.formLayout_6)
-        self.line_7 = QtWidgets.QFrame(self.box_EnergyOvw)
-        self.line_7.setFrameShape(QtWidgets.QFrame.VLine)
-        self.line_7.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line_7.setObjectName("line_7")
-        self.horizontalLayout_5.addWidget(self.line_7)
-        self.formLayout_7 = QtWidgets.QFormLayout()
-        self.formLayout_7.setContentsMargins(4, 8, 4, 0)
-        self.formLayout_7.setObjectName("formLayout_7")
-        self.lbl_ReadOnly57 = QtWidgets.QLabel(self.box_EnergyOvw)
-        self.lbl_ReadOnly57.setObjectName("lbl_ReadOnly57")
-        self.formLayout_7.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly57)
-        self.lbl_ReserveESBattery = QtWidgets.QLabel(self.box_EnergyOvw)
-        self.lbl_ReserveESBattery.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.lbl_ReserveESBattery.setObjectName("lbl_ReserveESBattery")
-        self.formLayout_7.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.lbl_ReserveESBattery)
-        self.lbl_ReadOnly58 = QtWidgets.QLabel(self.box_EnergyOvw)
-        self.lbl_ReadOnly58.setObjectName("lbl_ReadOnly58")
-        self.formLayout_7.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly58)
-        self.lbl_ReserveESFlow = QtWidgets.QLabel(self.box_EnergyOvw)
-        self.lbl_ReserveESFlow.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.lbl_ReserveESFlow.setObjectName("lbl_ReserveESFlow")
-        self.formLayout_7.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.lbl_ReserveESFlow)
-        self.lbl_ReadOnly59 = QtWidgets.QLabel(self.box_EnergyOvw)
-        self.lbl_ReadOnly59.setObjectName("lbl_ReadOnly59")
-        self.formLayout_7.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly59)
-        self.lbl_ReserveESGenStatus = QtWidgets.QLabel(self.box_EnergyOvw)
-        self.lbl_ReserveESGenStatus.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.lbl_ReserveESGenStatus.setObjectName("lbl_ReserveESGenStatus")
-        self.formLayout_7.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.lbl_ReserveESGenStatus)
-        self.lbl_ReadOnly60 = QtWidgets.QLabel(self.box_EnergyOvw)
-        self.lbl_ReadOnly60.setObjectName("lbl_ReadOnly60")
-        self.formLayout_7.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly60)
-        self.lbl_ReserveESGenFlow = QtWidgets.QLabel(self.box_EnergyOvw)
-        self.lbl_ReserveESGenFlow.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.lbl_ReserveESGenFlow.setObjectName("lbl_ReserveESGenFlow")
-        self.formLayout_7.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.lbl_ReserveESGenFlow)
-        self.horizontalLayout_5.addLayout(self.formLayout_7)
-        self.grd_HomeRootWidget.addWidget(self.box_EnergyOvw, 0, 1, 1, 1)
-        self.box_ColdWaterCon = QtWidgets.QGroupBox(self.page_1)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.box_ColdWaterCon.sizePolicy().hasHeightForWidth())
-        self.box_ColdWaterCon.setSizePolicy(sizePolicy)
-        self.box_ColdWaterCon.setMaximumSize(QtCore.QSize(300, 16777215))
-        self.box_ColdWaterCon.setObjectName("box_ColdWaterCon")
-        self.horizontalLayout_7 = QtWidgets.QHBoxLayout(self.box_ColdWaterCon)
-        self.horizontalLayout_7.setContentsMargins(7, 4, 7, -1)
-        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
-        self.formLayout_5 = QtWidgets.QFormLayout()
-        self.formLayout_5.setContentsMargins(-1, 8, 0, 4)
-        self.formLayout_5.setObjectName("formLayout_5")
-        self.lbl_ReadOnly51 = QtWidgets.QLabel(self.box_ColdWaterCon)
-        self.lbl_ReadOnly51.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly51.setObjectName("lbl_ReadOnly51")
-        self.formLayout_5.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly51)
-        self.lbl_HourCWaterConsumption = QtWidgets.QPushButton(self.box_ColdWaterCon)
-        self.lbl_HourCWaterConsumption.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_HourCWaterConsumption.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_HourCWaterConsumption.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
-"}")
-        self.lbl_HourCWaterConsumption.setObjectName("lbl_HourCWaterConsumption")
-        self.formLayout_5.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.lbl_HourCWaterConsumption)
-        self.lbl_ReadOnly52 = QtWidgets.QLabel(self.box_ColdWaterCon)
-        self.lbl_ReadOnly52.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly52.setObjectName("lbl_ReadOnly52")
-        self.formLayout_5.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly52)
-        self.lbl_DailyCWaterConsumption = QtWidgets.QPushButton(self.box_ColdWaterCon)
-        self.lbl_DailyCWaterConsumption.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_DailyCWaterConsumption.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_DailyCWaterConsumption.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
-"}")
-        self.lbl_DailyCWaterConsumption.setObjectName("lbl_DailyCWaterConsumption")
-        self.formLayout_5.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.lbl_DailyCWaterConsumption)
-        self.lbl_ReadOnly53 = QtWidgets.QLabel(self.box_ColdWaterCon)
-        self.lbl_ReadOnly53.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly53.setObjectName("lbl_ReadOnly53")
-        self.formLayout_5.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly53)
-        self.lbl_WeeklyCWaterConsumption = QtWidgets.QPushButton(self.box_ColdWaterCon)
-        self.lbl_WeeklyCWaterConsumption.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_WeeklyCWaterConsumption.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_WeeklyCWaterConsumption.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
-"}")
-        self.lbl_WeeklyCWaterConsumption.setObjectName("lbl_WeeklyCWaterConsumption")
-        self.formLayout_5.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.lbl_WeeklyCWaterConsumption)
-        self.lbl_ReadOnly54 = QtWidgets.QLabel(self.box_ColdWaterCon)
-        self.lbl_ReadOnly54.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly54.setObjectName("lbl_ReadOnly54")
-        self.formLayout_5.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly54)
-        self.lbl_MonthlyCWaterConsumption = QtWidgets.QPushButton(self.box_ColdWaterCon)
-        self.lbl_MonthlyCWaterConsumption.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_MonthlyCWaterConsumption.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_MonthlyCWaterConsumption.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
-"}")
-        self.lbl_MonthlyCWaterConsumption.setObjectName("lbl_MonthlyCWaterConsumption")
-        self.formLayout_5.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.lbl_MonthlyCWaterConsumption)
-        self.horizontalLayout_7.addLayout(self.formLayout_5)
-        self.line_9 = QtWidgets.QFrame(self.box_ColdWaterCon)
-        self.line_9.setFrameShape(QtWidgets.QFrame.VLine)
-        self.line_9.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line_9.setObjectName("line_9")
-        self.horizontalLayout_7.addWidget(self.line_9)
-        self.plw_CWaterConsumption = PlotWidget(self.box_ColdWaterCon)
-        self.plw_CWaterConsumption.setMinimumSize(QtCore.QSize(196, 97))
-        self.plw_CWaterConsumption.setMaximumSize(QtCore.QSize(196, 16777215))
-        self.plw_CWaterConsumption.setStyleSheet("border: none")
-        self.plw_CWaterConsumption.setInteractive(False)
-        self.plw_CWaterConsumption.setObjectName("plw_CWaterConsumption")
-        self.horizontalLayout_7.addWidget(self.plw_CWaterConsumption)
-        self.grd_HomeRootWidget.addWidget(self.box_ColdWaterCon, 1, 0, 1, 1)
-        self.box_NetworkOvw = QtWidgets.QGroupBox(self.page_1)
-        self.box_NetworkOvw.setMinimumSize(QtCore.QSize(300, 129))
-        self.box_NetworkOvw.setMaximumSize(QtCore.QSize(300, 16777215))
-        self.box_NetworkOvw.setObjectName("box_NetworkOvw")
-        self.gridLayout_7 = QtWidgets.QGridLayout(self.box_NetworkOvw)
-        self.gridLayout_7.setContentsMargins(7, 4, 7, -1)
-        self.gridLayout_7.setObjectName("gridLayout_7")
-        self.formLayout_10 = QtWidgets.QFormLayout()
-        self.formLayout_10.setContentsMargins(-1, 8, 0, 4)
-        self.formLayout_10.setObjectName("formLayout_10")
-        self.lbl_ReadOnly69 = QtWidgets.QLabel(self.box_NetworkOvw)
-        self.lbl_ReadOnly69.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly69.setObjectName("lbl_ReadOnly69")
-        self.formLayout_10.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly69)
-        self.lbl_CurrentDataFlow = QtWidgets.QPushButton(self.box_NetworkOvw)
-        self.lbl_CurrentDataFlow.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_CurrentDataFlow.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_CurrentDataFlow.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
-"}")
-        self.lbl_CurrentDataFlow.setObjectName("lbl_CurrentDataFlow")
-        self.formLayout_10.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.lbl_CurrentDataFlow)
-        self.lbl_ReadOnly70 = QtWidgets.QLabel(self.box_NetworkOvw)
-        self.lbl_ReadOnly70.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly70.setObjectName("lbl_ReadOnly70")
-        self.formLayout_10.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly70)
-        self.lbl_HourDataFlow = QtWidgets.QPushButton(self.box_NetworkOvw)
-        self.lbl_HourDataFlow.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_HourDataFlow.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_HourDataFlow.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
-"}")
-        self.lbl_HourDataFlow.setObjectName("lbl_HourDataFlow")
-        self.formLayout_10.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.lbl_HourDataFlow)
-        self.lbl_ReadOnly71 = QtWidgets.QLabel(self.box_NetworkOvw)
-        self.lbl_ReadOnly71.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly71.setObjectName("lbl_ReadOnly71")
-        self.formLayout_10.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly71)
-        self.lbl_DailyDataFlow = QtWidgets.QPushButton(self.box_NetworkOvw)
-        self.lbl_DailyDataFlow.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_DailyDataFlow.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_DailyDataFlow.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
-"}")
-        self.lbl_DailyDataFlow.setObjectName("lbl_DailyDataFlow")
-        self.formLayout_10.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.lbl_DailyDataFlow)
-        self.lbl_ReadOnly72 = QtWidgets.QLabel(self.box_NetworkOvw)
-        self.lbl_ReadOnly72.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly72.setObjectName("lbl_ReadOnly72")
-        self.formLayout_10.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly72)
-        self.lbl_WeeklyDataFlow = QtWidgets.QPushButton(self.box_NetworkOvw)
-        self.lbl_WeeklyDataFlow.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_WeeklyDataFlow.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_WeeklyDataFlow.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
-"}")
-        self.lbl_WeeklyDataFlow.setObjectName("lbl_WeeklyDataFlow")
-        self.formLayout_10.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.lbl_WeeklyDataFlow)
-        self.gridLayout_7.addLayout(self.formLayout_10, 0, 0, 1, 1)
-        self.line_12 = QtWidgets.QFrame(self.box_NetworkOvw)
-        self.line_12.setFrameShape(QtWidgets.QFrame.VLine)
-        self.line_12.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line_12.setObjectName("line_12")
-        self.gridLayout_7.addWidget(self.line_12, 0, 1, 1, 1)
-        self.plw_Network = PlotWidget(self.box_NetworkOvw)
-        self.plw_Network.setMinimumSize(QtCore.QSize(196, 97))
-        self.plw_Network.setMaximumSize(QtCore.QSize(196, 16777215))
-        self.plw_Network.setStyleSheet("border: none")
-        self.plw_Network.setInteractive(False)
-        self.plw_Network.setObjectName("plw_Network")
-        self.gridLayout_7.addWidget(self.plw_Network, 0, 2, 1, 1)
-        self.grd_HomeRootWidget.addWidget(self.box_NetworkOvw, 2, 1, 1, 1)
-        self.box_GraphsViewer = QtWidgets.QGroupBox(self.page_1)
-        self.box_GraphsViewer.setObjectName("box_GraphsViewer")
-        self.gridLayout_8 = QtWidgets.QGridLayout(self.box_GraphsViewer)
-        self.gridLayout_8.setContentsMargins(7, 4, 7, -1)
-        self.gridLayout_8.setObjectName("gridLayout_8")
-        self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_10.setObjectName("horizontalLayout_10")
-        self.label_4 = QtWidgets.QLabel(self.box_GraphsViewer)
-        self.label_4.setObjectName("label_4")
-        self.horizontalLayout_10.addWidget(self.label_4)
-        self.radioButton = QtWidgets.QRadioButton(self.box_GraphsViewer)
-        self.radioButton.setMaximumSize(QtCore.QSize(40, 16777215))
-        self.radioButton.setChecked(True)
-        self.radioButton.setObjectName("radioButton")
-        self.horizontalLayout_10.addWidget(self.radioButton)
-        self.radioButton_2 = QtWidgets.QRadioButton(self.box_GraphsViewer)
-        self.radioButton_2.setMaximumSize(QtCore.QSize(42, 16777215))
-        self.radioButton_2.setObjectName("radioButton_2")
-        self.horizontalLayout_10.addWidget(self.radioButton_2)
-        self.radioButton_3 = QtWidgets.QRadioButton(self.box_GraphsViewer)
-        self.radioButton_3.setMaximumSize(QtCore.QSize(42, 16777215))
-        self.radioButton_3.setObjectName("radioButton_3")
-        self.horizontalLayout_10.addWidget(self.radioButton_3)
-        self.radioButton_4 = QtWidgets.QRadioButton(self.box_GraphsViewer)
-        self.radioButton_4.setMaximumSize(QtCore.QSize(42, 16777215))
-        self.radioButton_4.setObjectName("radioButton_4")
-        self.horizontalLayout_10.addWidget(self.radioButton_4)
-        self.gridLayout_8.addLayout(self.horizontalLayout_10, 3, 1, 1, 1)
-        self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_9.setObjectName("horizontalLayout_9")
-        self.lbl_ReadOnly73 = QtWidgets.QLabel(self.box_GraphsViewer)
-        self.lbl_ReadOnly73.setObjectName("lbl_ReadOnly73")
-        self.horizontalLayout_9.addWidget(self.lbl_ReadOnly73)
-        self.toolButton_2 = QtWidgets.QToolButton(self.box_GraphsViewer)
-        self.toolButton_2.setStyleSheet("min-height: 20")
-        self.toolButton_2.setCheckable(True)
-        self.toolButton_2.setObjectName("toolButton_2")
-        self.horizontalLayout_9.addWidget(self.toolButton_2)
-        self.toolButton_3 = QtWidgets.QToolButton(self.box_GraphsViewer)
-        self.toolButton_3.setStyleSheet("min-height: 20")
-        self.toolButton_3.setCheckable(True)
-        self.toolButton_3.setObjectName("toolButton_3")
-        self.horizontalLayout_9.addWidget(self.toolButton_3)
-        self.toolButton = QtWidgets.QToolButton(self.box_GraphsViewer)
-        self.toolButton.setStyleSheet("min-height: 20")
-        self.toolButton.setCheckable(True)
-        self.toolButton.setObjectName("toolButton")
-        self.horizontalLayout_9.addWidget(self.toolButton)
-        self.toolButton_4 = QtWidgets.QToolButton(self.box_GraphsViewer)
-        self.toolButton_4.setStyleSheet("min-height: 20")
-        self.toolButton_4.setCheckable(True)
-        self.toolButton_4.setObjectName("toolButton_4")
-        self.horizontalLayout_9.addWidget(self.toolButton_4)
-        self.gridLayout_8.addLayout(self.horizontalLayout_9, 0, 1, 1, 1)
-        self.plw_Big = PlotWidget(self.box_GraphsViewer)
-        self.plw_Big.setObjectName("plw_Big")
-        self.gridLayout_8.addWidget(self.plw_Big, 1, 1, 1, 1)
-        self.grd_HomeRootWidget.addWidget(self.box_GraphsViewer, 0, 3, 3, 1)
-        self.box_WaterOvw = QtWidgets.QGroupBox(self.page_1)
-        self.box_WaterOvw.setMinimumSize(QtCore.QSize(300, 129))
-        self.box_WaterOvw.setMaximumSize(QtCore.QSize(300, 16777215))
-        self.box_WaterOvw.setObjectName("box_WaterOvw")
-        self.horizontalLayout_8 = QtWidgets.QHBoxLayout(self.box_WaterOvw)
-        self.horizontalLayout_8.setContentsMargins(7, 4, 7, -1)
-        self.horizontalLayout_8.setObjectName("horizontalLayout_8")
-        self.formLayout_8 = QtWidgets.QFormLayout()
-        self.formLayout_8.setContentsMargins(-1, 8, 4, 4)
-        self.formLayout_8.setObjectName("formLayout_8")
-        self.lbl_ReadOnly61 = QtWidgets.QLabel(self.box_WaterOvw)
-        self.lbl_ReadOnly61.setObjectName("lbl_ReadOnly61")
-        self.formLayout_8.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly61)
-        self.lbl_WaterPumpStat = QtWidgets.QLabel(self.box_WaterOvw)
-        self.lbl_WaterPumpStat.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.lbl_WaterPumpStat.setObjectName("lbl_WaterPumpStat")
-        self.formLayout_8.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.lbl_WaterPumpStat)
-        self.lbl_ReadOnly62 = QtWidgets.QLabel(self.box_WaterOvw)
-        self.lbl_ReadOnly62.setObjectName("lbl_ReadOnly62")
-        self.formLayout_8.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly62)
-        self.lbl_WaterPumpFlow = QtWidgets.QLabel(self.box_WaterOvw)
-        self.lbl_WaterPumpFlow.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.lbl_WaterPumpFlow.setObjectName("lbl_WaterPumpFlow")
-        self.formLayout_8.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.lbl_WaterPumpFlow)
-        self.lbl_ReadOnly63 = QtWidgets.QLabel(self.box_WaterOvw)
-        self.lbl_ReadOnly63.setObjectName("lbl_ReadOnly63")
-        self.formLayout_8.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly63)
-        self.lbl_WaterSewageFull = QtWidgets.QLabel(self.box_WaterOvw)
-        self.lbl_WaterSewageFull.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.lbl_WaterSewageFull.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
-        self.lbl_WaterSewageFull.setObjectName("lbl_WaterSewageFull")
-        self.formLayout_8.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.lbl_WaterSewageFull)
-        self.lbl_ReadOnly64 = QtWidgets.QLabel(self.box_WaterOvw)
-        self.lbl_ReadOnly64.setObjectName("lbl_ReadOnly64")
-        self.formLayout_8.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly64)
-        self.lbl_WaterSewagePumpOutStat = QtWidgets.QLabel(self.box_WaterOvw)
-        self.lbl_WaterSewagePumpOutStat.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.lbl_WaterSewagePumpOutStat.setObjectName("lbl_WaterSewagePumpOutStat")
-        self.formLayout_8.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.lbl_WaterSewagePumpOutStat)
-        self.horizontalLayout_8.addLayout(self.formLayout_8)
-        self.line_8 = QtWidgets.QFrame(self.box_WaterOvw)
-        self.line_8.setFrameShape(QtWidgets.QFrame.VLine)
-        self.line_8.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line_8.setObjectName("line_8")
-        self.horizontalLayout_8.addWidget(self.line_8)
-        self.verticalLayout_4 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_4.setContentsMargins(7, 0, 7, -1)
-        self.verticalLayout_4.setObjectName("verticalLayout_4")
-        self.btn_WaterPumpPowerStat = QtWidgets.QPushButton(self.box_WaterOvw)
-        self.btn_WaterPumpPowerStat.setMinimumSize(QtCore.QSize(80, 20))
-        self.btn_WaterPumpPowerStat.setObjectName("btn_WaterPumpPowerStat")
-        self.verticalLayout_4.addWidget(self.btn_WaterPumpPowerStat)
-        self.btn_WaterPumpPowerMode = QtWidgets.QPushButton(self.box_WaterOvw)
-        self.btn_WaterPumpPowerMode.setMinimumSize(QtCore.QSize(80, 20))
-        self.btn_WaterPumpPowerMode.setObjectName("btn_WaterPumpPowerMode")
-        self.verticalLayout_4.addWidget(self.btn_WaterPumpPowerMode)
-        self.btn_WaterSewagePumpPowerStat = QtWidgets.QPushButton(self.box_WaterOvw)
-        self.btn_WaterSewagePumpPowerStat.setMinimumSize(QtCore.QSize(80, 20))
-        self.btn_WaterSewagePumpPowerStat.setObjectName("btn_WaterSewagePumpPowerStat")
-        self.verticalLayout_4.addWidget(self.btn_WaterSewagePumpPowerStat)
-        self.btn_WaterSewagePumpPowerMode = QtWidgets.QPushButton(self.box_WaterOvw)
-        self.btn_WaterSewagePumpPowerMode.setMinimumSize(QtCore.QSize(80, 20))
-        self.btn_WaterSewagePumpPowerMode.setObjectName("btn_WaterSewagePumpPowerMode")
-        self.verticalLayout_4.addWidget(self.btn_WaterSewagePumpPowerMode)
-        self.horizontalLayout_8.addLayout(self.verticalLayout_4)
-        self.grd_HomeRootWidget.addWidget(self.box_WaterOvw, 1, 1, 1, 1)
-        self.box_EnergyCon = QtWidgets.QGroupBox(self.page_1)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.box_EnergyCon.sizePolicy().hasHeightForWidth())
-        self.box_EnergyCon.setSizePolicy(sizePolicy)
-        self.box_EnergyCon.setMaximumSize(QtCore.QSize(300, 16777215))
-        self.box_EnergyCon.setObjectName("box_EnergyCon")
-        self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.box_EnergyCon)
-        self.horizontalLayout_6.setContentsMargins(7, 4, 7, -1)
-        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
-        self.formLayout_4 = QtWidgets.QFormLayout()
-        self.formLayout_4.setContentsMargins(-1, 8, 0, 4)
-        self.formLayout_4.setObjectName("formLayout_4")
-        self.lbl_ReadOnly47 = QtWidgets.QLabel(self.box_EnergyCon)
-        self.lbl_ReadOnly47.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly47.setObjectName("lbl_ReadOnly47")
-        self.formLayout_4.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly47)
-        self.lbl_CurrentEnergyConsumption = QtWidgets.QPushButton(self.box_EnergyCon)
-        self.lbl_CurrentEnergyConsumption.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_CurrentEnergyConsumption.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_CurrentEnergyConsumption.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
-"}")
-        self.lbl_CurrentEnergyConsumption.setObjectName("lbl_CurrentEnergyConsumption")
-        self.formLayout_4.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.lbl_CurrentEnergyConsumption)
-        self.lbl_ReadOnly48 = QtWidgets.QLabel(self.box_EnergyCon)
-        self.lbl_ReadOnly48.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly48.setObjectName("lbl_ReadOnly48")
-        self.formLayout_4.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly48)
-        self.lbl_HourEnergyConsumption = QtWidgets.QPushButton(self.box_EnergyCon)
-        self.lbl_HourEnergyConsumption.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_HourEnergyConsumption.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_HourEnergyConsumption.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
-"}")
-        self.lbl_HourEnergyConsumption.setObjectName("lbl_HourEnergyConsumption")
-        self.formLayout_4.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.lbl_HourEnergyConsumption)
-        self.lbl_ReadOnly49 = QtWidgets.QLabel(self.box_EnergyCon)
-        self.lbl_ReadOnly49.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly49.setObjectName("lbl_ReadOnly49")
-        self.formLayout_4.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly49)
-        self.lbl_DailyEnergyConsumption = QtWidgets.QPushButton(self.box_EnergyCon)
-        self.lbl_DailyEnergyConsumption.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_DailyEnergyConsumption.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_DailyEnergyConsumption.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
-"}")
-        self.lbl_DailyEnergyConsumption.setObjectName("lbl_DailyEnergyConsumption")
-        self.formLayout_4.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.lbl_DailyEnergyConsumption)
-        self.lbl_ReadOnly50 = QtWidgets.QLabel(self.box_EnergyCon)
-        self.lbl_ReadOnly50.setMaximumSize(QtCore.QSize(22, 15))
-        self.lbl_ReadOnly50.setObjectName("lbl_ReadOnly50")
-        self.formLayout_4.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.lbl_ReadOnly50)
-        self.lbl_WeeklyEnergyConsumption = QtWidgets.QPushButton(self.box_EnergyCon)
-        self.lbl_WeeklyEnergyConsumption.setMinimumSize(QtCore.QSize(41, 0))
-        self.lbl_WeeklyEnergyConsumption.setBaseSize(QtCore.QSize(40, 0))
-        self.lbl_WeeklyEnergyConsumption.setStyleSheet("QPushButton {    \n"
-"    border: none;\n"
-"    background: none;\n"
-"    color: white; \n"
-"    font: 9pt \"Segoe UI Semilight\"; \n"
-"    text-align: right; \n"
-"    padding-right: 1px;\n"
-"    min-width: 40px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    color: rgb(70, 175, 38);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    color: rgb(47, 105, 23);\n"
-"}")
-        self.lbl_WeeklyEnergyConsumption.setObjectName("lbl_WeeklyEnergyConsumption")
-        self.formLayout_4.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.lbl_WeeklyEnergyConsumption)
-        self.horizontalLayout_6.addLayout(self.formLayout_4)
-        self.line_10 = QtWidgets.QFrame(self.box_EnergyCon)
-        self.line_10.setFrameShape(QtWidgets.QFrame.VLine)
-        self.line_10.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line_10.setObjectName("line_10")
-        self.horizontalLayout_6.addWidget(self.line_10)
-        self.plw_EnergyConsumption = PlotWidget(self.box_EnergyCon)
-        self.plw_EnergyConsumption.setMinimumSize(QtCore.QSize(196, 97))
-        self.plw_EnergyConsumption.setMaximumSize(QtCore.QSize(196, 16777215))
-        self.plw_EnergyConsumption.setStyleSheet("border: none")
-        self.plw_EnergyConsumption.setInteractive(False)
-        self.plw_EnergyConsumption.setObjectName("plw_EnergyConsumption")
-        self.horizontalLayout_6.addWidget(self.plw_EnergyConsumption)
-        self.grd_HomeRootWidget.addWidget(self.box_EnergyCon, 0, 0, 1, 1)
-        self.verticalLayout_7.addLayout(self.grd_HomeRootWidget)
-        self.stack.addWidget(self.page_1)
-        self.page_8 = QtWidgets.QWidget()
-        self.page_8.setObjectName("page_8")
-        self.gridLayoutWidget_3 = QtWidgets.QWidget(self.page_8)
+        brush = QtGui.QBrush(QtGui.QColor(45, 45, 45))
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        self.mda_HomeScreenWidgets.setBackground(brush)
+        self.mda_HomeScreenWidgets.setObjectName("mda_HomeScreenWidgets")
+        self.verticalLayout_7.addWidget(self.mda_HomeScreenWidgets)
+        self.stack.addWidget(self.page_Home)
+        self.page_Rooms = QtWidgets.QWidget()
+        self.page_Rooms.setObjectName("page_Rooms")
+        self.gridLayoutWidget_3 = QtWidgets.QWidget(self.page_Rooms)
         self.gridLayoutWidget_3.setGeometry(QtCore.QRect(10, 10, 901, 401))
         self.gridLayoutWidget_3.setObjectName("gridLayoutWidget_3")
         self.gridLayout_9 = QtWidgets.QGridLayout(self.gridLayoutWidget_3)
@@ -1528,14 +817,14 @@ class Ui_MainWindow(object):
         self.plv_HCtrlClimateHumidStat.setGeometry(QtCore.QRect(280, 40, 256, 192))
         self.plv_HCtrlClimateHumidStat.setObjectName("plv_HCtrlClimateHumidStat")
         self.gridLayout_9.addWidget(self.box_HCtrlClimateStats, 0, 1, 1, 1)
-        self.stack.addWidget(self.page_8)
-        self.page_2 = QtWidgets.QWidget()
-        self.page_2.setObjectName("page_2")
-        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.page_2)
+        self.stack.addWidget(self.page_Rooms)
+        self.page_Defense = QtWidgets.QWidget()
+        self.page_Defense.setObjectName("page_Defense")
+        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.page_Defense)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
         self.grd_DefnRootWidget = QtWidgets.QGridLayout()
         self.grd_DefnRootWidget.setObjectName("grd_DefnRootWidget")
-        self.box_DefnLogsPool = QtWidgets.QGroupBox(self.page_2)
+        self.box_DefnLogsPool = QtWidgets.QGroupBox(self.page_Defense)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -1562,7 +851,7 @@ class Ui_MainWindow(object):
         self.tbv_DefnHardwareStat.setGeometry(QtCore.QRect(200, 109, 241, 51))
         self.tbv_DefnHardwareStat.setObjectName("tbv_DefnHardwareStat")
         self.grd_DefnRootWidget.addWidget(self.box_DefnLogsPool, 0, 1, 1, 1)
-        self.box_DefnDatabase = QtWidgets.QGroupBox(self.page_2)
+        self.box_DefnDatabase = QtWidgets.QGroupBox(self.page_Defense)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -1639,7 +928,7 @@ class Ui_MainWindow(object):
         self.ltv_DefnDatabaseUsersList.setGeometry(QtCore.QRect(10, 40, 180, 121))
         self.ltv_DefnDatabaseUsersList.setObjectName("ltv_DefnDatabaseUsersList")
         self.grd_DefnRootWidget.addWidget(self.box_DefnDatabase, 1, 1, 1, 1)
-        self.box_DefnCamBox = QtWidgets.QGroupBox(self.page_2)
+        self.box_DefnCamBox = QtWidgets.QGroupBox(self.page_Defense)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -1681,8 +970,8 @@ class Ui_MainWindow(object):
 "}")
         self.lbl_ReadOnly6.setObjectName("lbl_ReadOnly6")
         self.gridLayout_3.addWidget(self.lbl_ReadOnly6, 0, 2, 1, 1)
-        spacerItem6 = QtWidgets.QSpacerItem(150, 20, QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout_3.addItem(spacerItem6, 0, 1, 1, 1)
+        spacerItem4 = QtWidgets.QSpacerItem(150, 20, QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_3.addItem(spacerItem4, 0, 1, 1, 1)
         self.btn_DefnCamRecArchOpen = QtWidgets.QPushButton(self.box_DefnCamBox)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -1736,10 +1025,10 @@ class Ui_MainWindow(object):
         self.gridLayout_3.addWidget(self.gvf_DefnCamView, 3, 0, 1, 4)
         self.grd_DefnRootWidget.addWidget(self.box_DefnCamBox, 0, 0, 2, 1)
         self.verticalLayout_6.addLayout(self.grd_DefnRootWidget)
-        self.stack.addWidget(self.page_2)
-        self.page_3 = QtWidgets.QWidget()
-        self.page_3.setObjectName("page_3")
-        self.horizontalLayoutWidget = QtWidgets.QWidget(self.page_3)
+        self.stack.addWidget(self.page_Defense)
+        self.page_Plants = QtWidgets.QWidget()
+        self.page_Plants.setObjectName("page_Plants")
+        self.horizontalLayoutWidget = QtWidgets.QWidget(self.page_Plants)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 10, 901, 401))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
@@ -1851,49 +1140,18 @@ class Ui_MainWindow(object):
         self.btn_ManageSelectedModuleSettings.setGeometry(QtCore.QRect(10, 370, 181, 23))
         self.btn_ManageSelectedModuleSettings.setObjectName("btn_ManageSelectedModuleSettings")
         self.horizontalLayout_3.addWidget(self.box_PtsSelectedModuleStats)
-        self.stack.addWidget(self.page_3)
-        self.page_7 = QtWidgets.QWidget()
-        self.page_7.setObjectName("page_7")
-        self.horizontalLayoutWidget_2 = QtWidgets.QWidget(self.page_7)
-        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(10, 10, 901, 401))
-        self.horizontalLayoutWidget_2.setObjectName("horizontalLayoutWidget_2")
-        self.horizontalLayout_12 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_2)
-        self.horizontalLayout_12.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_12.setObjectName("horizontalLayout_12")
-        self.stack.addWidget(self.page_7)
-        self.page_6 = QtWidgets.QWidget()
-        self.page_6.setObjectName("page_6")
-        self.gridLayoutWidget = QtWidgets.QWidget(self.page_6)
-        self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 10, 901, 401))
-        self.gridLayoutWidget.setObjectName("gridLayoutWidget")
-        self.gridLayout_4 = QtWidgets.QGridLayout(self.gridLayoutWidget)
-        self.gridLayout_4.setContentsMargins(0, 0, 0, 0)
-        self.gridLayout_4.setObjectName("gridLayout_4")
-        self.taw_PtsConfig = QtWidgets.QTabWidget(self.gridLayoutWidget)
-        self.taw_PtsConfig.setStyleSheet("")
-        self.taw_PtsConfig.setObjectName("taw_PtsConfig")
-        self.tab1 = QtWidgets.QWidget()
-        self.tab1.setObjectName("tab1")
-        self.taw_PtsConfig.addTab(self.tab1, "")
-        self.tab2 = QtWidgets.QWidget()
-        self.tab2.setObjectName("tab2")
-        self.label = QtWidgets.QLabel(self.tab2)
-        self.label.setGeometry(QtCore.QRect(430, 180, 47, 13))
-        self.label.setObjectName("label")
-        self.taw_PtsConfig.addTab(self.tab2, "")
-        self.gridLayout_4.addWidget(self.taw_PtsConfig, 0, 0, 1, 1)
-        self.stack.addWidget(self.page_6)
-        self.page_4 = QtWidgets.QWidget()
-        self.page_4.setStyleSheet("")
-        self.page_4.setObjectName("page_4")
-        self.gridLayoutWidget_2 = QtWidgets.QWidget(self.page_4)
+        self.stack.addWidget(self.page_Plants)
+        self.page_Hardware = QtWidgets.QWidget()
+        self.page_Hardware.setStyleSheet("")
+        self.page_Hardware.setObjectName("page_Hardware")
+        self.gridLayoutWidget_2 = QtWidgets.QWidget(self.page_Hardware)
         self.gridLayoutWidget_2.setGeometry(QtCore.QRect(10, 10, 901, 401))
         self.gridLayoutWidget_2.setObjectName("gridLayoutWidget_2")
         self.gridLayout_5 = QtWidgets.QGridLayout(self.gridLayoutWidget_2)
         self.gridLayout_5.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_5.setObjectName("gridLayout_5")
-        spacerItem7 = QtWidgets.QSpacerItem(6, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout_5.addItem(spacerItem7, 0, 3, 1, 1)
+        spacerItem5 = QtWidgets.QSpacerItem(6, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_5.addItem(spacerItem5, 0, 3, 1, 1)
         self.lbl_SelectedHardwareUnit = QtWidgets.QLabel(self.gridLayoutWidget_2)
         self.lbl_SelectedHardwareUnit.setStyleSheet("font: 11pt \"Segoe UI Semibold\"")
         self.lbl_SelectedHardwareUnit.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
@@ -1973,8 +1231,8 @@ class Ui_MainWindow(object):
         self.btn_HardwareAdditionalSettings.setObjectName("btn_HardwareAdditionalSettings")
         self.horizontalLayout_11.addWidget(self.btn_HardwareAdditionalSettings)
         self.gridLayout_5.addWidget(self.frame_HardwareBasicActions, 0, 0, 1, 1)
-        spacerItem8 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout_5.addItem(spacerItem8, 0, 1, 1, 1)
+        spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.gridLayout_5.addItem(spacerItem6, 0, 1, 1, 1)
         self.line_4 = QtWidgets.QFrame(self.gridLayoutWidget_2)
         self.line_4.setFrameShape(QtWidgets.QFrame.HLine)
         self.line_4.setFrameShadow(QtWidgets.QFrame.Sunken)
@@ -2010,10 +1268,10 @@ class Ui_MainWindow(object):
         self.tbv_HardwareList.horizontalHeader().setStretchLastSection(False)
         self.tbv_HardwareList.verticalHeader().setVisible(False)
         self.gridLayout_5.addWidget(self.tbv_HardwareList, 2, 0, 1, 4)
-        self.stack.addWidget(self.page_4)
-        self.page_5 = QtWidgets.QWidget()
-        self.page_5.setObjectName("page_5")
-        self.box_CfgInterface = QtWidgets.QGroupBox(self.page_5)
+        self.stack.addWidget(self.page_Hardware)
+        self.page_Settings = QtWidgets.QWidget()
+        self.page_Settings.setObjectName("page_Settings")
+        self.box_CfgInterface = QtWidgets.QGroupBox(self.page_Settings)
         self.box_CfgInterface.setGeometry(QtCore.QRect(10, 140, 331, 161))
         self.box_CfgInterface.setObjectName("box_CfgInterface")
         self.formLayout_3 = QtWidgets.QFormLayout(self.box_CfgInterface)
@@ -2081,7 +1339,7 @@ class Ui_MainWindow(object):
         self.cbb_Language.addItem("")
         self.cbb_Language.setItemText(5, "English")
         self.formLayout_3.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.cbb_Language)
-        self.box_CfgSystem = QtWidgets.QGroupBox(self.page_5)
+        self.box_CfgSystem = QtWidgets.QGroupBox(self.page_Settings)
         self.box_CfgSystem.setGeometry(QtCore.QRect(10, 305, 330, 102))
         self.box_CfgSystem.setObjectName("box_CfgSystem")
         self.ckb_ToggleLogs = QtWidgets.QCheckBox(self.box_CfgSystem)
@@ -2300,7 +1558,7 @@ class Ui_MainWindow(object):
         self.cbb_LogsLevelMode.addItem("")
         self.cbb_LogsLevelMode.addItem("")
         self.cbb_LogsLevelMode.addItem("")
-        self.box_LoggedAs = QtWidgets.QGroupBox(self.page_5)
+        self.box_LoggedAs = QtWidgets.QGroupBox(self.page_Settings)
         self.box_LoggedAs.setGeometry(QtCore.QRect(10, 10, 330, 111))
         self.box_LoggedAs.setObjectName("box_LoggedAs")
         self.lbl_ReadOnly15 = QtWidgets.QLabel(self.box_LoggedAs)
@@ -2330,7 +1588,7 @@ class Ui_MainWindow(object):
         self.gfv_CurrentUserAvatar.setText("")
         self.gfv_CurrentUserAvatar.setScaledContents(True)
         self.gfv_CurrentUserAvatar.setObjectName("gfv_CurrentUserAvatar")
-        self.box_CfgKeyboardSeqEdit = QtWidgets.QGroupBox(self.page_5)
+        self.box_CfgKeyboardSeqEdit = QtWidgets.QGroupBox(self.page_Settings)
         self.box_CfgKeyboardSeqEdit.setGeometry(QtCore.QRect(360, 10, 261, 396))
         self.box_CfgKeyboardSeqEdit.setObjectName("box_CfgKeyboardSeqEdit")
         self.formLayout_2 = QtWidgets.QFormLayout(self.box_CfgKeyboardSeqEdit)
@@ -2452,7 +1710,7 @@ class Ui_MainWindow(object):
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line.setObjectName("line")
         self.formLayout_2.setWidget(10, QtWidgets.QFormLayout.SpanningRole, self.line)
-        self.box_UsersDbEdit = QtWidgets.QGroupBox(self.page_5)
+        self.box_UsersDbEdit = QtWidgets.QGroupBox(self.page_Settings)
         self.box_UsersDbEdit.setGeometry(QtCore.QRect(640, 10, 261, 396))
         self.box_UsersDbEdit.setObjectName("box_UsersDbEdit")
         self.lbl_SelectedUserDescription = QtWidgets.QLabel(self.box_UsersDbEdit)
@@ -2520,10 +1778,10 @@ class Ui_MainWindow(object):
         self.gfv_SelectedUserAvatar.setText("")
         self.gfv_SelectedUserAvatar.setScaledContents(True)
         self.gfv_SelectedUserAvatar.setObjectName("gfv_SelectedUserAvatar")
-        self.stack.addWidget(self.page_5)
-        self.page_login = QtWidgets.QWidget()
-        self.page_login.setObjectName("page_login")
-        self.box_Login = QtWidgets.QGroupBox(self.page_login)
+        self.stack.addWidget(self.page_Settings)
+        self.page_Login = QtWidgets.QWidget()
+        self.page_Login.setObjectName("page_Login")
+        self.box_Login = QtWidgets.QGroupBox(self.page_Login)
         self.box_Login.setGeometry(QtCore.QRect(500, 150, 280, 150))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
@@ -2646,13 +1904,13 @@ class Ui_MainWindow(object):
         self.lbl_LoginStatus.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
         self.lbl_LoginStatus.setObjectName("lbl_LoginStatus")
         self.gridLayout.addWidget(self.lbl_LoginStatus, 3, 0, 1, 3)
-        self.label_2 = QtWidgets.QLabel(self.page_login)
+        self.label_2 = QtWidgets.QLabel(self.page_Login)
         self.label_2.setGeometry(QtCore.QRect(360, 10, 280, 140))
         self.label_2.setText("")
         self.label_2.setPixmap(QtGui.QPixmap(":/main/AsQamm/logo-alpha.png"))
         self.label_2.setScaledContents(True)
         self.label_2.setObjectName("label_2")
-        self.label_3 = QtWidgets.QLabel(self.page_login)
+        self.label_3 = QtWidgets.QLabel(self.page_Login)
         self.label_3.setGeometry(QtCore.QRect(200, 115, 280, 135))
         self.label_3.setPixmap(QtGui.QPixmap(":/<resource root>/logo-alpha.png"))
         self.label_3.setScaledContents(True)
@@ -2663,28 +1921,27 @@ class Ui_MainWindow(object):
         self.label_2.raise_()
         self.box_Login.raise_()
         self.label_3.raise_()
-        self.stack.addWidget(self.page_login)
-        self.page_loading = QtWidgets.QWidget()
-        self.page_loading.setObjectName("page_loading")
-        self.lbl_LoadingAnimation = QtWidgets.QLabel(self.page_loading)
+        self.stack.addWidget(self.page_Login)
+        self.page_Loading = QtWidgets.QWidget()
+        self.page_Loading.setObjectName("page_Loading")
+        self.lbl_LoadingAnimation = QtWidgets.QLabel(self.page_Loading)
         self.lbl_LoadingAnimation.setGeometry(QtCore.QRect(360, 50, 200, 200))
         self.lbl_LoadingAnimation.setText("")
         self.lbl_LoadingAnimation.setScaledContents(True)
         self.lbl_LoadingAnimation.setObjectName("lbl_LoadingAnimation")
-        self.lbl_LoadingText = QtWidgets.QLabel(self.page_loading)
+        self.lbl_LoadingText = QtWidgets.QLabel(self.page_Loading)
         self.lbl_LoadingText.setGeometry(QtCore.QRect(335, 260, 250, 25))
         self.lbl_LoadingText.setStyleSheet("font: 13pt \"Segoe UI Semilight\"")
         self.lbl_LoadingText.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_LoadingText.setObjectName("lbl_LoadingText")
-        self.stack.addWidget(self.page_loading)
+        self.stack.addWidget(self.page_Loading)
         self.verticalLayout_5.addWidget(self.stack)
         self.horizontalLayout_2.addWidget(self.frame_pages)
         self.gridLayout_2.addWidget(self.Content, 1, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stack.setCurrentIndex(8)
-        self.taw_PtsConfig.setCurrentIndex(1)
+        self.stack.setCurrentIndex(1)
         self.cbb_LogsArchMode.setCurrentIndex(5)
         self.lnI_Password.returnPressed.connect(self.btn_UserInit.click)
         self.ckb_ToggleLogs.toggled['bool'].connect(self.ckb_ToggleLogsArch.setEnabled)
@@ -2696,12 +1953,12 @@ class Ui_MainWindow(object):
         MainWindow.setTabOrder(self.lnI_Password, self.btn_UserInit)
         MainWindow.setTabOrder(self.btn_UserInit, self.btn_UserInitAsGuest)
         MainWindow.setTabOrder(self.btn_UserInitAsGuest, self.btn_Toggle)
-        MainWindow.setTabOrder(self.btn_Toggle, self.btn_page1)
-        MainWindow.setTabOrder(self.btn_page1, self.btn_page2)
-        MainWindow.setTabOrder(self.btn_page2, self.btn_page3)
-        MainWindow.setTabOrder(self.btn_page3, self.btn_page4)
-        MainWindow.setTabOrder(self.btn_page4, self.btn_page5)
-        MainWindow.setTabOrder(self.btn_page5, self.btn_InterfaceMode)
+        MainWindow.setTabOrder(self.btn_Toggle, self.btn_HomePage)
+        MainWindow.setTabOrder(self.btn_HomePage, self.btn_DefensePage)
+        MainWindow.setTabOrder(self.btn_DefensePage, self.btn_PlantsPage)
+        MainWindow.setTabOrder(self.btn_PlantsPage, self.btn_HardwarePage)
+        MainWindow.setTabOrder(self.btn_HardwarePage, self.btn_SettingsPage)
+        MainWindow.setTabOrder(self.btn_SettingsPage, self.btn_InterfaceMode)
         MainWindow.setTabOrder(self.btn_InterfaceMode, self.btn_Apply)
         MainWindow.setTabOrder(self.btn_Apply, self.btn_Save)
         MainWindow.setTabOrder(self.btn_Save, self.btn_Load)
@@ -2749,85 +2006,11 @@ class Ui_MainWindow(object):
         self.lbl_HardwareAll.setText(_translate("MainWindow", "(n/a)"))
         self.lbl_ReadOnly2.setText(_translate("MainWindow", "Устройств (готово):"))
         self.lbl_HardwareOnLine.setText(_translate("MainWindow", "(n/a)"))
-        self.btn_page1.setShortcut(_translate("MainWindow", "Ctrl+1"))
-        self.btn_page2.setShortcut(_translate("MainWindow", "Ctrl+2"))
-        self.btn_page3.setShortcut(_translate("MainWindow", "Ctrl+3"))
-        self.btn_page4.setShortcut(_translate("MainWindow", "Ctrl+4"))
-        self.btn_page5.setShortcut(_translate("MainWindow", "Ctrl+5"))
-        self.box_HotWaterCon.setTitle(_translate("MainWindow", "Водопотребление (ГВС, м³)"))
-        self.lbl_ReadOnly65.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">ЧАС</span></p></body></html>"))
-        self.lbl_HourHWaterConsumption.setText(_translate("MainWindow", "0.0"))
-        self.lbl_ReadOnly66.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ffee00;\">ДЕН</span></p></body></html>"))
-        self.lbl_DailyHWaterConsumption.setText(_translate("MainWindow", "0.0"))
-        self.lbl_ReadOnly67.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#66b036;\">НЕД</span></p></body></html>"))
-        self.lbl_WeeklyHWaterConsumption.setText(_translate("MainWindow", "0.0"))
-        self.lbl_ReadOnly68.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#00aaff;\">МЕС</span></p></body></html>"))
-        self.lbl_MonthlyHWaterConsumption.setText(_translate("MainWindow", "0.0"))
-        self.box_EnergyOvw.setTitle(_translate("MainWindow", "Электропитание"))
-        self.lbl_ReadOnly55.setText(_translate("MainWindow", "Сеть"))
-        self.lbl_DirectESStatus.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">неактив</span></p></body></html>"))
-        self.lbl_ReadOnly56.setText(_translate("MainWindow", "Резервн. пит."))
-        self.lbl_ReserveESStatus.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">неактив</span></p></body></html>"))
-        self.btn_ESStatusSwitch.setText(_translate("MainWindow", "Переключить"))
-        self.lbl_ReadOnly57.setText(_translate("MainWindow", "Заряд"))
-        self.lbl_ReserveESBattery.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">0%</span></p></body></html>"))
-        self.lbl_ReadOnly58.setText(_translate("MainWindow", "Поток энерг."))
-        self.lbl_ReserveESFlow.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">0</span></p></body></html>"))
-        self.lbl_ReadOnly59.setText(_translate("MainWindow", "Генератор"))
-        self.lbl_ReserveESGenStatus.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">неактив</span></p></body></html>"))
-        self.lbl_ReadOnly60.setText(_translate("MainWindow", "Вывод генер."))
-        self.lbl_ReserveESGenFlow.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">0</span></p></body></html>"))
-        self.box_ColdWaterCon.setTitle(_translate("MainWindow", "Водопотребление (ХВС, м³)"))
-        self.lbl_ReadOnly51.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">ЧАС</span></p></body></html>"))
-        self.lbl_HourCWaterConsumption.setText(_translate("MainWindow", "0.0"))
-        self.lbl_ReadOnly52.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ffee00;\">ДЕН</span></p></body></html>"))
-        self.lbl_DailyCWaterConsumption.setText(_translate("MainWindow", "0.0"))
-        self.lbl_ReadOnly53.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#66b036;\">НЕД</span></p></body></html>"))
-        self.lbl_WeeklyCWaterConsumption.setText(_translate("MainWindow", "0.0"))
-        self.lbl_ReadOnly54.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#00aaff;\">МЕС</span></p></body></html>"))
-        self.lbl_MonthlyCWaterConsumption.setText(_translate("MainWindow", "0.0"))
-        self.box_NetworkOvw.setTitle(_translate("MainWindow", "Сеть"))
-        self.lbl_ReadOnly69.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">ТЕК</span></p></body></html>"))
-        self.lbl_CurrentDataFlow.setText(_translate("MainWindow", "0.0"))
-        self.lbl_ReadOnly70.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ffee00;\">ЧАС</span></p></body></html>"))
-        self.lbl_HourDataFlow.setText(_translate("MainWindow", "0.0"))
-        self.lbl_ReadOnly71.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#66b036;\">ДЕН</span></p></body></html>"))
-        self.lbl_DailyDataFlow.setText(_translate("MainWindow", "0.0"))
-        self.lbl_ReadOnly72.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#55aaff;\">НЕД</span></p></body></html>"))
-        self.lbl_WeeklyDataFlow.setText(_translate("MainWindow", "0.0"))
-        self.box_GraphsViewer.setTitle(_translate("MainWindow", "Просмотр статистики"))
-        self.label_4.setText(_translate("MainWindow", "Время"))
-        self.radioButton.setText(_translate("MainWindow", "ТЕК"))
-        self.radioButton_2.setText(_translate("MainWindow", "ЧАС"))
-        self.radioButton_3.setText(_translate("MainWindow", "ДЕН"))
-        self.radioButton_4.setText(_translate("MainWindow", "НЕД"))
-        self.lbl_ReadOnly73.setText(_translate("MainWindow", "Графики"))
-        self.toolButton_2.setText(_translate("MainWindow", "Энергия"))
-        self.toolButton_3.setText(_translate("MainWindow", "ХВС"))
-        self.toolButton.setText(_translate("MainWindow", "ГВС"))
-        self.toolButton_4.setText(_translate("MainWindow", "Сеть"))
-        self.box_WaterOvw.setTitle(_translate("MainWindow", "Водопровод"))
-        self.lbl_ReadOnly61.setText(_translate("MainWindow", "Насос скваж."))
-        self.lbl_WaterPumpStat.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">неактив</span></p></body></html>"))
-        self.lbl_ReadOnly62.setText(_translate("MainWindow", "Поток скваж."))
-        self.lbl_WaterPumpFlow.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">0</span></p></body></html>"))
-        self.lbl_ReadOnly63.setText(_translate("MainWindow", "Септик (зап.)"))
-        self.lbl_WaterSewageFull.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">0%</span></p></body></html>"))
-        self.lbl_ReadOnly64.setText(_translate("MainWindow", "Септик (отк.)"))
-        self.lbl_WaterSewagePumpOutStat.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">неактив</span></p></body></html>"))
-        self.btn_WaterPumpPowerStat.setText(_translate("MainWindow", "Питание насоса"))
-        self.btn_WaterPumpPowerMode.setText(_translate("MainWindow", "Режим насоса"))
-        self.btn_WaterSewagePumpPowerStat.setText(_translate("MainWindow", "Питание помпы септ."))
-        self.btn_WaterSewagePumpPowerMode.setText(_translate("MainWindow", "Режим помпы септ."))
-        self.box_EnergyCon.setTitle(_translate("MainWindow", "Электропотребление (квт/ч)"))
-        self.lbl_ReadOnly47.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ff0000;\">ТЕК</span></p></body></html>"))
-        self.lbl_CurrentEnergyConsumption.setText(_translate("MainWindow", "0.0"))
-        self.lbl_ReadOnly48.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ffee00;\">ЧАС</span></p></body></html>"))
-        self.lbl_HourEnergyConsumption.setText(_translate("MainWindow", "0.0"))
-        self.lbl_ReadOnly49.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#66b036;\">ДЕН</span></p></body></html>"))
-        self.lbl_DailyEnergyConsumption.setText(_translate("MainWindow", "0.0"))
-        self.lbl_ReadOnly50.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#00aaff;\">НЕД</span></p></body></html>"))
-        self.lbl_WeeklyEnergyConsumption.setText(_translate("MainWindow", "0.0"))
+        self.btn_HomePage.setShortcut(_translate("MainWindow", "Ctrl+1"))
+        self.btn_DefensePage.setShortcut(_translate("MainWindow", "Ctrl+2"))
+        self.btn_PlantsPage.setShortcut(_translate("MainWindow", "Ctrl+3"))
+        self.btn_HardwarePage.setShortcut(_translate("MainWindow", "Ctrl+4"))
+        self.btn_SettingsPage.setShortcut(_translate("MainWindow", "Ctrl+5"))
         self.box_HCtrlRoomsAndZones.setTitle(_translate("MainWindow", "Комнаты и зоны"))
         self.box_HCtrlClimateStats.setTitle(_translate("MainWindow", "Cocтояние климата"))
         self.lbl_ReadOnly74.setText(_translate("MainWindow", "Температура воздуха"))
@@ -2874,9 +2057,6 @@ class Ui_MainWindow(object):
         self.btn_ManageSelectedModuleRules.setText(_translate("MainWindow", "Управлять правилами"))
         self.btn_ManageSelectedModuleDirectly.setText(_translate("MainWindow", "Управлять вручную"))
         self.btn_ManageSelectedModuleSettings.setText(_translate("MainWindow", "Настроить теплицу"))
-        self.taw_PtsConfig.setTabText(self.taw_PtsConfig.indexOf(self.tab1), _translate("MainWindow", " Теплица 1 "))
-        self.label.setText(_translate("MainWindow", "пусто XD"))
-        self.taw_PtsConfig.setTabText(self.taw_PtsConfig.indexOf(self.tab2), _translate("MainWindow", " Теплица 2 "))
         self.lbl_SelectedHardwareUnit.setText(_translate("MainWindow", "(не выбрано)"))
         self.box_CfgInterface.setTitle(_translate("MainWindow", "Интерфейс и дружественность"))
         self.lbl_ReadOnly3.setText(_translate("MainWindow", "Язык интерфейса:"))

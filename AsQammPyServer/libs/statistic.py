@@ -2,10 +2,10 @@
 Модуль работы со статистикой значений с датчиков.
 '''
 
-import os, time, glob, json, zipfile, pandas
+import os, glob, json
+import datetime, time
 
 from libs.utils import AqLogger
-import libs.exceptions 
 
 
 def evalMonths(monthName: str) -> int:
@@ -121,7 +121,7 @@ class AqStatist:
         self.isBusy = bool(False)
 
 
-    def registerStatistic(self, valueId: str, value) -> None:
+    def registerStatistic(self, vtime: datetime.datetime, valueId: str, value) -> None:
         '''
         Записать значение датчика в файл статистики.
 
@@ -137,40 +137,28 @@ class AqStatist:
         '''
         assert value
 
-        self.logger.debug(f'Регистрирую: {valueId}, {value}')
         self.isBusy = True
         timer = time.perf_counter_ns()
 
+        #Если дата изменилась, создать новый файл
         if f'statistic/{time.strftime("%d%b%Y")}.asqd' != self.currentCsvFile:
             self.currentCsvFile = f'statistic/{time.strftime("%d%b%Y")}.asqd'
             with open(self.currentCsvFile, 'x', encoding = 'utf-8', newline = '') as csvFile:
-                pass
+                csvFile.write('time,valueId,value\n')
 
+        #Проверить, на месте ли заголовок, если его нет, то добавить
         try:
             with open(self.currentCsvFile, 'r+', encoding = 'utf-8', newline = '') as csvFile:
-                try: jsonString = json.loads((pandas.read_csv(csvFile)).to_json(orient = 'records'))
-                except (json.JSONDecodeError, pandas.errors.EmptyDataError): jsonString = []
-                
+                fileText = csvFile.read()
+                if not fileText.startswith('time,valueId,value\n'): csvFile.write(f'time,valueId,value\n{fileText}')
+
         except FileNotFoundError:
             with open(self.currentCsvFile, 'x', encoding = 'utf-8', newline = '') as csvFile:
-                jsonString = []
-
-        with open(self.currentCsvFile, 'w+', encoding = 'utf-8', newline = '') as csvFile:
-            for dictionary in jsonString[-16:]:
-                if  dictionary['time'] == f'{time.strftime("%H:%M")}':
-                    #Если текущая строка — с текущем временем, но значение для данного valueId нет, то
-                    #будет вызван KeyError (cм. строку 31)
-                    dictionary.update({valueId: value})
-                    break
-
-                else:
-                    #Если текущая строка содержит время, отличное от текущего, то пропустить её
-                    continue
-            else:
-                #Если строки с текущим временем не было найдено
-                jsonString.append({'time': f'{time.strftime("%H:%M")}', valueId: value})
-
-            csvFile.write((pandas.read_json(json.dumps(jsonString), orient = 'records')).to_csv(index = False))
+                csvFile.write('time,valueId,value\n')
+        
+        #Занести значение в конец файла
+        with open(self.currentCsvFile, 'a', encoding = 'utf-8', newline = '') as csvFile:
+            csvFile.write(f'{vtime.hour}:{vtime.minute},{valueId},{value}\n')
 
         endtimer = time.perf_counter_ns()
         #self.logger.debug(f'Статистический агент сообщил, что регистрация значения заняла {endtimer - timer} наносекунд.')

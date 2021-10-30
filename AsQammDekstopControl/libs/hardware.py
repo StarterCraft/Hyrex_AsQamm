@@ -5,15 +5,22 @@ import json
 
 class AqHardwareSystem:
     def __init__(self, root, server):
+        self.hardware = []
+
         try:
            self.hardware = server.get('getHardwareData', json)
         except ServerResponseException as exception: 
-            if exception.data[1] == 501: self.hardware = []
-            raise exception
+            print(exception.data[1])
+            if exception.data[1] == 501: pass
+
+        print(self.hardware)
+
         self.logger = AqLogger('Hardware')
         self.mainTableModel = QtGui.QStandardItemModel(0, 6)
         
         for unit in self.hardware:
+            print(unit["children"])
+
             lu = []
             item = QtGui.QStandardItem()
             item.setText('✓' if str(unit['isEnabled']) else '❌')
@@ -42,7 +49,7 @@ class AqHardwareSystem:
 
             item6 = QtGui.QStandardItem()
             item6.setText(
-                f'{len(unit["children"])} | {len([child for child in unit["children"] if child.isEnabled])}')
+                f'{len(unit["children"])} | {len([child for child in unit["children"].values() if child[1]["isEnabled"]])}')
             item6.setTextAlignment(QtCore.Qt.AlignCenter)
             lu.append(item6)
 
