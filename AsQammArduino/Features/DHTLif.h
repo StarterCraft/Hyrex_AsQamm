@@ -19,8 +19,8 @@ void DHTt(const uint8_t pin) {
         unsigned char i, j;
 
         ReLoad: //метка для ошибок
-            //=============MCU send START
-            DHT_DDR |= (1 << DHT_BIT); //выход
+        //=============MCU send START
+        DHT_DDR |= (1 << DHT_BIT); //выход
         DHT_PORT &= ~(1 << DHT_BIT); //низкий уровень, подтягиваем линию, разбудим датчик
         delay(18); //18 мс по условиям документации.
         DHT_PORT |= (1 << DHT_BIT); //отпускаем линию
@@ -68,7 +68,8 @@ void DHTt(const uint8_t pin) {
             return;
         }
 
-        temperature = (receivedDHTData[3] * 0.1) + ((receivedDHTData[2] & 0b01111111) * 25.6); //нюанс расчета температуры для DHT22
+        // Температура есть 16-битное число со знаком
+        temperature = (float)((int16_t)((receivedDHTData[2] << 8) | receivedDHTData[3])) * 0.1;        
         if (receivedDHTData[2] & 0b10000000) temperature *= -1.0f; //если отрицательная температура
         humidity = (receivedDHTData[1] * 0.1) + (receivedDHTData[0] * 25.6); //нюанс расчета влажности для DHT22
 

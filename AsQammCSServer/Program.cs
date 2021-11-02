@@ -21,8 +21,8 @@ namespace AsQammServer
         public static void Main(string[] args)
         {
             AqLogger.GlobalConfiguration(LogLevel.Debug, LogLevel.Debug);
-            //CreateHostBuilder(args).Build().Run();
             Hardware.AqHardwareSystem hardware = new Hardware.AqHardwareSystem();
+            CreateHostBuilder(args).Build().Run();
         }
 
 

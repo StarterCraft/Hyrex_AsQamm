@@ -5,7 +5,7 @@ using AsQammServer.Client;
 
 namespace AsQammServer.Hardware
 {
-    public class ValueTypeDisplayData: AqAbstractDisplayData
+    public class ValueTypeDisplayData: AqDisplayData
     {
         public ValueTypeDisplayData(
             string typeDisplayName = "Unnamed Type",

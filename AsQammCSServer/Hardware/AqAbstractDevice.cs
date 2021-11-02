@@ -12,7 +12,7 @@ namespace AsQammServer.Hardware
     /// <summary>
     /// Объект для отображения информации о устройстве в вершителях
     /// </summary>
-    public class DeviceDisplayData: Client.AqAbstractDisplayData
+    public class DeviceDisplayData: Client.AqDisplayData
     {
         public DeviceDisplayData(
             string typeDisplayName = "Unnamed Type",
@@ -94,6 +94,7 @@ namespace AsQammServer.Hardware
         /// </summary>
         public enum ConnectionType
         {
+            WireGeneric = 0,
             WireSerial = 1,
             WireFirmata = 2,
             WirelessWiFi = 3,
@@ -105,14 +106,28 @@ namespace AsQammServer.Hardware
         /// <summary>
         /// Событие, вызываемое при изменении свойства 
         /// <see cref="IsEnabled"/> на <see langword="true"/> 
-        /// (при активации исполнителя от системы).
+        /// (перед активацией исполнителя от системы).
+        /// </summary>
+        public event Action AboutToActivate;
+
+        /// <summary>
+        /// Событие, вызываемое при изменении свойства 
+        /// <see cref="IsEnabled"/> на <see langword="false"/> 
+        /// (перед отключением исполнителя от системы).
+        /// </summary>
+        public event Action AboutToDeactivate;
+
+        /// <summary>
+        /// Событие, вызываемое при изменении свойства 
+        /// <see cref="IsEnabled"/> на <see langword="true"/> 
+        /// (после активации исполнителя от системы).
         /// </summary>
         public event Action Activated;
 
         /// <summary>
         /// Событие, вызываемое при изменении свойства 
         /// <see cref="IsEnabled"/> на <see langword="false"/> 
-        /// (при отклюбчении исполнителя от системы).
+        /// (после отключения исполнителя от системы).
         /// </summary>
         public event Action Deactivated;
 
@@ -133,8 +148,8 @@ namespace AsQammServer.Hardware
 
 
         /// <summary>
-        /// Если исполнитель является подчинённым, то в этом атрибуте будет нахо-
-        /// диться ссылка на объект материнского объекта, иначе — null
+        /// Если исполнитель является подчинённым, то в этом атрибуте будет находиться
+        /// ссылка на объект материнского исполнителя, иначе — <see langword="null"/>
         /// </summary>
         public AqAbstractDevice Parent
         {
@@ -215,16 +230,18 @@ namespace AsQammServer.Hardware
                 {
                     if (value)
                     {
+                        AboutToActivate?.Invoke();
                         OnActivation();
                         _IsEnabled = true;
-                        Activated();
+                        Activated?.Invoke();
                     }
 
                     else
                     {
+                        AboutToDeactivate?.Invoke();
                         OnDeactivation();
                         _IsEnabled = false;
-                        Deactivated();
+                        Deactivated?.Invoke();
                     }
                 }
 
@@ -274,6 +291,11 @@ namespace AsQammServer.Hardware
         public readonly string DriverId;
 
         /// <summary>
+        /// Тип подключения
+        /// </summary>
+        public readonly ConnectionType ConnectType;
+
+        /// <summary>
         /// Информация для отображения в вершителях
         /// </summary>
         public DeviceDisplayData DisplayData;
@@ -296,6 +318,7 @@ namespace AsQammServer.Hardware
             string deviceId,
             string deviceAddress,
             string driverId,
+            ConnectionType connectionType,
             DeviceDisplayData displayData)
         {
             IsEnabled = isEnabled;
@@ -303,6 +326,7 @@ namespace AsQammServer.Hardware
             DeviceId = deviceId;
             DeviceAddress = deviceAddress;
             DriverId = driverId;
+            ConnectType = connectionType;
             DisplayData = displayData;
         }
     }

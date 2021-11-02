@@ -129,7 +129,7 @@ namespace AsQammServer.Drivers
         }
 
         /// <summary>
-        /// 
+        /// Сессия подключения к Аrduino
         /// </summary>
         public ArduinoSession Session
         {
@@ -144,11 +144,24 @@ namespace AsQammServer.Drivers
             }
         }
 
-
-        private bool _IsEnabled;
+        /// <summary>
+        /// Xранилище для свойства <see cref="Session"/>
+        /// </summary>
         private ArduinoSession _Session;
+
+        /// <summary>
+        /// Порт для подключения
+        /// </summary>
         public string ComPort;
+
+        /// <summary>
+        /// Скорость подключения
+        /// </summary>
         public SerialBaudRate BaudRate;
+
+        /// <summary>
+        /// Сообщения, полученные от устройства
+        /// </summary>
         public List<FirmataStringMessage> ReceivedMessages;
 
 
@@ -177,7 +190,7 @@ namespace AsQammServer.Drivers
             AqAbstractDevice parent = null,
             DeviceDisplayData displayData = default):
 
-            base(isEnabled, "Arduino", deviceId, comPort, driverId, displayData)
+            base(isEnabled, "Arduino", deviceId, comPort, driverId, ConnectionType.WireFirmata, displayData)
         {
             ComPort = comPort;
             Parent = parent;
@@ -207,6 +220,7 @@ namespace AsQammServer.Drivers
         }
 
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return $"{DeviceId} type Arduboard ({DisplayData.TypeDisplayName}) at {ComPort}";
@@ -227,7 +241,7 @@ namespace AsQammServer.Drivers
         /// </summary>
         /// <param name="messageType">Необходимый <see cref="FirmataStringMessage.MessageType">
         /// тип сообщения</see></param>
-        /// <returns></returns>
+        /// <returns>Последнее полученное сообщение</returns>
         public FirmataStringMessage GetLastMessage(
             FirmataStringMessage.MessageType messageType = FirmataStringMessage.MessageType.NotSpecified)
         {
@@ -299,7 +313,8 @@ namespace AsQammServer.Drivers
             ArduinoDevice parent = null,
             DeviceDisplayData displayData = default):
 
-            base(isEnabled, "Arduino", deviceId, $"{parent.DeviceAddress}:{atPin}", driverId, displayData)
+            base(isEnabled, "Arduino", deviceId, $"{parent.DeviceAddress}:{atPin}", 
+                driverId, ConnectionType.WireGeneric, displayData)
         {
             Type = type;
         }
@@ -355,7 +370,8 @@ namespace AsQammServer.Drivers
             ArduinoDevice parent = null,
             DeviceDisplayData displayData = default) :
 
-            base(isEnabled, "Arduino", deviceId, $"{parent.DeviceAddress}:{atPin}", driverId, displayData)
+            base(isEnabled, "Arduino", deviceId, $"{parent.DeviceAddress}:{atPin}", 
+                driverId, ConnectionType.WireGeneric, displayData)
         {
             Type = type;
         }

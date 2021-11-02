@@ -158,7 +158,10 @@ class AqStatist:
         
         #Занести значение в конец файла
         with open(self.currentCsvFile, 'a', encoding = 'utf-8', newline = '') as csvFile:
-            csvFile.write(f'{vtime.hour}:{vtime.minute},{valueId},{value}\n')
+            csvFile.write(
+                f'{(vtime.hour if vtime.hour >= 10 else f"0{vtime.hour}")}:'
+                f'{vtime.minute if vtime.minute >= 10 else f"0{vtime.minute}"},'
+                f'{valueId},{value}\n')
 
         endtimer = time.perf_counter_ns()
         #self.logger.debug(f'Статистический агент сообщил, что регистрация значения заняла {endtimer - timer} наносекунд.')
@@ -195,7 +198,9 @@ class AqStatist:
 
         #Если выборка состоит из 1 аргумента и не имеет уточнения оборудования
         if len(query) == 5:
+            print(201)
             Query.append(query[:-2])
+            print(Query)
             if Query[0].endswith('Y'):
                 maxYear = int(time.strftime('%Y'))
                 minYear = maxYear - int((Query[0])[:-1])
@@ -405,6 +410,7 @@ class AqStatist:
 
         #Часть выборки с определением оборудования
         Query.append((query[4:-1]).split(', '))
+        print(Query)
         if Stats:
             for statisticItem in Stats[:]:
                 newStatisticItem = {'time': statisticItem['time']}

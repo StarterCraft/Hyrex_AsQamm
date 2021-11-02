@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using Useful.Extensions;
+
 
 namespace AsQammServer.Utilities
 {
@@ -21,9 +23,10 @@ namespace AsQammServer.Utilities
         }
 
 
-        public static void AppendInPlace<T>(this List<T> self, T value)
+        /// <inheritdoc/>
+        public static void AppendInPlace<T>(this IEnumerable<T> self, T value)
         {
-            self = self.Append<T>(value).ToList();
+            self = self.Append(value);
         }
     }
 }

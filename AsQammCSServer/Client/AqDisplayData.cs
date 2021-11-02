@@ -8,7 +8,7 @@ namespace AsQammServer.Client
     /// Шаблон класса с информацией о каком-либо объекте системы
     /// для отображения в вершителях.
     /// </summary>
-    public abstract class AqAbstractDisplayData
+    public abstract class AqDisplayData
     {
         /// <summary>
         /// Отображаемое имя типа объекта
