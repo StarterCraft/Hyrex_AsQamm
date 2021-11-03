@@ -4,12 +4,13 @@
     <TargetFramework>net5.0</TargetFramework>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
-    <StartupObject />
+    <StartupObject>AsQammServer.Server</StartupObject>
     <RootNamespace>AsQammServer</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,8 +27,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.11" />
-    <PackageReference Include="NLog" Version="4.7.11" />
-    <PackageReference Include="SolidSoils.Arduino.Client" Version="0.4.0" />
+    <PackageReference Include="NLog" Version="4.7.12" />
+    <PackageReference Include="Pastel" Version="2.1.0" />
+    <PackageReference Include="SolidSoils.Arduino.Client" Version="1.1.1" />
     <PackageReference Include="System.IO.Ports" Version="5.0.1" />
     <PackageReference Include="System.Useful" Version="2.0.1.8" />
     <PackageReference Include="Useful.Extensions" Version="3.0.1" />

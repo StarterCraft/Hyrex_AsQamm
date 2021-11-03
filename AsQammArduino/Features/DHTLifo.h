@@ -1,6 +1,5 @@
 #pragma once
 #include <Arduino.h>
-#include <Firmata.h>
 
 
 uint64_t readingTime;
@@ -33,7 +32,7 @@ void DHTt(const uint8_t pin) {
                 goto ReLoad;
                 count--;
             } else {
-                Firmata.sendString("ERR;DHTt;INIT");
+                Serial.println("ERR;DHTt;INIT");
                 return;
             }
         }
@@ -44,7 +43,7 @@ void DHTt(const uint8_t pin) {
                 goto ReLoad;
                 count--;
             } else {
-                Firmata.sendString("ERR;DHTt;BHVR");
+                Serial.println("ERR;DHTt;BHVR");
                 return;
             }
         }
@@ -64,7 +63,7 @@ void DHTt(const uint8_t pin) {
 
         if ((unsigned char)(receivedDHTData[0] + receivedDHTData[1] +
                 receivedDHTData[2] + receivedDHTData[3]) != receivedDHTData[4]) { //checksum
-            Firmata.sendString("ERR;DHTt;CHSM");
+            Serial.println("ERR;DHTt;CHSM");
             return;
         }
 
@@ -73,11 +72,23 @@ void DHTt(const uint8_t pin) {
         if (receivedDHTData[2] & 0b10000000) temperature *= -1.0f; //если отрицательная температура
         humidity = (receivedDHTData[1] * 0.1) + (receivedDHTData[0] * 25.6); //нюанс расчета влажности для DHT22
 
-        Serial.println(itoa(receivedDHTData[2]));
-        Serial.println(itoa(receivedDHTData[3]));
 
+        char result[64], catres[8];
+        strcpy(result, "[0] ");
+        itoa(receivedDHTData[0], catres, 2);
+        strcat(result, catres);
+        strcat(result, "; [1] ");
+        itoa(receivedDHTData[1], catres, 2);
+        strcat(result, catres);
+        strcat(result, "; [2] ");
+        itoa(receivedDHTData[2], catres, 2);
+        strcat(result, catres);
+        strcat(result, "; [3] ");
+        itoa(receivedDHTData[3], catres, 2);
+        strcat(result, catres);
 
-        char result[32], catres[8];
+        Serial.println(result);
+
         readingTime = millis();
         strcpy(result, "OK;DHTt;");
 
@@ -88,7 +99,7 @@ void DHTt(const uint8_t pin) {
         dtostrf(humidity, 5, 2, catres);
         strcat(result, catres);
 
-        Firmata.sendString(result);
+        Serial.println(result);
         return;
     }
 }

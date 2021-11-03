@@ -34,8 +34,11 @@ namespace AsQammServer.Hardware
         /// </summary>
         public void LoadPlatformDrivers()
         {
+            int count = 0;
+
             foreach (string fileName in Directory.GetFiles(
-                "Drivers\\Platforms\\", "*.asqx", SearchOption.TopDirectoryOnly))
+                $"{Directory.GetCurrentDirectory()}\\Drivers\\Platforms", "*.dll",
+                SearchOption.TopDirectoryOnly))
             {
                 string platformName = fileName.Split('\\').Last().SubstringN(0, -3);
                 List<string> classNames = new();
@@ -45,15 +48,22 @@ namespace AsQammServer.Hardware
                 {
                     if (type.IsSubclassOf(typeof(AqAbstractDevice)))
                     {
+                        count++;
                         classNames.Add(type.Name);
-                        Logger.Debug($"Класс протокола {type.Name} инициализирован");
+                        Logger.Debug(
+                            $"Класс протокола {platformName.ToUpperInvariant()} " +
+                            $"{type.Name} инициализирован");
                     }
                 }
 
-                if (classNames.Count() != 0) DriverManager.Platforms.Add(platformName, new List<Type>());
+                if (classNames.Count() != 0)
+                    DriverManager.Platforms.Add(platformName, new List<Type>());
+
                 foreach (string className in classNames)
-                    DriverManager.Platforms[platformName].Add(types.Single(type => type.Name == className));
+                    DriverManager.Platforms[platformName].Add(types.Single(t => t.Name == className));
             }
+
+            Logger.Info($"Инициализировано {count} дрйверов протоколов");
         }
 
 
@@ -63,7 +73,7 @@ namespace AsQammServer.Hardware
         public void LoadDeviceDrivers()
         {
             foreach (string folderName in Directory.GetDirectories(
-                "Drivers\\Devices\\", "*", SearchOption.TopDirectoryOnly))
+                "Drivers\\Devices", "*", SearchOption.TopDirectoryOnly))
             {
                 if (folderName.Contains('.')) continue;
 
@@ -74,7 +84,7 @@ namespace AsQammServer.Hardware
                         Dictionary<string, List<string>> deviceDriverClasses = new();
 
                         foreach (string fileName in Directory.GetFiles(
-                            folderName, "*.asqx", SearchOption.AllDirectories))
+                            folderName, "*.dll", SearchOption.AllDirectories))
                         {
                             List<Type> types = Assembly.LoadFile(fileName).GetExportedTypes().ToList();
 
@@ -97,7 +107,8 @@ namespace AsQammServer.Hardware
                         {
                             List<Type> types = Assembly.LoadFile(pair.Key).GetExportedTypes().ToList();
 
-                            foreach (string className in pair.Value) DriverManager.Devices.Add(types.Single(t => t.Name == className));
+                            foreach (string className in pair.Value) 
+                                DriverManager.Devices.Add(types.Single(t => t.Name == className));
                         }
                     }
                 }

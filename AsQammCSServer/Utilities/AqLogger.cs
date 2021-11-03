@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Drawing;
 
 using NLog;
+using Pastel;
 
 
 namespace AsQammServer.Utilities
@@ -32,7 +34,8 @@ namespace AsQammServer.Utilities
             )
         {
             NLog.Targets.ColoredConsoleTarget consoleTarget = new() { 
-                Layout = "[${logger} @ ${level:uppercase=true}] ${message}"
+                Layout = "[" + "${logger}".Pastel(Color.Green) + " @ " +
+                "${level:uppercase=true}".Pastel(Color.Yellow) + "] ${message}"
             };
 
             NLog.Targets.FileTarget fileTarget = new()

@@ -28,6 +28,9 @@ namespace AsQammServer.Hardware
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class DeviceDisabledException: Exception
     {
         public DeviceDisabledException(AqAbstractDevice device): 
@@ -309,13 +312,11 @@ namespace AsQammServer.Hardware
         /// </remarks>
         /// <param name="isEnabled">Используется ли исполнитель в системе?</param>
         /// <param name="platform">Индентификатор протокола</param>
-        /// <param name="deviceId">Индентификатор исполнителя</param>
         /// <param name="deviceAddress">Адрес на котором располагается исполнитель</param>
         /// <param name="driverId">Индентификатор драйвера исполнителя</param>
         protected AqAbstractDevice(
             bool isEnabled,
             string platform,
-            string deviceId,
             string deviceAddress,
             string driverId,
             ConnectionType connectionType,
@@ -323,7 +324,7 @@ namespace AsQammServer.Hardware
         {
             IsEnabled = isEnabled;
             Platform = platform;
-            DeviceId = deviceId;
+            DeviceId = $"{DeviceAddress}:{DriverId}";
             DeviceAddress = deviceAddress;
             DriverId = driverId;
             ConnectType = connectionType;
