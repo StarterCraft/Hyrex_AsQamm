@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 using AsQammServer;
 
@@ -29,7 +30,8 @@ namespace AsQammServer.Hardware
 
 
     /// <summary>
-    /// 
+    /// Исключение вызывается, если произошла попытка обращения к 
+    /// отключенному устройству
     /// </summary>
     public class DeviceDisabledException: Exception
     {
