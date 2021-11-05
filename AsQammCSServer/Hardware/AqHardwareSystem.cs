@@ -4,6 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
 
 using NLog;
 
@@ -22,6 +23,9 @@ namespace AsQammServer.Hardware
     public class AqHardwareSystem
     {
         private Logger Logger = LogManager.GetLogger("Hardware");
+
+        public const string ConfigurationFilePath = "SystemProperties\\Hardware.asqd";
+        private IConfigurationRoot Configuration;
 
         public bool IsOK = new();
         public Dictionary<string, List<AqAbstractDevice>> InstalledHardware = new();
@@ -51,7 +55,7 @@ namespace AsQammServer.Hardware
                         count++;
                         classNames.Add(type.Name);
                         Logger.Debug(
-                            $"Класс протокола {platformName.ToUpperInvariant()} " +
+                            $"Класс протокола {platformName} " +
                             $"{type.Name} инициализирован");
                     }
                 }
@@ -118,11 +122,14 @@ namespace AsQammServer.Hardware
 
         public AqHardwareSystem()
         {
-            // Инициализация протоколов
+            //Загрузим настройки
+            Configuration = AqExtensions.GetJsonConfiguration(ConfigurationFilePath);
+
+            //Инициализация протоколов
             Logger.Info("Инициализация протоколов...");
             LoadPlatformDrivers();
 
-            // Инициализация драйверов
+            //Инициализация драйверов
             Logger.Info("Инициализация драйверов устройств...");
             LoadDeviceDrivers();
         }

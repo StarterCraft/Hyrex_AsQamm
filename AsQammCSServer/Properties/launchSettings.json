@@ -18,7 +18,6 @@
     "CSServerCore": {
       "commandName": "Project",
       "workingDirectory": "G:\\Work\\Code\\Hyrex_AsQamm\\AsQammCSServer\\bin\\Debug\\net5.0",
-      "launchBrowser": true,
       "launchUrl": "gettest",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

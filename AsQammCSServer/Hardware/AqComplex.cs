@@ -5,6 +5,6 @@
     /// </summary>
     public class AqComplex
     {
-
+        private const string ConfigurationFilePath = "SystemProperties\\Complex.asqd";
     }
 }
