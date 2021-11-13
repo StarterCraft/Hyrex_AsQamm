@@ -10,16 +10,13 @@ class AqHardwareSystem:
         try:
            self.hardware = server.get('getHardwareData', json)
         except ServerResponseException as exception: 
-            print(exception.data[1])
             if exception.data[1] == 501: pass
-
-        print(self.hardware)
 
         self.logger = AqLogger('Hardware')
         self.mainTableModel = QtGui.QStandardItemModel(0, 6)
         
         for unit in self.hardware:
-            print(unit["children"])
+            print(unit)
 
             lu = []
             item = QtGui.QStandardItem()

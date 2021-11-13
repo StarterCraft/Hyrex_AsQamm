@@ -53,7 +53,7 @@ class AqUserSystem():
         self.seekForFiles(self.possibleFileNames, self.availableFileNames, True)
 
         for item in self.availableFileNames: #Для каждого из фалов выполним открытие и выгрузим данные
-            with open(r'%s' % item, 'r') as dataFile:
+            with open(rf'{item}', 'r', encoding = 'utf-8') as dataFile:
                 fileString = dataFile.readline()
                 jsonString = self.crypto.decryptContent(fileString)
                 jsonString = json.loads(jsonString)

@@ -8,6 +8,7 @@ using AsQammServer.Hardware;
 using AsQammServer.Utilities;
 
 using Solid.Arduino;
+using Solid.Arduino.Firmata;
 
 
 namespace AsQammServer.Drivers
@@ -149,6 +150,9 @@ namespace AsQammServer.Drivers
         /// </summary>
         private ArduinoSession _Session;
 
+
+        private PinCapability[] Pins;
+
         /// <summary>
         /// Порт для подключения
         /// </summary>
@@ -174,7 +178,6 @@ namespace AsQammServer.Drivers
         /// <param name="comPort">COM-порт, на котором необходимо запустить службу Firmata 
         /// для этого исполнителя</param>
         /// <param name="driverId">Индентификатор драйвера исполнителя</param>
-        /// 
         /// <param name="baudRate">Скорость подключения к исполнителю, бод</param>
         /// <param name="parent">Если исполнитель является подчинённым, то — 
         /// объект материнского исполнителя</param>
@@ -188,19 +191,13 @@ namespace AsQammServer.Drivers
             AqAbstractDevice parent = null,
             DeviceDisplayData displayData = default):
 
-            base(isEnabled, "Arduino", comPort, driverId, ConnectionType.WireFirmata, displayData)
+            base(isEnabled, parent is null, true,
+                "Arduino", comPort, driverId, ConnectionType.WireFirmata,
+                displayData)
         {
             ComPort = comPort;
             Parent = parent;
             BaudRate = baudRate;
-            IsFertile = true;
-            IsControllable = Parent is not null;
-
-            if (isEnabled)
-            {
-                Session = new(new EnhancedSerialConnection(comPort, baudRate));
-                Session.StringReceived += ParseString;
-            }
         }
 
 
@@ -208,6 +205,8 @@ namespace AsQammServer.Drivers
         public override void OnActivation()
         {
             Session = new(new EnhancedSerialConnection(ComPort, BaudRate));
+            Session.StringReceived += ParseString;
+            Pins = Session.GetBoardCapabilityAsync().Result.Pins;
         }
 
 
@@ -216,6 +215,7 @@ namespace AsQammServer.Drivers
         {
             Session?.Dispose();
             Session = null;
+            Pins = null;
         }
 
 
@@ -307,14 +307,13 @@ namespace AsQammServer.Drivers
             bool isEnabled,
             string atPin,
             string driverId,
+            ArduinoDevice parent,
             SensorType type,
-            ArduinoDevice parent = null,
             DeviceDisplayData displayData = default) :
 
-            base(isEnabled, "Arduino", $"{parent.DeviceAddress}:{atPin}",
+            base(isEnabled, false, false, "Arduino", $"{parent.DeviceAddress}:{atPin}", 
                 driverId, ConnectionType.WireGeneric, displayData)
         {
-            IsFertile = false;
             Type = type;
         }
     }
@@ -365,10 +364,10 @@ namespace AsQammServer.Drivers
             bool isEnabled,
             string driverId,
             ExecutorType type,
-            ArduinoDevice parent = null,
+            ArduinoDevice parent,
             DeviceDisplayData displayData = default) :
 
-            base(isEnabled, "Arduino", $"{parent.DeviceAddress}:{atPin}",
+            base(isEnabled, false, false, "Arduino", $"{parent.DeviceAddress}:{atPin}",
                 driverId, ConnectionType.WireGeneric, displayData)
         {
             IsFertile = false;

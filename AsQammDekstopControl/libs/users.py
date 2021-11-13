@@ -94,7 +94,7 @@ class AqUsersClient:
         root.ui.gfv_CurrentUserAvatar.setPixmap(user.avatar)
         
 
-    def lockApp(self, root, usersCore):
+    def lockApp(self, root, server, usersCore):
         if not self.loggedIn:
             root.ui.frame_top.hide()
             root.ui.frame_left_menu.hide()
@@ -169,7 +169,7 @@ class AqUsersClient:
             root.ui.btn_Apply.setEnabled(True)
             root.ui.btn_Save.setEnabled(True)
             root.ui.btn_Load.setEnabled(True)
-            libs.utils.AqConfigSystem.applyConfig(root, usersCore)
+            libs.utils.AqConfigSystem.applyConfig(root, server, usersCore)
 
             if currentUser.configPreset != 'default':
                 libs.utils.AqUIFunctions.loadSpecifiedTheme(root, currentUser.config.theme)
@@ -254,7 +254,7 @@ class AqUsersClient:
                                                      bytesObjectsIter     = r,
                                                      loadingScreenTextLbl = root.ui.lbl_LoadingText)
             paThread.started.connect( lambda: libs.utils.AqUIFunctions.showLoadingAnimation(root) )
-            paThread.finished.connect( lambda: self.userCheck(root, usersCore, paThread.exitVar) )
+            paThread.finished.connect( lambda: self.userCheck(root, server, usersCore, paThread.exitVar) )
             paThread.start()
 
         except IndexError:
@@ -271,7 +271,7 @@ class AqUsersClient:
         del r
 
 
-    def userCheck(self, root, usersCore, boolean):
+    def userCheck(self, root, server, usersCore, boolean):
         if boolean:
             libs.utils.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_Home)
             self.selector[0].setAsCurrent(True)
@@ -279,10 +279,10 @@ class AqUsersClient:
             self.selector[0].edited = False
             self.loggedIn = True
 
-            if self.selector[0].getPermits('pxConfigAsAdmin'): self.lockApp(root, usersCore)
+            if self.selector[0].getPermits('pxConfigAsAdmin'): self.lockApp(root, server, usersCore)
             else:
                 self.cleanUserList()
-                self.lockApp(root, usersCore)
+                self.lockApp(root, server, usersCore)
                     
             playsound(root.sounds['login'], False)
             self.userSystemLogger.info(f'Вход в систему произведён пользователем {self.selector[0].login}')
@@ -297,7 +297,7 @@ class AqUsersClient:
             playsound(root.sounds['error'], False)
                 
 
-    def guestUserInit(self, usersCore, root):
+    def guestUserInit(self, usersCore, server, root):
         usersCore.users[0].setAsCurrent(True)
         self.userSystemLogger.info(f'У активного пользователя (Гость) установлен параметр активности: {usersCore.users[0].current}, экземпляр назначен активным пользователем')
 
@@ -305,7 +305,7 @@ class AqUsersClient:
         self.cleanUserList()
         self.currentUser = self.users[0]
         playsound(root.sounds['login'], False)
-        self.lockApp(root, usersCore)
+        self.lockApp(root, server, usersCore)
 
         self.userSystemLogger.info('Вход в систему произведён в режиме гостя')
 
@@ -500,12 +500,12 @@ class AqUsersClient:
         self.userSystemLogger.info('Инициирован выход из системы.')
         libs.utils.AqUIFunctions.showLoadingAnimation(root)
         myThread = self.LogoutProcessor(root, server, usersCore)
-        myThread.finished.connect( lambda: self.logOutLock(root, usersCore) )
+        myThread.finished.connect( lambda: self.logOutLock(root, server, usersCore) )
         myThread.start()
 
 
-    def logOutLock(self, root, usersCore):
-        self.lockApp(root, usersCore)
+    def logOutLock(self, root, server, usersCore):
+        self.lockApp(root, server, usersCore)
         libs.utils.AqUIFunctions.hideLoadingAnimation(root, root.ui.page_Login)
 
 

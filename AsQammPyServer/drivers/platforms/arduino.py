@@ -302,6 +302,19 @@ class ArduinoDevice(AqHardwareDevice, pyfirmata.Board):
                     else:
                         for attrib in unit.attrl:
                             unitDict.update({attrib: getattr(unit, attrib)})
+                        if unit.retrieves:
+                            unitDict.update({'retrieves': [
+                                {attribN: getattr(valueType, attribN) for attribN in [
+                                    'id', 'unit', 'frequency', 'typeDisplayName',
+                                    'typeDescription', 'instanceName', 'instanceDescription']}
+                                #{'id': valueType.id,
+                                 #'unit': valueType.unit, 
+                                # 'frequency': valueType.frequency,
+                                # 'typeDisplayName': valueType.typeDisplayName,
+                                # 'typeDescription': valueType.description,
+                                # 'instanceName': valueType.instanceName,
+                                # 'instanceDescription': valueType.instanceDescription}
+                               for valueType in unit.retrieves]})
                         items.append(tuple([pin, [unit.driverId, unitDict]]))
                         continue
 

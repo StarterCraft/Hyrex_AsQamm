@@ -14,7 +14,7 @@ void DHTt(const uint8_t pin) {
         #define DHT_DDR DDRD
         #define DHT_PIN PIND
         #define DHT_BIT pin
-        int count = 32;
+        unint count = 32;
         unsigned char i, j;
 
         ReLoad: //метка для ошибок
@@ -70,8 +70,11 @@ void DHTt(const uint8_t pin) {
         // Температура есть 16-битное число со знаком
         // The temperature is a 16 bit signed integer, 10 times the actual value in degrees Celsius
         int16_t temperatureTimesTen = (int16_t)((receivedDHTData[2] << 8) | receivedDHTData[3]);
-        float temperature = (float)(temperatureTimesTen) * 0.1;
+        temperature = (float)(temperatureTimesTen) * 0.1;
         if (receivedDHTData[2] & 0b10000000) temperature *= -1.0f; //если отрицательная температура
+        //тупое решение проблемы
+        if (temperature > 80) temperature = temperature - 3276.7f;
+
         humidity = (receivedDHTData[1] * 0.1) + (receivedDHTData[0] * 25.6); //нюанс расчета влажности для DHT22
 
 
@@ -94,11 +97,11 @@ void DHTt(const uint8_t pin) {
         readingTime = millis();
         strcpy(result, "OK;DHTt;");
 
-        dtostrf(temperature, 5, 2, catres);
+        dtostrf(temperature, 5, 1 catres);
         strcat(result, catres);
         strcat(result, ";");
 
-        dtostrf(humidity, 5, 2, catres);
+        dtostrf(humidity, 5, 1, catres);
         strcat(result, catres);
 
         Serial.println(result);

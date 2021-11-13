@@ -7,6 +7,7 @@ from playsound                         import *
 import os, time, math, glob, json
 import base64, subprocess, hashlib
 import logging, traceback, platform
+import uibld.mdiTemplates
 
 from colorama import Fore as Fore, Style as Style, init as initColorama
 initColorama()
@@ -194,6 +195,7 @@ class AqUIFunctions:
             
     @staticmethod
     def generateLoadingAnimation(root):
+        print(198)
         root.animation3 = QMovie(':/<resource root>/loading.gif', parent = root)
         root.ui.lbl_LoadingAnimation.setMovie(root.animation3)
 
@@ -225,7 +227,7 @@ class AqUIFunctions:
         
     @staticmethod
     def getDefaultThemeId():
-        with open('data/config/~!default!~.asqd', 'r') as configFile:
+        with open('data/config/~!default!~.asqd', 'r', encoding = 'utf-8') as configFile:
             jsonString = json.loads(str(configFile.read()))
             return jsonString['theme']
 
@@ -371,6 +373,25 @@ class AqUIFunctions:
                 icon15 = QtGui.QIcon()
                 icon15.addPixmap(QtGui.QPixmap(iconAddresses['more_ico']), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 root.ui.btn_HardwareAdditionalSettings.setIcon(icon15)
+
+
+    @staticmethod
+    def configureHomePageWidget(root, server, widgetDef):
+        print(widgetDef)
+        hardwareData = server.get('getHardwareData', json)
+        unit = [unit for unit in hardwareData if unit['deviceAddress'] == widgetDef['properties']['valueId'].split(':')[0]][0]
+        child = [child for address, child in unit['children'].items() if address.split(':') == widgetDef['properties']['valueId'].split(':')[1:-2]][0]
+        valueType = [vtype for vtype in child[1]['retrieves'] if vtype['id'] == widgetDef['properties']['valueId'].split(':')[-1]][0]
+        probeFrequency = valueType['frequency']
+
+        widget = getattr(
+            uibld.mdiTemplates, widgetDef['template'])(root.ui.mda_HomeScreenWidgets,
+            widgetDef['name'], widgetDef['properties'], 
+            lambda x: server.get('getLastEntry', json, {'content': x}),
+            probeFrequency)
+        root.widgets.append(widget)
+        root.ui.mda_HomeScreenWidgets.addSubWindow(widget)
+        widget.show()
 
 
 class AqThread(QThread):
@@ -1005,7 +1026,7 @@ class AqConfigSystem:
 
 
     @staticmethod
-    def applyConfig(root, usersCore):
+    def applyConfig(root, server, usersCore):
         currentUser = usersCore.getCurrentUser()
 
         root.ui.cbb_Language.setCurrentIndex((currentUser.config.language))
@@ -1047,6 +1068,9 @@ class AqConfigSystem:
         root.ui.btn_Save.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['saveChanges']))))
         root.ui.btn_Load.setShortcut((QKeySequence.fromString(str(currentUser.config.keyBindings['loadChanges']))))
 
+        for widgetDef in currentUser.config.widgets:
+            AqUIFunctions.configureHomePageWidget(root, server, widgetDef)
+
         del currentUser
 
 
@@ -1061,6 +1085,7 @@ class AqConfig:
         self.logSavingDuration = configDict['logSavingDuration']
 
         self.keyBindings = configDict['keyBindings']
+        self.widgets = configDict['widgets']
 
 
     def setup(self, configDict):
@@ -1074,7 +1099,6 @@ class AqConfig:
 
 
     def setupByParam(self, param, value):
-        
         if param == 'language':
             self.language = value
         elif param == 'theme':
@@ -1094,6 +1118,10 @@ class AqConfig:
         self.keyBindings = keyBindingsDict
 
 
+    def setWidgetData(self, widgetsDict):
+        self.widgets = widgetsDict
+
+
     def getDict(self):
         return {'preset': None,
                 'language': (self.language),
@@ -1102,4 +1130,5 @@ class AqConfig:
                 'loggingMode': (self.loggingMode),
                 'logSavingMode': (self.logSavingMode),
                 'logSavingDuration': (self.logSavingDuration),
-                'keyBindings': (self.keyBindings)}
+                'keyBindings': (self.keyBindings),
+                'widgets': (self.widgets)}

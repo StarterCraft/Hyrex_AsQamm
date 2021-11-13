@@ -4,6 +4,7 @@
 
 import os, glob, json
 import datetime, time
+import pandas
 
 from libs.utils import AqLogger
 
@@ -171,6 +172,8 @@ class AqStatist:
         
     def getStatsByTimeQuery(self, query: str) -> list:
         '''
+        /*Метод пока не разрабатывается*/
+
         Получить статистику по выборке времени в виде списка словарей
         по следующему образцу:
 
@@ -441,3 +444,34 @@ class AqStatist:
                             newStatisticItem.update(item)
             Stats.append(newStatisticItem)
         return Stats
+
+
+    def getLastEntryForValues(self, valueIds: list):
+        '''
+        Получить последнее значение по его индентификатору.
+        Можно получить несколько значений по нескольким индентификаторам.
+
+        :param 'valueIds': list<str>
+            Индентификаторы значений
+
+        :returns: dict<str, str>
+            Значения в строковом виде
+        '''
+        values = {}
+        data = None
+
+        while self.isBusy:
+            pass
+
+        with open(self.currentCsvFile, 'r') as file:
+            data = pandas.read_csv(file)
+
+        for valueId in valueIds:
+            values.update(
+                {valueId: 
+                    [data.loc[data['valueId'] == valueId].iloc[-1].values.tolist()[0],
+                     data.loc[data['valueId'] == valueId].iloc[-1].values.tolist()[-1]]
+                }
+            )
+
+        return values

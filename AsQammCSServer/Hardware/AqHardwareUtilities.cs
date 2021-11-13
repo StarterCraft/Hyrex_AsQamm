@@ -14,6 +14,9 @@ namespace AsQammServer.Hardware
         {
             switch (self)
             {
+                case AqAbstractDevice.ConnectionType.WireGeneric:
+                    return "Wire (unknown subtype)";
+
                 case AqAbstractDevice.ConnectionType.WireSerial:
                     return "Wire: Serial";
 
@@ -30,7 +33,7 @@ namespace AsQammServer.Hardware
                     return "Wireless: Mobile (Cellular)";
 
                 default:
-                    return "";
+                    return "Unknown";
             }
         }
     }

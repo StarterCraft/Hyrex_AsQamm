@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>300</width>
+     <height>160</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>300</width>
+     <height>160</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>300</width>
+     <height>160</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QFrame {background-color: rgb(45, 45, 45);}
+
+
+QRadioButton { font: 9pt &quot;Segoe UI Semilight&quot; ; }
+
+QGroupBox { font: 63 10pt &quot;Segoe UI Semibold&quot;; }
+
+QCheckBox, QLabel { font: 9pt &quot;Segoe UI Semilight&quot;; }
+QCheckBox:disabled { color: gray; }
+
+QMessageBox { color: white; }
+QMessageBox QPushButton { 
+	color: black;
+    background-color: rgb(215, 215, 215);
+	border: 1px solid gray;
+	border-radius: 3px;  
+	min-width: 6em;
+	font: 8pt &quot;Segoe UI Semibold&quot;;
+}
+
+
+QPushButton:hover { 
+	background-color: rgb(235, 235, 235);
+}
+
+
+QPushButton:pressed { 
+	background-color: rgb(221, 221, 221);
+}
+
+
+QTabWidget::pane {
+	border-top: 1px solid white;
+	padding: 2px;
+}
+
+
+QTabBar::tab {
+    background: rgb(59, 59, 59);
+    border: 1px solid white;
+    border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+    padding-left: 7px;
+    padding-right: 7px;
+	padding-top: 3px;
+	padding-bottom: 2px;
+	font: 63 9pt &quot;Segoe UI Semibold&quot;;
+}
+
+
+QTabBar::tab:disabled { background-color: gray; }
+QTabBar::tab:active:disabled { background-color: grey; }
+
+
+QTabBar::tab:hover {
+	background-color: rgb(47, 105, 23);
+	color: rgb(248, 248, 248);
+}
+
+
+QTabBar::tab:!selected {
+    margin-top: 2px; /* make non-selected tabs look smaller */
+}
+
+
+/* make use of negative margins for overlapping tabs */
+QTabBar::tab:selected {
+    /* expand/overlap to the left and right by 4px */
+    margin-left: -4px;
+    margin-right: -4px;
+	background-color: rgb(70, 175, 38);
+}
+
+
+QTabBar::tab:first:selected {
+    margin-left: 0; /* the first selected tab has nothing to overlap with on the left */
+}
+
+
+QTabBar::tab:last:selected {
+    margin-right: 0; /* the last selected tab has nothing to overlap with on the right */
+}
+
+
+QListView {
+    show-decoration-selected: 1; /* make the selection span the entire width of the view */
+}
+
+
+QListView::item:hover { background-color: rgb(47, 105, 23); }
+QListView::item:selected { background-color: rgb(70, 175, 38) }
+
+
+QSlider::handle:horizontal {
+    background:  rgb(70, 175, 38);
+    width: 18px;
+    margin: -2px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+    border-radius: 3px;
+}
+
+
+QSlider::handle:horizontal:hover { background-color: rgb(45, 102, 23); }
+QSlider::handle:horizontal:disabled { background-color: grey; }
+
+
+ QScrollBar:vertical
+ {
+     background-color: #2A2929;
+     width: 15px;
+     margin: 15px 3px 15px 3px;
+     border: 1px transparent #2A2929;
+ }
+
+
+ QScrollBar::handle:vertical
+ {
+     background-color: rgb(45, 45, 45);         /* #605F5F; */
+     min-height: 5px;
+	 border: 2px solid white;
+	 border-radius: 4px;
+ }
+
+
+ QScrollBar::sub-line:vertical
+ {
+     margin: 3px 0px 3px 0px;
+     border-image: url(:/qss_icons/rc/up_arrow_disabled.png);
+     height: 10px;
+     width: 10px;
+     subcontrol-position: top;
+     subcontrol-origin: margin;
+ }
+
+
+ QScrollBar::add-line:vertical
+ {
+     margin: 3px 0px 3px 0px;
+     border-image: url(:/qss_icons/rc/down_arrow_disabled.png);
+     height: 10px;
+     width: 10px;
+     subcontrol-position: bottom;
+     subcontrol-origin: margin;
+ }
+
+
+ QScrollBar::sub-line:vertical:hover,QScrollBar::sub-line:vertical:on
+ {
+
+     border-image: url(:/black/images/black/arrowUp_ico.png);
+     height: 10px;
+     width: 10px;
+     subcontrol-position: top;
+     subcontrol-origin: margin;
+ }
+
+
+ QScrollBar::add-line:vertical:hover, QScrollBar::add-line:vertical:on
+ {
+     border-image: url(:/black/images/black/arrowDown_ico.png);
+     height: 10px;
+     width: 10px;
+     subcontrol-position: bottom;
+     subcontrol-origin: margin;
+ }
+
+
+ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical
+ {
+     background: none;
+ }
+
+
+ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
+ {
+     background: none;
+ }
+
+
+QSpinBox { border: none; font: 9pt &quot;Segoe UI&quot;; }
+QSpinBox:hover { border: 1px green sunken; }
+QSpinBox:disabled { color: grey; }
+
+QSpinBox::up-button { color: white; }
+QSpinBox::down-button { color: white; }
+
+
+QTimeEdit { border: none; font: 9pt &quot;Segoe UI&quot;; }
+QTimeEdit:hover { border: 1px green sunken; }
+QTimeEdit:disabled { color: grey; }
+
+QTimeEdit::up-button { color: white; }
+QTimeEdit::down-button { color: white; }
+
+
+QComboBox {
+	color: black;
+    border: 1px solid gray;
+    border-radius: 3px;
+    padding: 1px 18px 1px 3px;
+    min-width: 6em;
+	font: 8pt &quot;Segoe UI Semilight&quot;;
+}
+
+
+QComboBox:hover {
+	border: 1px solid rgb(254, 254, 254);
+	background-color: rgb(236, 236, 236);
+}
+
+
+QPushButton { 
+	color: black;
+    background-color: rgb(215, 215, 215);
+	border: 1px solid gray;
+	border-radius: 3px;  
+	min-width: 6em;
+	font: 8pt &quot;Segoe UI Semibold&quot;;
+}
+
+
+QPushButton:hover { 
+	background-color: rgb(235, 235, 235);
+}
+
+
+QPushButton:pressed { 
+	background-color: rgb(221, 221, 221);
+}
+
+QToolButton { 
+	color: black;
+    background-color: rgb(215, 215, 215);
+	border: 1px solid gray;
+	border-radius: 3px;
+	font: 8pt &quot;Segoe UI Semibold&quot;;
+}
+
+
+QToolButton:hover { 
+	background-color: rgb(235, 235, 235);
+}
+
+
+QToolButton:pressed { 
+	background-color: rgb(221, 221, 221);
+}
+
+QComboBox:disabled { color: gray; background-color: rgb(35, 35, 35); }
+
+
+QComboBox::down-arrow {
+    image: url(:/black/black/arrowDown_ico.png);
+}
+
+
+QComboBox::up-arrow { image: url(:/black/black/arrowUp_ico.png); }
+
+
+QComboBox:editable {
+    background: white;
+}
+
+
+QComboBox:!editable, QComboBox::drop-down:editable {
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+}
+
+
+/* QComboBox gets the &quot;on&quot; state when the popup is open */
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,
+                                stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);
+}
+
+
+QComboBox:on { /* shift the text when the popup opens */
+    padding-top: 3px;
+    padding-left: 4px;
+}
+
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+
+    border-left-width: 1px;
+    border-left-color: darkgray;
+    border-left-style: solid; /* just a single line */
+    border-top-right-radius: 3px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 3px;
+}
+
+
+QLineEdit { 
+	border-radius: 3px;
+	border: 1px solid white;
+	font: 8pt &quot;Segoe UI Semilight&quot;;
+ }
+
+QLineEdit:hover { 
+	border-color: rgb(42, 105, 23);
+}
+
+QKeySequenceEdit { font: 9pt &quot;Segoe UI Semilight&quot;; color: white; }
+</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="1">
+     <widget class="QLabel" name="degreeSignLabel">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font:28pt &quot;Segoe UI Semilight&quot;;
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string>°C</string>
+      </property>
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <property name="indent">
+       <number>-1</number>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="valueLabel">
+      <property name="styleSheet">
+       <string notr="true">font: 72pt &quot;Segoe UI Semilight&quot;;
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::PlainText</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="2">
+     <widget class="QLabel" name="topLabel">
+      <property name="styleSheet">
+       <string notr="true">font: 16pt &quot;Segoe UI Semilight&quot;;
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -71,6 +71,9 @@ void DHTt(const uint8_t pin) {
         // Температура есть 16-битное число со знаком
         temperature = (float)((int16_t)((receivedDHTData[2] << 8) | receivedDHTData[3])) * 0.1;        
         if (receivedDHTData[2] & 0b10000000) temperature *= -1.0f; //если отрицательная температура
+        //тупое решение проблемы
+        if (temperature > 80) temperature = temperature - 3276.7f;
+
         humidity = (receivedDHTData[1] * 0.1) + (receivedDHTData[0] * 25.6); //нюанс расчета влажности для DHT22
 
         Serial.println(itoa(receivedDHTData[2]));

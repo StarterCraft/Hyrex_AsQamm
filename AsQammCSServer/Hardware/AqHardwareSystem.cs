@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 
 using NLog;
 
+using Newtonsoft.Json;
+
 using AsQammServer.Utilities;
 using AsQammServer.DriverControl;
 
@@ -123,7 +125,10 @@ namespace AsQammServer.Hardware
         public AqHardwareSystem()
         {
             //Загрузим настройки
-            Configuration = AqExtensions.GetJsonConfiguration(ConfigurationFilePath);
+            using (StreamReader file = File.OpenText(ConfigurationFilePath))
+            {
+                
+            }
 
             //Инициализация протоколов
             Logger.Info("Инициализация протоколов...");

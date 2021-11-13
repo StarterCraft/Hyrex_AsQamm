@@ -1,20 +1,30 @@
 {
-        "preset": null,
-        "language": 0,
-        "theme": "black",
-        "popupOpacity": 91,
-        "loggingMode": true,
-        "logSavingMode": true,
-        "logSavingDuration": 5,
-        "keyBindings": {
-                "homeScreen": "",
-                "defenseScreen": "2",
-                "plantsScreen": "3",
-                "hardwareScreen": "4",
-                "configScreen": "5",
-                "changeInterfaceMode": "Ctrl+Q",
-                "applyChanges": "Ctrl+A",
-                "saveChanges": "Ctrl+S",
-                "loadChanges": "Ctrl+W"
+    "preset": null,
+    "language": 0,
+    "theme": "black",
+    "popupOpacity": 91,
+    "loggingMode": true,
+    "logSavingMode": true,
+    "logSavingDuration": 5,
+    "keyBindings": {
+        "homeScreen": "",
+        "defenseScreen": "2",
+        "plantsScreen": "3",
+        "hardwareScreen": "4",
+        "configScreen": "5",
+        "changeInterfaceMode": "Ctrl+Q",
+        "applyChanges": "Ctrl+A",
+        "saveChanges": "Ctrl+S",
+        "loadChanges": "Ctrl+W"
+    },
+    "widgets": [
+        {
+            "name": "DHT22",
+            "template": "sensorWatchLast",
+            "properties": {
+                "topLabelText": "DHT22 НА УЛИЦЕ",
+                "valueId": "COM6:d:7:TS02:TEMPC"
+            }
         }
+    ]
 }

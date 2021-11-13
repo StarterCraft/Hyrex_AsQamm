@@ -33,6 +33,7 @@ class AqMainWindow(QMainWindow):
         self.rootLogger = AqLogger('Core')
 
         self.popups = []
+        self.widgets = []
         self.sounds = {
             'error': 'data/system/sounds/error.mp3',
             'login': 'data/system/sounds/login.mp3', 
@@ -164,10 +165,11 @@ if __name__ == '__main__':
         usersCore.loadUsers(root, server, usersCore)
         AqUIFunctions.mapThemes(root)
         root.rootLogger.debug('Темы интерфейса загружены')
+        AqUIFunctions.generateLoadingAnimation(root)
 
         hardwareSystem.setHardwareListModel(root)
         root.ui.btn_UserInit.clicked.connect( lambda: usersCore.userInit(root, server, usersCore) )
-        root.ui.btn_UserInitAsGuest.clicked.connect( lambda: usersCore.guestUserInit(usersCore, root) )
+        root.ui.btn_UserInitAsGuest.clicked.connect( lambda: usersCore.guestUserInit(usersCore, server, root) )
         root.ui.btn_LogOut.clicked.connect( lambda: usersCore.logOutBegin(root, server, usersCore) )
         root.ui.btn_ChangeCurrentUserSrtt.clicked.connect ( lambda: usersCore.callCurrentUserSetupDlg(root, server, usersCore, usersCore.getInstance(root, True)) )
         root.ui.btn_UserDatabaseAddUser.clicked.connect ( lambda: usersCore.callUserCreationDlg(root, server, usersCore) )
@@ -183,7 +185,7 @@ if __name__ == '__main__':
         root.rootLogger.debug('Привязка кнопок в интерфейсе приложения завершена успешно')
         root.ui.mda_HomeScreenWidgets.tileSubWindows()
 
-        usersCore.lockApp(root, usersCore)
+        usersCore.lockApp(root, server, usersCore)
         root.mainloop(app)
 
     except Exception as exception:

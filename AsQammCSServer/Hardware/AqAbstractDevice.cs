@@ -45,6 +45,15 @@ namespace AsQammServer.Hardware
 
 
     /// <summary>
+    /// 
+    /// </summary>
+    public struct AqDeviceInfo
+    {
+
+    }
+
+
+    /// <summary>
     /// Класс, представляющий любого `исполнителя` (или, упрощённо, `устройство`)
     /// — устройство, находящееся в подчинении сервера.
     /// </summary>
@@ -312,11 +321,18 @@ namespace AsQammServer.Hardware
         /// <see cref="Parent"/> здесь нё задаётся, так как он может быть null
         /// </remarks>
         /// <param name="isEnabled">Используется ли исполнитель в системе?</param>
+        /// <param name="isControllable">Контролируется ли исполнитель сервером напрямую, или он 
+        /// контролируется своим материнским исполнителем?</param>
+        /// <param name="isFertile">Способен ли исполнитель иметь других исполнителей в подчинении?</param>
         /// <param name="platform">Индентификатор протокола</param>
         /// <param name="deviceAddress">Адрес на котором располагается исполнитель</param>
         /// <param name="driverId">Индентификатор драйвера исполнителя</param>
+        /// <param name="connectionType">Тип соединения</param>
+        /// <param name="displayData">Информация для отображения в вершителях</param>
         protected AqAbstractDevice(
             bool isEnabled,
+            bool isControllable,
+            bool isFertile,
             string platform,
             string deviceAddress,
             string driverId,
@@ -324,6 +340,8 @@ namespace AsQammServer.Hardware
             DeviceDisplayData displayData)
         {
             IsEnabled = isEnabled;
+            IsControllable = isControllable;
+            IsFertile = isFertile;
             Platform = platform;
             DeviceId = $"{DeviceAddress}:{DriverId}";
             DeviceAddress = deviceAddress;

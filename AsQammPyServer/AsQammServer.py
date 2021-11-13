@@ -170,13 +170,14 @@ class AqServer:
             #except (KeyError, AttributeError, ValueError): return server.errorResponse(401)
 
 
-        @server.api.get('/getLatestStats', description = 'Получить статистику за x времени')
-        def getQueriedStats(content: dict, request: Request):
+        @server.api.get('/getLastEntry', description = 'Получить статистику за x времени')
+        def getLastEntryForValues(content: dict, request: Request):
             global server, hardwareCore
 
             try:
                 if server.tok.isOk(content['tok']) and hardwareCore:
-                    return server.standardResponse(hardwareCore.statisticAgent.getStatsByTimeQuery(content['query']))
+                    return server.standardResponse(
+                        hardwareCore.statisticAgent.getLastEntryForValues(content['content']))
                 elif not hardwareCore: return server.errorResponse(501)
                 else: server.errorResponse(401)
             except (KeyError, AttributeError, ValueError): return server.errorResponse(401)

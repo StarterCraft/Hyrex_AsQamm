@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>AsQammServer.Drivers</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\CSServerCore.csproj" />
+    <ProjectReference Include="..\..\..\..\Platforms\Arduino\Arduino.csproj" />
+  </ItemGroup>
+
+</Project>

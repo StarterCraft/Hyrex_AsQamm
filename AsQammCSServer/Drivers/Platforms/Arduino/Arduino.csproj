@@ -13,4 +13,12 @@
     <ProjectReference Include="..\..\..\CSServerCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="G:\Work\Code\Hyrex_AsQamm\AsQammCSServer\Drivers\Platforms\Arduino\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="G:\Work\Code\Hyrex_AsQamm\AsQammCSServer\Drivers\Platforms\Arduino\.editorconfig" />
+  </ItemGroup>
+
 </Project>
