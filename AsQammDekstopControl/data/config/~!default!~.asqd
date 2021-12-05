@@ -20,9 +20,9 @@
     "widgets": [
         {
             "name": "DHT22",
-            "template": "sensorWatchLast",
+            "template": "SensorWatchLast",
             "properties": {
-                "topLabelText": "DHT22 НА УЛИЦЕ",
+                "topLabel.text": "DHT22 НА УЛИЦЕ",
                 "valueId": "COM6:d:7:TS02:TEMPC"
             }
         }

@@ -21,115 +21,6 @@ namespace AsQammServer.Drivers
     public abstract class ArduinoDevice: AqAbstractDevice
     {
         /// <summary>
-        /// Класс для работы со строковыми сообщениями-ответами от Arduino-
-        /// исполнителя. Firmata посылает ответы на строковые команды в виде
-        /// строк, кото- рые могут быть двух видов: бeз ошибки и с ошибкой.
-        /// </summary>
-        /// 
-        /// Схема безошибочного строкового ответа от исполнителя:
-        /// 'OK;{a};{b}', где:
-        ///     a —— Имя метода, который вызывался и на который исполнитель
-        ///          отправляет ответ;
-        ///     b —— Результат выполнения метода.Может представлять из себя
-        ///          число или строку.Если результат представляет собой спи-
-        ///          сок, то каждый его элемент записывается через точку с
-        ///          запятой.
-        ///
-        /// Схема строкового сообщения об ошибке(ответа) от исполнителя:
-        /// 'ERR;{a};{b}', где:
-        ///     a —— Имя метода, который вызывался и на который исполнитель
-        ///          отправляет ответ;
-        ///     b —— Код ошибки, зависит от вызываемого метода(для каждого
-        ///          метода существуют свои коды ошибки, о них можно узнать
-        ///          в документации к функциональным библиотекам AsQamm Arduino).
-        public class FirmataStringMessage
-        {
-            /// <summary>
-            /// Перечисление возможных видов строкового сообщения
-            /// </summary>
-            public enum MessageType
-            {
-                OK = 1,
-                Error = 0,
-                NotSpecified = -1
-            }
-
-            /// <summary>
-            /// Исключение, которое вызывается, если сообщение, полученное от
-            /// исполнителя, не соответствует синтаксису строковых сообщений.
-            /// </summary>
-            public class SyntaxError : Exception
-            {
-                public SyntaxError() :
-                    base("От Arduino-исполнителя получено некорректное строковое сообщение")
-                {
-
-                }
-            }
-
-            /// <summary>
-            /// Тип сообщения
-            /// </summary>
-            public readonly MessageType Type;
-
-            /// <summary>
-            /// Имя метода
-            /// </summary>
-            public readonly string MethodName;
-
-            /// <summary>
-            /// Код типа сообщения
-            /// </summary>
-            public readonly string StatusCode;
-
-            /// <summary>
-            /// Время получения сообщения
-            /// </summary>
-            public readonly DateTimeOffset ReceivedAt;
-
-            /// <summary>
-            /// Полезная нагрузка сообщения
-            /// </summary>
-            public readonly List<string> Received;
-
-            /// <summary>
-            ///  Инициализировать обработчик строкового сообщения. Если после-
-            ///  днее не соответствует синтаксису строковых сообщений, будет
-            ///  вызвано исключение <see cref="Synta"/>.
-            /// </summary>
-            /// <param name="raw">Строковое сообщение от Arduino-исполнителя в виде 
-            /// строки.
-            /// </param>
-            public FirmataStringMessage(string raw)
-            {
-                List<string> components = raw.Split(';').ToList();
-
-                if (components.Count < 2) throw new SyntaxError();
-
-                StatusCode = components[0];
-                MethodName = components[1];
-                Received = new List<string>();
-                ReceivedAt = DateTimeOffset.Now;
-
-                switch (StatusCode)
-                {
-                    case "OK":
-                        Type = MessageType.OK;
-                        Received = components.GetRange(2, components.Count);
-                        break;
-
-                    case "ERR":
-                        Type = MessageType.Error;
-                        Received.Add(components[2]);
-                        break;
-
-                    default:
-                        throw new SyntaxError();
-                }
-            }
-        }
-
-        /// <summary>
         /// Сессия подключения к Аrduino
         /// </summary>
         public ArduinoSession Session
@@ -260,6 +151,116 @@ namespace AsQammServer.Drivers
             }
 
             return ReceivedMessages.Single(message => (currentTime - message.ReceivedAt) == timeSpans.Min());
+        }
+    }
+
+
+    /// <summary>
+    /// Класс для работы со строковыми сообщениями-ответами от Arduino-
+    /// исполнителя. Firmata посылает ответы на строковые команды в виде
+    /// строк, кото- рые могут быть двух видов: бeз ошибки и с ошибкой.
+    /// </summary>
+    /// 
+    /// Схема безошибочного строкового ответа от исполнителя:
+    /// 'OK;{a};{b}', где:
+    ///     a —— Имя метода, который вызывался и на который исполнитель
+    ///          отправляет ответ;
+    ///     b —— Результат выполнения метода.Может представлять из себя
+    ///          число или строку.Если результат представляет собой спи-
+    ///          сок, то каждый его элемент записывается через точку с
+    ///          запятой.
+    ///
+    /// Схема строкового сообщения об ошибке(ответа) от исполнителя:
+    /// 'ERR;{a};{b}', где:
+    ///     a —— Имя метода, который вызывался и на который исполнитель
+    ///          отправляет ответ;
+    ///     b —— Код ошибки, зависит от вызываемого метода(для каждого
+    ///          метода существуют свои коды ошибки, о них можно узнать
+    ///          в документации к функциональным библиотекам AsQamm Arduino).
+    public class FirmataStringMessage
+    {
+        /// <summary>
+        /// Перечисление возможных видов строкового сообщения
+        /// </summary>
+        public enum MessageType
+        {
+            OK = 1,
+            Error = 0,
+            NotSpecified = -1
+        }
+
+        /// <summary>
+        /// Исключение, которое вызывается, если сообщение, полученное от
+        /// исполнителя, не соответствует синтаксису строковых сообщений.
+        /// </summary>
+        public class SyntaxError : Exception
+        {
+            public SyntaxError() :
+                base("От Arduino-исполнителя получено некорректное строковое сообщение")
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// Тип сообщения
+        /// </summary>
+        public readonly MessageType Type;
+
+        /// <summary>
+        /// Имя метода
+        /// </summary>
+        public readonly string MethodName;
+
+        /// <summary>
+        /// Код типа сообщения
+        /// </summary>
+        public readonly string StatusCode;
+
+        /// <summary>
+        /// Время получения сообщения
+        /// </summary>
+        public readonly DateTimeOffset ReceivedAt;
+
+        /// <summary>
+        /// Полезная нагрузка сообщения
+        /// </summary>
+        public readonly List<string> Received;
+
+        /// <summary>
+        ///  Инициализировать обработчик строкового сообщения. Если после-
+        ///  днее не соответствует синтаксису строковых сообщений, будет
+        ///  вызвано исключение <see cref="Synta"/>.
+        /// </summary>
+        /// <param name="raw">Строковое сообщение от Arduino-исполнителя в виде 
+        /// строки.
+        /// </param>
+        public FirmataStringMessage(string raw)
+        {
+            List<string> components = raw.Split(';').ToList();
+
+            if (components.Count < 2) throw new SyntaxError();
+
+            StatusCode = components[0];
+            MethodName = components[1];
+            Received = new List<string>();
+            ReceivedAt = DateTimeOffset.Now;
+
+            switch (StatusCode)
+            {
+                case "OK":
+                    Type = MessageType.OK;
+                    Received = components.GetRange(2, components.Count);
+                    break;
+
+                case "ERR":
+                    Type = MessageType.Error;
+                    Received.Add(components[2]);
+                    break;
+
+                default:
+                    throw new SyntaxError();
+            }
         }
     }
 

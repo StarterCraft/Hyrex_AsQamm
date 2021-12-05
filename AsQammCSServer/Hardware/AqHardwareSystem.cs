@@ -122,14 +122,17 @@ namespace AsQammServer.Hardware
         }
 
 
+        /// <summary>
+        /// Инициализировать устройства
+        /// </summary>
+        public void InitializeDevices() 
+        { 
+
+        }
+
+
         public AqHardwareSystem()
         {
-            //Загрузим настройки
-            using (StreamReader file = File.OpenText(ConfigurationFilePath))
-            {
-                
-            }
-
             //Инициализация протоколов
             Logger.Info("Инициализация протоколов...");
             LoadPlatformDrivers();
@@ -137,6 +140,10 @@ namespace AsQammServer.Hardware
             //Инициализация драйверов
             Logger.Info("Инициализация драйверов устройств...");
             LoadDeviceDrivers();
+
+            //Инициализация устройств
+            Logger.Info("Инициализация устройств");
+
         }
     }
 }
