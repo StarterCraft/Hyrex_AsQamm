@@ -1,4 +1,6 @@
 #pragma once
+#define DHT22_MIN -40
+#define DHT22_MAX 80
 #include <Arduino.h>
 #include <Firmata.h>
 
@@ -68,11 +70,23 @@ void DHTt(const uint8_t pin) {
             return;
         }
 
-        // Температура есть 16-битное число со знаком
-        temperature = (float)((int16_t)((receivedDHTData[2] << 8) | receivedDHTData[3])) * 0.1;        
-        if (receivedDHTData[2] & 0b10000000) temperature *= -1.0f; //если отрицательная температура
-        //тупое решение проблемы
-        if (temperature > 80) temperature = temperature - 3276.7f;
+        //Температура есть 16-битное число со знаком
+        //The temperature is a 16 bit signed integer, 10 times the actual value in degrees Celsius
+        temperature = ((receivedDHTData[2] & 0x7F) << 8 | receivedDHTData[3]) * 0.1;
+        //if MSB = 1 we have negative temperature
+        temperature = ((receivedDHTData[2] & 0x80) == 0 ? temperature : -temperature);
+
+        //Если значение бессмысленно, попробуем другой метод извлечения
+        if (temperature < DHT22_MIN || temperature > DHT22_MAX) {
+            int32_t temp = ((receivedDHTData[2]) << 8 | receivedDHTData[3]);
+            //if MSB = 1 we have negative temperature
+            if (temp & 0x8000)
+            {
+                temp = temp | 0xFFFF0000; //sign-extend
+                temperature = temp * 0.1f; //Convert to negative whole-degrees
+            }
+            else temperature = (float)temp / 10.0f;
+        }
 
         humidity = (receivedDHTData[1] * 0.1) + (receivedDHTData[0] * 25.6); //нюанс расчета влажности для DHT22
 

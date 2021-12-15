@@ -1,6 +1,7 @@
 #pragma once
+#define DHT22_MIN -40
+#define DHT22_MAX 80
 #include <Arduino.h>
-
 
 uint64_t readingTime;
 
@@ -8,13 +9,13 @@ uint64_t readingTime;
 void DHTt(const uint8_t pin) {
     if ((millis() - readingTime) > 2000) {
         unsigned char receivedDHTData[5];
-        float humidity;
+        float temperature, humidity;
 
         #define DHT_PORT PORTD
         #define DHT_DDR DDRD
         #define DHT_PIN PIND
         #define DHT_BIT pin
-        unint count = 32;
+        uint count = 32;
         unsigned char i, j;
 
         ReLoad: //метка для ошибок
@@ -67,11 +68,24 @@ void DHTt(const uint8_t pin) {
             return;
         }
 
-        // Температура есть 16-битное число со знаком
-        // The temperature is a 16 bit signed integer, 10 times the actual value in degrees Celsius
-        auto temp = ((receivedDHTData[2] & 0x7F) << 8 | receivedDHTData[3]) * 0.1;
-        // if MSB = 1 we have negative temperature
-        temp = ((receivedDHTData[2] & 0x80) == 0 ? temp : -temp);
+        //Температура есть 16-битное число со знаком
+        //The temperature is a 16 bit signed integer, 10 times the actual value in degrees Celsius
+        temperature = ((receivedDHTData[2] & 0x7F) << 8 | receivedDHTData[3]) * 0.1;
+        //if MSB = 1 we have negative temperature
+        temperature = ((receivedDHTData[2] & 0x80) == 0 ? temperature : -temperature);
+
+        //Если значение бессмысленно, попробуем другой метод извлечения
+        if (temperature < DHT22_MIN || temperature > DHT22_MAX) {
+            int32_t temp = ((receivedDHTData[2]) << 8 | receivedDHTData[3]);
+            //if MSB = 1 we have negative temperature
+            if (temp & 0x8000)
+            {
+                temp = temp | 0xFFFF0000; //sign-extend
+                temperature = temp * 0.1f; //Convert to negative whole-degrees
+            }
+            else temperature = (float)temp / 10.0f;
+        }
+
         humidity = (receivedDHTData[1] * 0.1) + (receivedDHTData[0] * 25.6); //нюанс расчета влажности для DHT22
 
 
@@ -94,7 +108,7 @@ void DHTt(const uint8_t pin) {
         readingTime = millis();
         strcpy(result, "OK;DHTt;");
 
-        dtostrf(temp, 5, 1, catres);
+        dtostrf(temperature, 5, 1, catres);
         strcat(result, catres);
         strcat(result, ";");
 
